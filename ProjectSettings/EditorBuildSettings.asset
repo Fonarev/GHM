@@ -12,12 +12,48 @@ EditorBuildSettings:
     path: Assets/GemHunterMatch/Scenes/Main.unity
     guid: b348bab4d0bcc4249974860e9b60da73
   - enabled: 1
-    path: Assets/GemHunterMatch/Scenes/Level1.unity
+    path: Assets/GemHunterMatch/Scenes/Level 1.unity
+    guid: a8a8d7bd1adca9f49975cd578b7c4690
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 2.unity
+    guid: 807db5184ea5889408a1aac3ca3ee663
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 3.unity
+    guid: b1459fd6e98413f4b87eb0b762794a65
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 4.unity
+    guid: 5fad21c45af38514294ba6835ff5962b
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 5.unity
+    guid: 8517649722829604eb48e7b11a793fb4
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 6.unity
+    guid: 7e4324d38e49a9b4e8d09165e8ee3d53
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 7.unity
+    guid: df24a6cad6b3f314088d4fc3944ae4d2
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 8.unity
+    guid: 037f02fa2270c6444bf7408e2b0f8150
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 9.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/GemHunterMatch/Scenes/Level2.unity
-    guid: cef0a6256b6cc41a2b9c230466e59854
+    path: Assets/GemHunterMatch/Scenes/Level 10.unity
+    guid: f4da8ec330193214da3e99dc93b15c92
   - enabled: 1
-    path: Assets/GemHunterMatch/Scenes/Level3.unity
-    guid: 6f8636eea4fd4465593f170e96739fcc
+    path: Assets/GemHunterMatch/Scenes/Level 11.unity
+    guid: c0c160b2b3d165143b4283f1902bfc41
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 12.unity
+    guid: 3d4158708b409ec46a998cf95d4ded0f
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 13.unity
+    guid: 47fadef57e5002d4d8453263411e0214
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 14.unity
+    guid: e7eaff6ab0786fb4f9280d27f2dabd73
+  - enabled: 1
+    path: Assets/GemHunterMatch/Scenes/Level 15.unity
+    guid: 9b6e1fb8484808d448d823f83de02af9
   m_configObjects: {}
