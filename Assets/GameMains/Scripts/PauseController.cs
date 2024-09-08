@@ -12,6 +12,7 @@ namespace Assets.GameMains.Scripts
         public event Action<bool> OnPauseButton;
 
         [SerializeField] private bool singleton;
+        [SerializeField] private bool isMessage;
 
         public static PauseController instance;
 
@@ -49,12 +50,17 @@ namespace Assets.GameMains.Scripts
         private void OnApplicationFocus(bool hasFocus)
         {
             Pause(!hasFocus);
+            Message($"Focus {!hasFocus}");
         }
 
         private void OnApplicationPause(bool isPaused)
         {
             Pause(isPaused);
+            Message($"ApplicationPause {isPaused}");
         }
-      
+        private void Message(string message)
+        {
+            if (isMessage) Debug.Log(message);
+        }
     }
 }

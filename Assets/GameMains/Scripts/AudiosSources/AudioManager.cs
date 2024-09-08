@@ -2,13 +2,15 @@
 
 using UnityEngine;
 
-namespace Assets.GameMains.Scripts
+namespace Assets.GameMains.Scripts.AudiosSources
 {
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private bool singleton;
 
         public static AudioManager instance;
+        private AudioSource MusicSourceActive;
+        private AudioSource MusicSourceBackground;
 
         private void Awake()
         {
