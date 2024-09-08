@@ -5,19 +5,19 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.GameMains.Scripts
 {
-    public class LoaderScenes : MonoBehaviour
+    public class LoaderScenes 
     {
-        public void LoadLevel(int sceneIndex)
+        public void LoadLevel(string name)
         {
             //anim.Play("CloseDoors");
-            StartCoroutine(LoadLevelAsync(sceneIndex));
+            HandlerCoroutine.StartRoutine(LoadLevelAsync(name));
         }
 
-        private IEnumerator LoadLevelAsync(int sceneIndex)
+        private IEnumerator LoadLevelAsync(string name)
         {
             yield return new WaitForSeconds(0.5f);
 
-            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
+            AsyncOperation operation = SceneManager.LoadSceneAsync(name);
 
             while (!operation.isDone)
             {

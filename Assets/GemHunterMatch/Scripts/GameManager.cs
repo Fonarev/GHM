@@ -169,7 +169,7 @@ namespace Match3
             }
 
             PoolSystem.AddNewInstance(Settings.VisualSettings.CoinVFX, 12);
-
+            
             //we delay the board init to leave enough time for all the tile to init
             StartCoroutine(DelayedInit());
         }
