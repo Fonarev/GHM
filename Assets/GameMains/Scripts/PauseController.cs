@@ -4,7 +4,7 @@ using System;
 
 using UnityEngine;
 
-namespace Assets.GameMains
+namespace Assets.GameMains.Scripts
 {
     public class PauseController : MonoBehaviour
     {

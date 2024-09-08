@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace Assets.GameMains
+namespace Assets.GameMains.Scripts
 {
     public class AudioManager : MonoBehaviour
     {
