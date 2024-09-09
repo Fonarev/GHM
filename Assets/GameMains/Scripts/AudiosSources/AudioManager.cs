@@ -9,8 +9,8 @@ namespace Assets.GameMains.Scripts.AudiosSources
         [SerializeField] private bool singleton;
 
         public static AudioManager instance;
-        private AudioSource MusicSourceActive;
-        private AudioSource MusicSourceBackground;
+        [SerializeField] private MusicSourceBackground MusicSourceBackground;
+        [SerializeField] private MusicSourceEffect MusicSourceEffect;
 
         private void Awake()
         {

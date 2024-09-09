@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Assets.GameMains.Scripts.Expansion;
+
+using System.Collections;
 
 using UnityEngine;
 
@@ -11,11 +13,11 @@ namespace Assets.GameMains.Scripts.EntryPoints
         public void Initialize(LoaderScenes loaderScenes)
         {
             _loaderScenes = loaderScenes;
-            //StartCoroutine(Load());
+            StartCoroutine(Load());
         }
         private IEnumerator Load()
        {
-            _loaderScenes.LoadLevel(1);
+            _loaderScenes.LoadLevel(Scenes.menu);
             yield return null;
        }
     }
