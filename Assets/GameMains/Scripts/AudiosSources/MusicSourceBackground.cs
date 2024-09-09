@@ -13,6 +13,7 @@ namespace Assets.GameMains.Scripts
             audioBG.loop = true;
             audioBG.clip = musicClip;
         }
+
         public void Play() => audioBG.Play();
         public void Pause() => audioBG.Pause();
     }

@@ -9,8 +9,8 @@ namespace Assets.GameMains.Scripts.AudiosSources
         [SerializeField] private bool singleton;
 
         public static AudioManager instance;
-        [SerializeField] private MusicSourceBackground MusicSourceBackground;
-        [SerializeField] private MusicSourceEffect MusicSourceEffect;
+        [SerializeField] private MusicSourceBackground sourceBackground;
+        [SerializeField] private MusicSourceEffect sourceEffect;
 
         private void Awake()
         {
@@ -37,9 +37,15 @@ namespace Assets.GameMains.Scripts.AudiosSources
 
         public void Initialize(PauseController pauseController)
         {
+            sourceBackground.Initialize();
+            sourceEffect.Initialize();
+
             pauseController.OnPause += Pause;
             YandexGame.Instance.OnNowAdsShow += Pause;
         }
+
+        public void Play() => sourceBackground.Play();
+        public void PlayEffect(string name) => sourceEffect.Play(name);
 
         private void Pause(bool isSilence)
         {
@@ -50,7 +56,6 @@ namespace Assets.GameMains.Scripts.AudiosSources
                     //this.isSilence = isSilence;
                     //audioBG.Play();
                   
-
                 }
 
             }
