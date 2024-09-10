@@ -1,52 +1,49 @@
-﻿using Assets.YG.Scripts;
+﻿using Assets.GemHunterMatch.Scripts.Loaders;
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-using Unity.VisualScripting;
-
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
     public class UISelectLevels : MonoBehaviour
     {
-        public int location;
         public int count;
+        public RectTransform rootLevelEntry;
         public List<UILevelEntry> levels;
-        public  void Init()
+        private LocalAssetLoader loader;
+        private void OnEnable()
         {
-            StartCoroutine(LoadLevelEntry());
+            UpDateVeiw();
         }
-        private IEnumerator LoadLevelEntry()
+       
+        private void OnDisable()
         {
-            for (int i = 1; i < count; i++)
+           if(loader!= null) loader.UnLoadAll();
+        }
+
+        public async void Init(int location)
+        {
+            for (int i = 0; i < count; i++)
             {
-                int level = location + i;
-                var handle = Addressables.InstantiateAsync("LevelEntry");
-               
-                var ui = handle.Result;
-                if (ui.TryGetComponent(out UILevelEntry lvl)== false)
+                int number = location + i;
+                var level = levels[i];
+                if (level != null)
                 {
-                    throw new Exception($"This Type already exists!!!{ui}");
+                    level.Init(number + 1);
                 }
-
-                lvl.Init(level, TryLevel(level));
-                levels.Add(lvl);
-
-                yield return lvl;
+                else
+                {
+                    loader = new LocalAssetLoader(true);
+                    UILevelEntry newLevel = await loader.Load<UILevelEntry>("LevelEntry", rootLevelEntry);
+                    levels.Add(newLevel);   
+                    newLevel.Init(number + 1);
+                }
             }
         }
-
-        private bool TryLevel(int level)
+        private void UpDateVeiw()
         {
-            if (YandexGame.Instance.progressData.levels.ContainsKey(level))
-            {
-                return false;
-            }
-            return true;
+            foreach (var level in levels) { level.UpDateView(); }
         }
     }
 }

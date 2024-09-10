@@ -13,7 +13,11 @@ namespace Assets.GemHunterMatch.Scripts.Loaders
 
         public void Reset()
         {
-            UnLoad();
+            UnLoad(typeof(UILevelEntry));
+        }
+        public void ResetAll()
+        {
+            UnLoadAll();
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -9,27 +10,51 @@ namespace Assets.GemHunterMatch.Scripts.Loaders
     public class LocalAssetLoader 
     {
         private GameObject cach;
+        private Dictionary<Type, GameObject> cachsMap = new();
+        private List<GameObject> cachs = new();
+        private Type currentedType;
+        private bool isMessage;
 
-        public async Task<T> Load<T>(string assetId)
+        public LocalAssetLoader(bool isMessage = false)
         {
-            var handle = Addressables.InstantiateAsync(assetId);
+            this.isMessage = isMessage;
+        }
+
+        public async Task<T> Load<T>(string assetId,Transform transform = null)
+        {
+            var handle = Addressables.InstantiateAsync(assetId,transform);
             cach = await handle.Task;
             if(cach.TryGetComponent(out T loaded)== false)
             {
                 throw new NullReferenceException($"Null type {typeof(T)} in Asset Addresables");
             }
+            cachs.Add(cach);
+            Message($"ReleseInstance {cach.name}");
             return loaded;
         }
 
-        public void UnLoad()
+        public void UnLoad(Type type)
         {
-            if (cach != null)
+            if (cachsMap.ContainsKey(type))
             {
-                Addressables.ReleaseInstance(cach);
-                cach = null;
+                cachsMap[type].SetActive(false);
+                Addressables.ReleaseInstance(cachsMap[type]);
+                Message($"ReleseInstance {cachsMap[type].name}");
+                cachsMap.Remove(type);
             }
-
         }
-
+        public void UnLoadAll()
+        {
+            foreach (var go in cachs)
+            {
+                Addressables.ReleaseInstance(go);
+                Message($"ReleseInstance {go.name}");
+            }
+            cachs.Clear();
+        }
+     public void Message(string  message)
+     {
+            Debug.Log(message);
+     }
     }
 }
