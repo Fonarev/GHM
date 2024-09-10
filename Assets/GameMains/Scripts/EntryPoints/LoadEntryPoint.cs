@@ -1,4 +1,5 @@
 ﻿using Assets.GameMains.Scripts.Expansion;
+using Assets.YG.Scripts;
 
 using System.Collections;
 
@@ -17,6 +18,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
         }
         private IEnumerator Load()
        {
+            YandexGame.Instance.Load();
             _loaderScenes.LoadLevel(Scenes.menu);
             yield return null;
        }

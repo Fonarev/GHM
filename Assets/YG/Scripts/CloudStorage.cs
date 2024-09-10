@@ -34,7 +34,10 @@ namespace Assets.YG.Scripts
         {
 #if !UNITY_EDITOR
             LoadData(sendback);
+#else
+            yandex.progressData.CreateDefaultData();
 #endif
+
         }
 
         public void SetLoadedData(string data)
