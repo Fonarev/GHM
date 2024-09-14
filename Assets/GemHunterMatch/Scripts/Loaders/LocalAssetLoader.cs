@@ -29,7 +29,7 @@ namespace Assets.GemHunterMatch.Scripts.Loaders
                 throw new NullReferenceException($"Null type {typeof(T)} in Asset Addresables");
             }
             cachs.Add(cach);
-            Message($"ReleseInstance {cach.name}");
+            Message($"Instance {cach.name}");
             return loaded;
         }
 
@@ -39,7 +39,7 @@ namespace Assets.GemHunterMatch.Scripts.Loaders
             {
                 cachsMap[type].SetActive(false);
                 Addressables.ReleaseInstance(cachsMap[type]);
-                Message($"ReleseInstance {cachsMap[type].name}");
+                Message($"Release {cachsMap[type].name}");
                 cachsMap.Remove(type);
             }
         }
@@ -48,7 +48,7 @@ namespace Assets.GemHunterMatch.Scripts.Loaders
             foreach (var go in cachs)
             {
                 Addressables.ReleaseInstance(go);
-                Message($"ReleseInstance {go.name}");
+                Message($"Release {go.name}");
             }
             cachs.Clear();
         }

@@ -1,3 +1,5 @@
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -29,11 +31,12 @@ namespace Match3
 
             m_Cell = cell;
 
-            Board.AddObstacle(cell, this);
+            GridBoard.AddObstacle(cell, this);
             
             foreach (var state in LockState)
             {
-                GameManager.Instance.PoolSystem.AddNewInstance(state.UndoneVFX, 4);
+                //GameManager.Instance.PoolSystem.AddNewInstance(state.UndoneVFX, 4);
+                Debug.Log("Create Pool");
             }
         }
 
@@ -59,8 +62,12 @@ namespace Match3
             m_CurrentState = newState;
             //play the undone effect of the state before this one
             if(m_CurrentState-1 >= 0)
-                GameManager.Instance.PoolSystem.PlayInstanceAt(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
-            
+            {
+                //GameManager.Instance.PoolSystem.PlayInstanceAt(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
+                Debug.Log("instatiate obj Pool");
+            }
+
+
             if (m_CurrentState < LockState.Length)
             {
                 m_SpriteRenderer.sprite = LockState[m_CurrentState].Sprite;

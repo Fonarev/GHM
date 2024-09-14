@@ -1,16 +1,11 @@
-﻿using Assets.GameMains.Scripts.AudiosSources;
+﻿using Assets.GameMains.Scripts;
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.YG.Scripts;
 
-using System;
-using System.Collections;
-
 using TMPro;
 
-using Unity.VisualScripting;
-
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Assets.GemHunterMatch.Scripts.UI
@@ -19,37 +14,40 @@ namespace Assets.GemHunterMatch.Scripts.UI
     public class UILevelEntry : MonoBehaviour
     {
         [SerializeField] private Image Lock;
-        private TextMeshProUGUI numberLevel=> GetComponentInChildren<TextMeshProUGUI>();
         private int level;
-       private Button button => GetComponent<Button>();
-    
-       public void Init(int level)
-       {
-            this.level = level;
-            bool isLock = TryLevel(level);
-            button.interactable = isLock;
-            Lock.gameObject.SetActive(isLock);
-            numberLevel.text = this.level.ToString();
-            button.onClick.AddListener(OnClick);
-       }
-        private bool TryLevel(int level)
+        private Button button => GetComponent<Button>();
+        private TextMeshProUGUI numberLevel => GetComponentInChildren<TextMeshProUGUI>();
+       
+        public void Init(int number)
         {
-            if (YandexGame.Instance.progressData.levels.ContainsKey(level))
+            level = number;
+            numberLevel.text = number.ToString();
+
+            if (YandexGame.Instance.progressData.levels.ContainsKey(number))
             {
-                return false;
+                button.interactable = true;
+                Lock.gameObject.SetActive(false);
+                button.onClick.AddListener(OnClick);
             }
-            return true;
+            else
+            {
+                button.interactable = false;
+                Lock.gameObject.SetActive(true);
+            }
+
         }
+       
         private void OnClick()
         {
+            GlobalMediator.instance.SelectedLevel(level);
             AudioManager.instance.PlayEffect(EffectClip.click);
         }
 
         public void UpDateView()
         {
-            bool isLock = TryLevel(level);
-            button.interactable = isLock;
-            Lock.gameObject.SetActive(isLock);
+            //bool isLock = TryLevel(level);
+            //button.interactable = isLock;
+            //Lock.gameObject.SetActive(isLock);
         }
     }
 }

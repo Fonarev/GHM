@@ -70,7 +70,7 @@ namespace Match3
             Color[] infoColor = new Color[64];
             int currentColor = 0;
 
-            //we create a new match in the board, set its type to force deletion (as this match came from a bonus, not a swap)
+            //we create a new match in the board, set its type to force deletion (as this match came from a bonus, not a swapHandler)
             var newMatch = GameManager.Instance.Board.CreateCustomMatch(m_CurrentIndex);
             newMatch.ForcedDeletion = true;
             //we grab from the cell and not use "this" because when used as a Bonus Item, the item at this index won't be the gem

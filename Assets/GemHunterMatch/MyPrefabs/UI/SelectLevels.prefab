@@ -129,7 +129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3518299476989442698}
-  - component: {fileID: 3571877037199364538}
+  - component: {fileID: 4064719141876942586}
   m_Layer: 5
   m_Name: SelectLevels
   m_TagString: Untagged
@@ -152,12 +152,12 @@ RectTransform:
   - {fileID: 8953181012983125942}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 200}
   m_SizeDelta: {x: 500, y: 400}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &3571877037199364538
+--- !u!114 &4064719141876942586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,10 +166,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9168165259674044579}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81641166dc9c800428874f17d8b95587, type: 3}
+  m_Script: {fileID: 11500000, guid: f303ff7b7fc57484594a1d090bb5108c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 20
   rootLevelEntry: {fileID: 8953181012983125942}
   levels:
   - {fileID: 2385706374428292527}

@@ -1,3 +1,5 @@
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -24,10 +26,11 @@ namespace Match3
             if (!Application.isPlaying)
                 return false;
 #endif
-        
+
             //This tile is only used in editor to help design the level. At runtime, we notify the board that this tile is
             //a place for a gem. The Board will take care of creating a gem there.
-            Board.RegisterSpawner(position);
+            //Board.RegisterSpawner(position);
+            GridBoard.RegisterSpawnerPoint(position);
 
             return base.StartUp(position, tilemap, go);
         }

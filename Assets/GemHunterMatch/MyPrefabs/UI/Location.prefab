@@ -339,7 +339,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level 1/15
+  m_text: Level 1/20
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -601,7 +601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.8075159, b: 0.97735846, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -653,7 +653,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 550, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7518414260100620245
 MonoBehaviour:
@@ -667,5 +667,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 395d11fbe7de9604eb006abb943e6382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectLevels: {fileID: 0}
-  selectLocation: {fileID: 1395670808434088974}
+  numberLocal: 1
+  amountLevel: 20
+  startcountLevel: 0
+  completed: 0
+  textLevel: {fileID: 6376928419022621102}
+  barLevels: {fileID: 7409167681682630946}
+  icon: {fileID: 4430863263421746799}
+  button: {fileID: 1395670808434088974}
+  rootPrefabs: {fileID: 0}

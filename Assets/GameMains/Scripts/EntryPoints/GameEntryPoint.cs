@@ -1,22 +1,29 @@
-﻿using System.Collections;
+﻿using Assets.GemHunterMatch.Scripts;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.GameMains.Scripts.EntryPoints
 {
     public class GameEntryPoint : MonoBehaviour
     {
-
-        // Use this for initialization
-        void Start()
+      
+        public AssetReference reference;
+        public AssetReference gridAsset;
+        public GridBoard gridBoard;
+        public void Initialize()
         {
-
+            //gridBoard.Initialize(this);
+            Load(gridAsset);
+            //Load(reference);
         }
-
-        // Update is called once per frame
-        void Update()
+        private async void Load(AssetReference reference)
         {
+            var handle = await reference.InstantiateAsync().Task;
 
+            var board =  handle.GetComponent<GridBoard>();
+            board.Initialize(this);
         }
+       
     }
 }

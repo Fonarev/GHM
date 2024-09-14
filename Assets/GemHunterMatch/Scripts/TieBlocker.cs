@@ -1,3 +1,5 @@
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 
 namespace Match3
@@ -9,15 +11,15 @@ namespace Match3
             base.Init(cell);
         
             // we also register the cell as a normal "gem" cell so a gem is spawn under the blocker on start.
-            Board.RegisterCell(cell);
-            Board.ChangeLock(cell, true);
-            Board.RegisterMatchedCallback(cell, CellMatch);
+            GridBoard.RegisterCell(cell);
+            GridBoard.ChangeLock(cell, true);
+            GridBoard.RegisterMatchedCallback(cell, CellMatch);
         }
 
         public override void Clear()
         {
-            Board.UnregisterMatchedCallback(m_Cell, CellMatch);
-            Board.ChangeLock(m_Cell, false);
+            GridBoard.UnregisterMatchedCallback(m_Cell, CellMatch);
+            GridBoard.ChangeLock(m_Cell, false);
             Destroy(gameObject);
         }
 

@@ -22,6 +22,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a18ae504340ade040bc91d2f98fff99f
+    m_Address: SelectLevels
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 600de3337dbc1ce428ba9e7723b0c8c0
+    m_Address: NameGame
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb8c5ba4fedd9a2448897edbc9fb9231
+    m_Address: Grid
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50fe6cbee81a7d743b6643e08fe38117
+    m_Address: LevelData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e1261942c0e7c0c47ba4270a26f5bf42, type: 2}
   m_SchemaSet:

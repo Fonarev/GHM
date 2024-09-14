@@ -43,7 +43,7 @@ namespace Match3
         private bool m_BoardWasInit = false;
         private bool m_InputEnabled = true;
         private bool m_FinalStretch = false;//set when either reach goal or no move left. When board settle, trigger the end
-        
+
         private Grid m_Grid;
         private BoundsInt m_BoundsInt;
 
@@ -171,7 +171,7 @@ namespace Match3
                 UIHandler.Instance.RegisterGemToDebug(gem);
             }
 #endif
-            
+
             //fill a lookup of gem type to gem
             m_GemLookup = new Dictionary<int, Gem>();
             foreach (var gem in ExistingGems)
@@ -221,7 +221,7 @@ namespace Match3
                 s_Instance.GetReference();
             }
 
-            if(!s_Instance.CellContent.ContainsKey(cellPosition))
+            if (!s_Instance.CellContent.ContainsKey(cellPosition))
                 s_Instance.CellContent.Add(cellPosition, new BoardCell());
 
             if (startingGem != null)
@@ -1016,7 +1016,7 @@ namespace Match3
             }
 
             //empty cell are only handled once, sow e clear the list everytime it been checked.
-            //m_EmptyCells.Clear();
+            //emptyCells.Clear();
         }
 
         void DoMatchCheck()
@@ -1091,7 +1091,7 @@ namespace Match3
 
             if (gemToStart.transform.position == startPosition)
             {
-                //swap if finished
+                //swapHandler if finished
                 if (m_SwapStage == SwapStage.Forward)
                 {
                     CellContent[m_SwappingCells.Item1].ContainingGem = CellContent[m_SwappingCells.Item1].IncomingGem;
@@ -1130,12 +1130,12 @@ namespace Match3
 
                         m_SwapStage = SwapStage.None;
 
-                        // as swap was successful, we count down 1 move from the level
+                        // as swapHandler was successful, we count down 1 move from the level
                         LevelData.Instance.Moved();
                     }
                     else
                     {
-                        //if there is no match, we revert the swap
+                        //if there is no match, we revert the swapHandler
                         (CellContent[m_SwappingCells.Item1].IncomingGem, CellContent[m_SwappingCells.Item2].IncomingGem) = (
                             CellContent[m_SwappingCells.Item2].IncomingGem, CellContent[m_SwappingCells.Item1].IncomingGem);
                         (m_SwappingCells.Item1, m_SwappingCells.Item2) = (m_SwappingCells.Item2, m_SwappingCells.Item1);
@@ -1307,7 +1307,7 @@ namespace Match3
             var clickPos = GameManager.Instance.ClickPosition.ReadValue<Vector2>();
             var worldPos = mainCam.ScreenToWorldPoint(clickPos);
             worldPos.z = 0;
-            
+            Debug.Log(worldPos);
             if (m_HoldTrailInstance.gameObject.activeSelf)
             {
                 m_HoldTrailInstance.transform.position = worldPos;
@@ -1477,7 +1477,7 @@ namespace Match3
                     
                         if (CellContent.TryGetValue(topIdx, out var topCell) && topCell.CanBeMoved)
                         {
-                            //swap the cell
+                            //swapHandler the cell
                             (CellContent[idx].ContainingGem, CellContent[topIdx].ContainingGem) = (
                                 CellContent[topIdx].ContainingGem, CellContent[idx].ContainingGem);
                         
@@ -1499,14 +1499,14 @@ namespace Match3
                                 });
                             }
                         
-                            //swap back
+                            //swapHandler back
                             (CellContent[idx].ContainingGem, CellContent[topIdx].ContainingGem) = (
                                 CellContent[topIdx].ContainingGem, CellContent[idx].ContainingGem);
                         }
                     
                         if (CellContent.TryGetValue(rightIdx, out var rightCell) && rightCell.CanBeMoved)
                         {
-                            //swap the cell
+                            //swapHandler the cell
                             (CellContent[idx].ContainingGem, CellContent[rightIdx].ContainingGem) = (
                                 CellContent[rightIdx].ContainingGem, CellContent[idx].ContainingGem);
                         
@@ -1528,7 +1528,7 @@ namespace Match3
                                 });
                             }
                         
-                            //swap back
+                            //swapHandler back
                             (CellContent[idx].ContainingGem, CellContent[rightIdx].ContainingGem) = (
                                 CellContent[rightIdx].ContainingGem, CellContent[idx].ContainingGem);
                         }
