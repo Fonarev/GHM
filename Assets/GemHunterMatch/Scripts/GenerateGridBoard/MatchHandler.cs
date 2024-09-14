@@ -9,21 +9,20 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
     public class MatchHandler
     {
-        private int freezeMoveLock = 0;
-        private int PickedSwap;
+        public bool boardChanged { get; set; }
         public List<Match> tickingMatch { get; set; } = new();
         public List<Vector3Int> tickingCells { get; set; } = new();
         public List<Vector3Int> newTickingCells { get; set; } = new();
         public List<Vector3Int> cellToMatchCheck { get; set; } = new();
         public List<Vector3Int> emptyCells { get; set; } = new();
-
-        private List<PossibleSwap> possibleSwaps = new();
+      
         private BoundsInt m_BoundsInt;
-
+        private int freezeMoveLock = 0;
+        private int PickedSwap;
+        private List<PossibleSwap> possibleSwaps = new();
         private Dictionary<Vector3Int, BoardCell> contentCell;
-        private bool boardChanged;
-        private float sinceLastHint;
-        private bool incrementHintTimer;
+       
+        //private bool incrementHintTimer;
         private readonly GridBoard gridBoard;
         private readonly GenerateGem generateGem;
 
@@ -39,74 +38,39 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 DoMatchCheck();
 
-                incrementHintTimer = false;
+                gridBoard.incrementHintTimer = false;
                 boardChanged = true;
             }
             if (tickingMatch.Count > 0)
             {
                 MatchTicking();
 
-                incrementHintTimer = false;
+                gridBoard.incrementHintTimer = false;
                 boardChanged = true;
             }
             if (emptyCells.Count > 0)
             {
                 EmptyCheck();
 
-                incrementHintTimer = false;
+                gridBoard.incrementHintTimer = false;
                 boardChanged = true;
             }
             if (newTickingCells.Count > 0)
             {
                 tickingCells.AddRange(newTickingCells);
                 newTickingCells.Clear();
-                incrementHintTimer = false;
-            }
-            if (incrementHintTimer)
-            {
-                //nothing can happen anymore, if we were in the last stretch trigger the end
-                //if (m_FinalStretch)
-                //{
-                //    //this stop the end to be called in a loop. Input is still disabled to user cannot interact with board
-                //    m_FinalStretch = false;
-                //    UIHandler.Instance.ShowEnd();
-                //    return;
-                //}
-
-                //Nothing happened this frame, but the board was changed since last possible match check, so need to refresh
-                if (boardChanged)
-                {
-                    FindAllPossibleMatch();
-                    boardChanged = false;
-                }
-
-                var match = possibleSwaps[PickedSwap];
-                if (gridBoard.hintIndicator.activeSelf)
-                {
-                    var startPos = gridBoard.grid.GetCellCenterWorld(match.StartPosition);
-                    var endPos = gridBoard.grid.GetCellCenterWorld(match.StartPosition + match.Direction);
-
-                    var current = gridBoard.hintIndicator.transform.position;
-                    current = Vector3.MoveTowards(current, endPos, 1.0f * Time.deltaTime);
-
-                    gridBoard.hintIndicator.transform.position = current == endPos ? startPos : current;
-                }
-                else
-                {
-                    sinceLastHint += Time.deltaTime;
-                    if (sinceLastHint >= GameManager.Instance.Settings.InactivityBeforeHint)
-                    {
-                        gridBoard.hintIndicator.transform.position = gridBoard.grid.GetCellCenterWorld(match.StartPosition);
-                        gridBoard.hintIndicator.SetActive(true);
-                    }
-                }
-            }
-            else
-            {
-                m_HintIndicator.SetActive(false);
-                m_SinceLastHint = 0.0f;
+                gridBoard.incrementHintTimer = false;
             }
         }
+
+        public PossibleSwap GetMatch()
+        {
+            if (possibleSwaps.Count > 0) 
+                return possibleSwaps[PickedSwap];
+
+            return null;
+        }
+
         public List<Vector3Int> SortTickingCellsList()
         {
             tickingCells.Sort((a, b) =>
@@ -145,7 +109,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                         CreatePossibleSwap(idx, topIdx);
                         CreatePossibleSwap(idx, rightIdx);
-                       
                     }
                 }
             }
@@ -236,6 +199,17 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             return true;
         }
+
+        public void DoMatchCheck()
+        {
+            foreach (var cell in cellToMatchCheck)
+            {
+                DoCheck(cell);
+            }
+
+            cellToMatchCheck.Clear();
+        }
+
         private void EmptyCheck()
         {
             if (freezeMoveLock > 0)
@@ -463,16 +437,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     i--;
                 }
             }
-        }
-
-        public void DoMatchCheck()
-        {
-            foreach (var cell in cellToMatchCheck)
-            {
-                DoCheck(cell);
-            }
-
-            cellToMatchCheck.Clear();
         }
 
         private int ForseDeletoin(Match match, int j, Vector3Int gemIdx, Gem gem)

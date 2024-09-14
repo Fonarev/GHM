@@ -1375,6 +1375,7 @@ MonoBehaviour:
   - {fileID: 7927807542344970777, guid: 924c8da2c1342cd41a99abdae62388df, type: 3}
   - {fileID: 7927807542344970777, guid: bb60bc505e820734584f3d8bd0a16f53, type: 3}
   - {fileID: 7927807542344970777, guid: 8cc6bc4f5802b33419a96e85fb84e771, type: 3}
+  inactivityBeforeHint: 8
   gemHoldPrefab: {fileID: 3377509351392185962, guid: 0e57c286bfbf10045b66afa053c4ad34, type: 3}
   holdTrailPrefab: {fileID: 3411754766572351756, guid: 021bbf96a19906642a0e41fb58b29fc4, type: 3}
   visualSetting:

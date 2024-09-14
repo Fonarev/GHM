@@ -49,7 +49,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private void TickSwap()
         {
             contentCell = gridBoard.contentCell;
-            //(Vector3Int, Vector3Int) swappingCells = gridBoard.swappingCells;
 
             Gem gemToStart = contentCell[swappingCells.Item1].IncomingGem;
             Gem gemToEnd = contentCell[swappingCells.Item2].IncomingGem;
@@ -126,7 +125,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             //GameManager.Instance.PlaySFX(GameManager.Instance.Settings.SoundSettings.SwipSound);
 
             swipeQueued = false;
-            //swapHandler. incrementHintTimer = false;
+            gridBoard.incrementHintTimer = false;
         }
 
         private bool Check(Vector3Int item1, Vector3Int item2)
