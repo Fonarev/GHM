@@ -1,4 +1,7 @@
-using Match3;
+using Assets.GameMains.Scripts.AudiosSources;
+using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
+
 using UnityEngine;
 
 namespace Match3
@@ -29,21 +32,21 @@ namespace Match3
             
             var dir = Vertical ? Vector3Int.up : Vector3Int.right;
 
-            GameManager.Instance.PlaySFX(TriggerSound);
+            AudioManager.instance.PlayEffect(TriggerSound);
             
             //delete itself first.
-            var newMatch = GameManager.Instance.Board.CreateCustomMatch(currentIndex);
-            HandleContent(GameManager.Instance.Board.CellContent[currentIndex], newMatch);
+            var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
+            HandleContent(GridBoard.instance.contentCell[currentIndex], newMatch);
 
             //if there is a cell on a side, we add a new board action that will go in that direction.
-            if (GameManager.Instance.Board.CellContent.ContainsKey(currentIndex + dir))
+            if (GridBoard.instance.contentCell.ContainsKey(currentIndex + dir))
             {
-                GameManager.Instance.Board.AddNewBoardAction(new RocketAction(currentIndex, dir, VisualPrefab, 0));
+                GridBoard.instance.AddNewBoardAction(new RocketAction(currentIndex, dir, VisualPrefab, 0));
             }
 
-            if (GameManager.Instance.Board.CellContent.ContainsKey(currentIndex - dir))
+            if (GridBoard.instance.contentCell.ContainsKey(currentIndex - dir))
             {
-                GameManager.Instance.Board.AddNewBoardAction(new RocketAction(currentIndex, -dir, VisualPrefab,
+                GridBoard.instance.AddNewBoardAction(new RocketAction(currentIndex, -dir, VisualPrefab,
                     Vertical ? 2 : 1));
             }
         }
@@ -53,7 +56,7 @@ namespace Match3
     /// RocketAction is a board action that will delete gem along a direction at a given speed until it can no longer go
     /// forward
     /// </summary>
-    class RocketAction : Board.IBoardAction
+    class RocketAction : IBoardAction
     {
         protected Vector3Int m_CurrentCell;
         protected Vector3Int m_Direction;
@@ -67,10 +70,10 @@ namespace Match3
             m_CurrentCell = startCell;
             m_Direction = direction;
             
-            GameManager.Instance.Board.LockMovement();
+            GridBoard.instance.LockMovement();
 
             m_Visual = GameObject.Instantiate(visualPrefab, 
-                GameManager.Instance.Board.GetCellCenter(m_CurrentCell), 
+                GridBoard.instance.GetCellCenter(m_CurrentCell), 
                 Quaternion.identity);
 
             switch (flip)
@@ -89,13 +92,13 @@ namespace Match3
         {
             m_Visual.transform.position += (Vector3)(m_Direction) * (Time.deltaTime * MoveSpeed);
 
-            var cell = GameManager.Instance.Board.WorldToCell(m_Visual.transform.position);
+            Vector3 cell = GridBoard.instance.WorldToCell(m_Visual.transform.position);
 
             while (m_CurrentCell != cell)
             {
                 m_CurrentCell += m_Direction;
 
-                if (GameManager.Instance.Board.CellContent.TryGetValue(m_CurrentCell, out var content) && content.ContainingGem != null)
+                if (GridBoard.instance.contentCell.TryGetValue(m_CurrentCell, out var content) && content.ContainingGem != null)
                 {
                     if (content.Obstacle != null)
                     {
@@ -107,16 +110,15 @@ namespace Match3
                     }
                     else if (!content.ContainingGem.Damage(1))
                     {
-                        GameManager.Instance.Board.DestroyGem(m_CurrentCell, true);
-                        
+                        GridBoard.instance.DestroyGem(m_CurrentCell, true);
                     }
                 }
 
-                if (!GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentCell + m_Direction))
+                if (!GridBoard.instance.contentCell.ContainsKey(m_CurrentCell + m_Direction))
                 {
                     GameObject.Destroy(m_Visual);
                     //if we don't have a cell after that one, we reached the end, return false to finish that BoardAction
-                    GameManager.Instance.Board.UnlockMovement();
+                    GridBoard.instance.UnlockMovement();
                     return false;
                 }
             }

@@ -1,4 +1,5 @@
 using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,8 +42,8 @@ namespace Match3
             Vector3 position = GridBoard.instance.GetCellCenter(currentIndex); 
             foreach (var effectPrefab in effectMatchPrefabs)
             {
-                //GameManager.Instance.PoolSystem.AddNewInstance(effectPrefab, 8);
-                //GameManager.Instance.PoolSystem.PlayInstanceAt(effectPrefab, position);
+                PoolService.instance.AddNewInstance(effectPrefab, 8);
+                PoolService.instance.PlayInstanceAt(effectPrefab, position);
             }
         }
     }

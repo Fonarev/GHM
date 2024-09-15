@@ -1,3 +1,4 @@
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts;
 
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace Match3
             HandleContent(currentContent, newMatch);
 
 
-            //GameManager.Instance.PlaySFX(TriggerSound);
+            AudioManager.instance.PlayEffect(TriggerSound);
 
             for (int x = -2; x <= 2; ++x)
             {

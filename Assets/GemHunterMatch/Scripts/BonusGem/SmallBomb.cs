@@ -1,3 +1,6 @@
+using Assets.GameMains.Scripts.AudiosSources;
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 
 namespace Match3
@@ -23,11 +26,11 @@ namespace Match3
 
             m_Used = true;
             
-            var newMatch = GameManager.Instance.Board.CreateCustomMatch(currentIndex);
+            var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
             newMatch.ForcedDeletion = true;
-            HandleContent(GameManager.Instance.Board.CellContent[currentIndex], newMatch);
+            HandleContent(GridBoard.instance.contentCell[currentIndex], newMatch);
 
-            GameManager.Instance.PlaySFX(TriggerSound);
+            AudioManager.instance.PlayEffect(TriggerSound);
 
             Vector3Int[] spaces = new[]
             {
@@ -39,7 +42,7 @@ namespace Match3
         
             foreach (var idx in spaces)
             {
-                if (GameManager.Instance.Board.CellContent.TryGetValue(idx, out var content) &&
+                if (GridBoard.instance.contentCell.TryGetValue(idx, out var content) &&
                     content.ContainingGem != null)
                 {
                     HandleContent(content, newMatch);

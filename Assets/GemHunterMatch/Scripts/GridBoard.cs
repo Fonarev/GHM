@@ -190,6 +190,30 @@ namespace Assets.GemHunterMatch.Scripts
         }
 
        public Vector3 GetCellCenter(Vector3Int cell) => grid.GetCellCenterWorld(cell);
-       
+
+        internal void LockMovement()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Vector3Int WorldToCell(Vector3 position)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void DestroyGem(Vector3Int m_CurrentCell, bool v)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void UnlockMovement()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddNewBoardAction(RocketAction rocketAction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

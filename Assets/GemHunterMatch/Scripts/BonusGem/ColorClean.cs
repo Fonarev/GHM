@@ -1,5 +1,6 @@
 using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using System.Collections.Generic;
 
@@ -21,8 +22,8 @@ namespace Match3
         public override void Awake()
         {
             m_Usable = true;
-            
-            //GameManager.Instance.PoolSystem.AddNewInstance(UseEffect, 2);
+
+            PoolService.instance.AddNewInstance(UseEffect, 2);
             m_PositionMap = new Texture2D(64, 1, TextureFormat.RGBAFloat, false);
         }
 
@@ -103,7 +104,7 @@ namespace Match3
             m_PositionMap.SetPixels(infoColor, 0);
             m_PositionMap.Apply();
 
-            var vfxInst = PoolService.instance.GetInstance(UseEffect);
+            VisualEffect vfxInst = PoolService.instance.GetInstance(UseEffect);
             
             vfxInst.Stop();
             vfxInst.SetTexture(Shader.PropertyToID("PosMap"), m_PositionMap);
