@@ -23,18 +23,18 @@ namespace Match3
 
             m_Used = true;
             
-            var newMatch = GameManager.Instance.Board.CreateCustomMatch(m_CurrentIndex);
+            var newMatch = GameManager.Instance.Board.CreateCustomMatch(currentIndex);
             newMatch.ForcedDeletion = true;
-            HandleContent(GameManager.Instance.Board.CellContent[m_CurrentIndex], newMatch);
+            HandleContent(GameManager.Instance.Board.CellContent[currentIndex], newMatch);
 
             GameManager.Instance.PlaySFX(TriggerSound);
 
             Vector3Int[] spaces = new[]
             {
-                m_CurrentIndex + Vector3Int.left,
-                m_CurrentIndex + Vector3Int.right,
-                m_CurrentIndex + Vector3Int.up,
-                m_CurrentIndex + Vector3Int.down
+                currentIndex + Vector3Int.left,
+                currentIndex + Vector3Int.right,
+                currentIndex + Vector3Int.up,
+                currentIndex + Vector3Int.down
             };
         
             foreach (var idx in spaces)

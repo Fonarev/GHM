@@ -1,5 +1,7 @@
 ﻿using Assets.YG.Scripts;
 
+using System;
+
 using UnityEngine;
 
 namespace Assets.GameMains.Scripts.AudiosSources
@@ -68,5 +70,9 @@ namespace Assets.GameMains.Scripts.AudiosSources
 
         }
 
+        internal void PlayEffect(AudioClip triggerSound)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -32,18 +32,18 @@ namespace Match3
             GameManager.Instance.PlaySFX(TriggerSound);
             
             //delete itself first.
-            var newMatch = GameManager.Instance.Board.CreateCustomMatch(m_CurrentIndex);
-            HandleContent(GameManager.Instance.Board.CellContent[m_CurrentIndex], newMatch);
+            var newMatch = GameManager.Instance.Board.CreateCustomMatch(currentIndex);
+            HandleContent(GameManager.Instance.Board.CellContent[currentIndex], newMatch);
 
             //if there is a cell on a side, we add a new board action that will go in that direction.
-            if (GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentIndex + dir))
+            if (GameManager.Instance.Board.CellContent.ContainsKey(currentIndex + dir))
             {
-                GameManager.Instance.Board.AddNewBoardAction(new RocketAction(m_CurrentIndex, dir, VisualPrefab, 0));
+                GameManager.Instance.Board.AddNewBoardAction(new RocketAction(currentIndex, dir, VisualPrefab, 0));
             }
 
-            if (GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentIndex - dir))
+            if (GameManager.Instance.Board.CellContent.ContainsKey(currentIndex - dir))
             {
-                GameManager.Instance.Board.AddNewBoardAction(new RocketAction(m_CurrentIndex, -dir, VisualPrefab,
+                GameManager.Instance.Board.AddNewBoardAction(new RocketAction(currentIndex, -dir, VisualPrefab,
                     Vertical ? 2 : 1));
             }
         }

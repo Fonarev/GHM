@@ -25,7 +25,7 @@ namespace Match3
             {
                 
                 // In Editor, the instance can be crated on the fly so we can play any scene without setup to do.
-                // In a build, the first scene will Init all that so we are sure there will already be an instance.
+                // In a build, the first scene will Instatiate all that so we are sure there will already be an instance.
 #if UNITY_EDITOR
                 if (s_Instance == null && !s_IsShuttingDown)
                 {

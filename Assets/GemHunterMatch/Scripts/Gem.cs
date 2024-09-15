@@ -20,7 +20,7 @@ namespace Match3
 
         public int GemType;
 
-        public VisualEffect[] MatchEffectPrefabs;
+        public VisualEffect[] effectMatchPrefabs;
         public Sprite UISprite;
         
         //When a gem get added to a match, this match get stored here so we can now if this gem is currently in a match and 
@@ -30,7 +30,7 @@ namespace Match3
         [HideInInspector]
         public float SpeedMultiplier = 1.0f;
         public bool CanMove => m_CanMove;
-        public Vector3Int CurrentIndex => m_CurrentIndex;
+        public Vector3Int CurrentIndex => currentIndex;
         public bool Usable => m_Usable;
         public bool Used => m_Used;
         public float FallTime => m_FallTime;
@@ -42,7 +42,7 @@ namespace Match3
         protected bool m_Usable = false;
         protected bool m_Used = false;
         protected bool m_CanMove = true;
-        protected Vector3Int m_CurrentIndex;
+        protected Vector3Int currentIndex;
     
         protected int m_HitPoints = 1;
     
@@ -52,7 +52,7 @@ namespace Match3
 
         public virtual void Init(Vector3Int startIdx)
         {
-            m_CurrentIndex = startIdx;
+            currentIndex = startIdx;
         }
 
         // Called when swapping a Gem that have its Usable set to true. SwappedGem will contains the other gem it was swiped
@@ -72,7 +72,7 @@ namespace Match3
 
         public void MoveTo(Vector3Int newCell)
         {
-            m_CurrentIndex = newCell;
+            currentIndex = newCell;
         }
 
         public void StartMoveTimer()

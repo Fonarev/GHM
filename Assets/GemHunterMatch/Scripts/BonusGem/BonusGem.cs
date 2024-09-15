@@ -1,18 +1,14 @@
+using Assets.GemHunterMatch.Scripts;
+
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Match3
 {
-    /// <summary>
-    /// Bonus Gem is a special gem that contains a list of MatchShape.
-    /// Bonus Gems are listed in the Game Settings on the GameManager.
-    /// When a match happens, the system goes over all BonusGem and check if one of the MatchShape match the shape of the
-    /// match and if it does, spawn that bonus gem there.
-    /// </summary>
     public class BonusGem : Gem
     {
         public List<MatchShape> Shapes;
-        
+        private const int oneDamage = 1;
         public virtual void Awake(){}
 
         //helper function that inheriting class can use to destroy a gem, but handle obstacle and bonus gem properly
@@ -22,9 +18,7 @@ namespace Match3
         {
 
             if (cell.Obstacle != null)
-            {
-                cell.Obstacle.Damage(1);
-            }
+                cell.Obstacle.Damage(oneDamage);
 
             if (cell.ContainingGem == null)
                 return;
@@ -33,21 +27,22 @@ namespace Match3
             {
                 cell.ContainingGem.Use(null);
             }
-            else if (cell.ContainingGem.CurrentMatch == null && !cell.ContainingGem.Damage(1))
-                receivingMatch.AddGem(cell.ContainingGem);
+            else
+            {
+                if (cell.ContainingGem.CurrentMatch == null && !cell.ContainingGem.Damage(oneDamage))
+                    receivingMatch.AddGem(cell.ContainingGem);
+            }
         }
 
         //effect on the board are triggered by the gems being destroyed, but when using a bonus item ot use a Bonus Gem
         //the effect won't be triggered. So Bonus item call this function to trigger the VFX
         public void BonusTriggerEffect()
         {
-            var position = GameManager.Instance.Board.GetCellCenter(m_CurrentIndex); 
-            foreach (var effectPrefab in MatchEffectPrefabs)
+            Vector3 position = GridBoard.instance.GetCellCenter(currentIndex); 
+            foreach (var effectPrefab in effectMatchPrefabs)
             {
-                //normally the game will instantiate the bonus vfx when it first get spawn, but if using a bonus item
-                //before that happen, this ensure the vfx will get instantiated first 
-                GameManager.Instance.PoolSystem.AddNewInstance(effectPrefab, 8);
-                GameManager.Instance.PoolSystem.PlayInstanceAt(effectPrefab, position);
+                //GameManager.Instance.PoolSystem.AddNewInstance(effectPrefab, 8);
+                //GameManager.Instance.PoolSystem.PlayInstanceAt(effectPrefab, position);
             }
         }
     }

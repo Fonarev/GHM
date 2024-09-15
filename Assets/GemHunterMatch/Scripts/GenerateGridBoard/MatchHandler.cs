@@ -5,6 +5,8 @@ using System.Linq;
 
 using UnityEngine;
 
+using Random = UnityEngine.Random;
+
 namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
     public class MatchHandler
@@ -16,12 +18,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public List<Vector3Int> cellToMatchCheck { get; set; } = new();
         public List<Vector3Int> emptyCells { get; set; } = new();
       
-        private BoundsInt m_BoundsInt;
+        //private BoundsInt boundsInt;
         private int freezeMoveLock = 0;
-        private int PickedSwap;
-        private List<PossibleSwap> possibleSwaps = new();
-        private Dictionary<Vector3Int, BoardCell> contentCell;
-       
+        public bool newSwapMatch;
+        public int PickedSwap{ get => pickedSwap;private set{ pickedSwap = value; newSwapMatch = true; } }
+        public List<PossibleSwap> possibleSwaps = new();
+        private int pickedSwap;
+
         //private bool incrementHintTimer;
         private readonly GridBoard gridBoard;
         private readonly GenerateGem generateGem;
@@ -67,7 +70,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             if (possibleSwaps.Count > 0) 
                 return possibleSwaps[PickedSwap];
-
+            newSwapMatch = false;
             return null;
         }
 
@@ -90,19 +93,18 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public void FindAllPossibleMatch()
         {
             //TODO : instead of going over every gems just do it on moved gems for optimization
-            contentCell = gridBoard.contentCell;
             possibleSwaps.Clear();
 
             //we use a double loop instead of directly querying the cells, so we access them in increasing x then y coordinate
             //this allow to just have to test swapping upward then right, as down and left will have been tested by previous
             //gem already
 
-            for (int y = m_BoundsInt.yMin; y <= m_BoundsInt.yMax; ++y)
+            for (int y = generateGem. Bounds.yMin; y <= generateGem.Bounds.yMax; ++y)
             {
-                for (int x = m_BoundsInt.xMin; x <= m_BoundsInt.xMax; ++x)
+                for (int x = generateGem.Bounds.xMin; x <= generateGem.Bounds.xMax; ++x)
                 {
                     var idx = new Vector3Int(x, y, 0);
-                    if (contentCell.TryGetValue(idx, out var cell) && cell.CanBeMoved)
+                    if (gridBoard.contentCell.TryGetValue(idx, out var cell) && cell.CanBeMoved)
                     {
                         var topIdx = idx + Vector3Int.up;
                         var rightIdx = idx + Vector3Int.right;
@@ -119,7 +121,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public bool DoCheck(Vector3Int startCell, bool createMatch = true)
         {
             // in the case we call this with an empty cell. Shouldn't happen, but let's be safe
-            if (!contentCell.TryGetValue(startCell, out var centerGem) || centerGem.ContainingGem == null)
+            if (!gridBoard.contentCell.TryGetValue(startCell, out var centerGem) || centerGem.ContainingGem == null)
                 return false;
 
             //we ignore that gem if it's already part of another match.
@@ -152,7 +154,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     if (checkedCells.Contains(nextCell))
                         continue;
 
-                    if (contentCell.TryGetValue(current + dir, out var content)
+                    if (gridBoard.contentCell.TryGetValue(current + dir, out var content)
                         && content.CanMatch()
                         && content.ContainingGem.CurrentMatch == null
                         && content.ContainingGem.GemType == centerGem.ContainingGem.GemType)
@@ -166,27 +168,27 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             List<Vector3Int> temporaryShapeMatch = new();
             MatchShape matchedShape = null;
             List<BonusGem> matchedBonusGem = new();
-            //foreach (var bonusGem in GameManager.Instance.Settings.BonusSettings.Bonuses)
-            //{
-            //    foreach (var shape in bonusGem.Shapes)
-            //    {
-            //        if (shape.FitIn(gemList, ref temporaryShapeMatch))
-            //        {
-            //            if (matchedShape == null || matchedShape.Cells.Count < shape.Cells.Count)
-            //            {
-            //                matchedShape = shape;
-            //                //we have a new shape that have more gem, so we clear our existing list of bonus
-            //                matchedBonusGem.Clear();
-            //                matchedBonusGem.Add(bonusGem);
-            //            }
-            //            else if (matchedShape.Cells.Count == shape.Cells.Count)
-            //            {
-            //                //this new bonus have exactly the same number of the existing bonus, so become a new possible bonus
-            //                matchedBonusGem.Add(bonusGem);
-            //            }
-            //        }
-            //    }
-            //}
+            foreach (var bonusGem in gridBoard.bonusSettings.Bonuses)
+            {
+                foreach (var shape in bonusGem.Shapes)
+                {
+                    if (shape.FitIn(gemList, ref temporaryShapeMatch))
+                    {
+                        if (matchedShape == null || matchedShape.Cells.Count < shape.Cells.Count)
+                        {
+                            matchedShape = shape;
+                            //we have a new shape that have more gem, so we clear our existing list of bonus
+                            matchedBonusGem.Clear();
+                            matchedBonusGem.Add(bonusGem);
+                        }
+                        else if (matchedShape.Cells.Count == shape.Cells.Count)
+                        {
+                            //this new bonus have exactly the same number of the existing bonus, so become a new possible bonus
+                            matchedBonusGem.Add(bonusGem);
+                        }
+                    }
+                }
+            }
 
             //-- now we build a list of all line of 3+ gems
             List<Vector3Int> lineList = CreateLineList(offsets, gemList);
@@ -296,11 +298,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void CreatePossibleSwap(Vector3Int idx, Vector3Int directions)
         {
-            if (contentCell.TryGetValue(directions, out var topCell) && topCell.CanBeMoved)
+            if (gridBoard.contentCell.TryGetValue(directions, out var topCell) && topCell.CanBeMoved)
             {
                 //swapHandler the cell
-                (contentCell[idx].ContainingGem, contentCell[directions].ContainingGem) = (
-                    contentCell[directions].ContainingGem, contentCell[idx].ContainingGem);
+                (gridBoard.contentCell[idx].ContainingGem, gridBoard.contentCell[directions].ContainingGem) = (
+                    gridBoard.contentCell[directions].ContainingGem, gridBoard.contentCell[idx].ContainingGem);
 
                 if (DoCheck(directions, false))
                 {
@@ -321,8 +323,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 }
 
                 //swapHandler back
-                (contentCell[idx].ContainingGem, contentCell[directions].ContainingGem) = (
-                    contentCell[directions].ContainingGem, contentCell[idx].ContainingGem);
+                (gridBoard.contentCell[idx].ContainingGem, gridBoard.contentCell[directions].ContainingGem) = (
+                    gridBoard.contentCell[directions].ContainingGem, gridBoard.contentCell[idx].ContainingGem);
             }
         }
 
@@ -386,7 +388,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             }
         }
 
-        private Match CreateCustomMatch(Vector3Int newCell)
+        public Match CreateCustomMatch(Vector3Int newCell)
         {
             var newMatch = new Match()
             {
@@ -483,7 +485,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 {
                     //LevelData.Instance.Matched(gem);
 
-                    foreach (var matchEffectPrefab in gem.MatchEffectPrefabs)
+                    foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                     {
                         //GameManager.Instance.PoolSystem.PlayInstanceAt(matchEffectPrefab, m_Grid.GetCellCenterWorld(gem.CurrentIndex));
                     }
@@ -497,7 +499,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 //LevelData.Instance.Matched(gem);
 
-                foreach (var matchEffectPrefab in gem.MatchEffectPrefabs)
+                foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                 {
                     //GameManager.Instance.PoolSystem.PlayInstanceAt(matchEffectPrefab, m_Grid.GetCellCenterWorld(gem.CurrentIndex));
                 }

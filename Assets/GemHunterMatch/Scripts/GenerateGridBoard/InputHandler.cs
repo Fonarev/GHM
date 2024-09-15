@@ -30,6 +30,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             this.swapHandler = swapHandler;
             this.effectController = effectController;
             this.mainCam = mainCam;
+            lastClickTime = Time.time;
         }
 
         public void UpData()

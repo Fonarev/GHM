@@ -16,7 +16,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             this.holdTrailPrefab = holdTrailPrefab;
         }
 
-        public void InstatiateVFX(Transform parent = null)
+        public void Instatiate(Transform parent = null)
         {
             if (gemHoldPrefab != null)
             {

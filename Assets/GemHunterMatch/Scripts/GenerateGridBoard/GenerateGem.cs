@@ -16,6 +16,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private Dictionary<int, Gem> gemLookup = new();
         private readonly GridBoard gridBoard;
         public static GenerateGem instance;
+
         public GenerateGem(GridBoard gridBoard)
         {
             this.gridBoard = gridBoard;
@@ -61,9 +62,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             if (gemPrefab == null)
                 gemPrefab = existingGems[Random.Range(0, existingGems.Length)];
 
-            if (gemPrefab.MatchEffectPrefabs.Length != 0)
+            if (gemPrefab.effectMatchPrefabs.Length != 0)
             {
-                foreach (var matchEffectPrefab in gemPrefab.MatchEffectPrefabs)
+                foreach (var matchEffectPrefab in gemPrefab.effectMatchPrefabs)
                 {
                     //GameManager.Instance.PoolSystem.AddNewInstance(matchEffectPrefab, 16);
                 }

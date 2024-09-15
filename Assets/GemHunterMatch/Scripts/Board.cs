@@ -852,7 +852,7 @@ namespace Match3
                         {
                             LevelData.Instance.Matched(gem);
                             
-                            foreach (var matchEffectPrefab in gem.MatchEffectPrefabs)
+                            foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                             {
                                 GameManager.Instance.PoolSystem.PlayInstanceAt(matchEffectPrefab, m_Grid.GetCellCenterWorld(gem.CurrentIndex));
                             }
@@ -866,7 +866,7 @@ namespace Match3
                     {
                         LevelData.Instance.Matched(gem);
                         
-                        foreach (var matchEffectPrefab in gem.MatchEffectPrefabs)
+                        foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                         {
                             GameManager.Instance.PoolSystem.PlayInstanceAt(matchEffectPrefab, m_Grid.GetCellCenterWorld(gem.CurrentIndex));
                         }
@@ -1043,9 +1043,9 @@ namespace Match3
             if (gemPrefab == null)
                 gemPrefab = ExistingGems[Random.Range(0, ExistingGems.Length)];
 
-            if (gemPrefab.MatchEffectPrefabs.Length != 0)
+            if (gemPrefab.effectMatchPrefabs.Length != 0)
             {
-                foreach (var matchEffectPrefab in gemPrefab.MatchEffectPrefabs)
+                foreach (var matchEffectPrefab in gemPrefab.effectMatchPrefabs)
                 {
                     GameManager.Instance.PoolSystem.AddNewInstance(matchEffectPrefab, 16);
                 }

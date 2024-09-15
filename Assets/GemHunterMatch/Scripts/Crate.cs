@@ -57,7 +57,7 @@ namespace Match3
             {
                 foreach (var neighbour in BoardCell.Neighbours)
                 {
-                    var adjacentCell = m_CurrentIndex + neighbour;
+                    var adjacentCell = currentIndex + neighbour;
                     Board.UnregisterDeletedCallback(adjacentCell, AdjacentMatch);
                 }
             }
@@ -67,7 +67,7 @@ namespace Match3
         {
             if (!Damage(1))
             {
-                GameManager.Instance.Board.DestroyGem(m_CurrentIndex);
+                GameManager.Instance.Board.DestroyGem(currentIndex);
             }
         }
 
