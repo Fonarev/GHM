@@ -5,9 +5,6 @@ using UnityEngine;
 
 namespace Match3
 {
-    /// <summary>
-    /// Bonus Gem that delete gems directly left, right up and down of itself.
-    /// </summary>
     public class SmallBomb : BonusGem
     {
         public AudioClip TriggerSound;

@@ -21,6 +21,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
         }
 
         public void Play(string name) => audioBG.PlayOneShot(effects[name]);
+        public void Play(AudioClip name) => audioBG.PlayOneShot(name);
         public void Pause() => audioBG.Pause();
 
     }

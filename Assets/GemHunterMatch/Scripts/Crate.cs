@@ -1,3 +1,7 @@
+using Assets.GameMains.Scripts.AudiosSources;
+using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -27,24 +31,24 @@ namespace Match3
             base.Init(startIdx);
             
             if(DamageEffect != null)
-                GameManager.Instance.PoolSystem.AddNewInstance(DamageEffect, 6);
+                PoolService.instance.AddNewInstance(DamageEffect, 6);
 
             if (CanBeDestroyedWithAdjacentMatch)
             {
                 foreach (var neighbour in BoardCell.Neighbours)
                 {
                     var adjacentCell = startIdx + neighbour;
-                    Board.RegisterDeletedCallback(adjacentCell, AdjacentMatch);
+                    GridBoard.RegisterDeletedCallback(adjacentCell, AdjacentMatch);
                 }
             }
         }
 
         public override bool Damage(int damage)
         {
-            GameManager.Instance.PlaySFX(DamagedClip);
+            AudioManager.instance.PlayEffect(DamagedClip);
             
             if(DamageEffect != null)
-                GameManager.Instance.PoolSystem.PlayInstanceAt(DamageEffect, transform.position);
+                PoolService.instance.PlayInstanceAt(DamageEffect, transform.position);
             
             var ret = base.Damage(damage);
             UpdateState();
@@ -58,7 +62,7 @@ namespace Match3
                 foreach (var neighbour in BoardCell.Neighbours)
                 {
                     var adjacentCell = currentIndex + neighbour;
-                    Board.UnregisterDeletedCallback(adjacentCell, AdjacentMatch);
+                    GridBoard.UnregisterDeletedCallback(adjacentCell, AdjacentMatch);
                 }
             }
         }
@@ -67,7 +71,7 @@ namespace Match3
         {
             if (!Damage(1))
             {
-                GameManager.Instance.Board.DestroyGem(currentIndex);
+                GridBoard.instance.DestroyGem(currentIndex);
             }
         }
 

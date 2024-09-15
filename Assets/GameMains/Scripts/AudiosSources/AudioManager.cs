@@ -72,7 +72,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
 
         internal void PlayEffect(AudioClip triggerSound)
         {
-            throw new NotImplementedException();
+            sourceEffect.Play(triggerSound);
         }
     }
 }

@@ -17,15 +17,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public List<Vector3Int> newTickingCells { get; set; } = new();
         public List<Vector3Int> cellToMatchCheck { get; set; } = new();
         public List<Vector3Int> emptyCells { get; set; } = new();
-      
-        //private BoundsInt boundsInt;
-        private int freezeMoveLock = 0;
-        public bool newSwapMatch;
-        public int PickedSwap{ get => pickedSwap;private set{ pickedSwap = value; newSwapMatch = true; } }
-        public List<PossibleSwap> possibleSwaps = new();
-        private int pickedSwap;
+        public List<PossibleSwap> possibleSwaps { get; set; } = new();
 
-        //private bool incrementHintTimer;
+        private int pickedSwap;
         private readonly GridBoard gridBoard;
         private readonly GenerateGem generateGem;
 
@@ -69,8 +63,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public PossibleSwap GetMatch()
         {
             if (possibleSwaps.Count > 0) 
-                return possibleSwaps[PickedSwap];
-            newSwapMatch = false;
+                return possibleSwaps[pickedSwap];
+
             return null;
         }
 
@@ -99,7 +93,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             //this allow to just have to test swapping upward then right, as down and left will have been tested by previous
             //gem already
 
-            for (int y = generateGem. Bounds.yMin; y <= generateGem.Bounds.yMax; ++y)
+            for (int y = generateGem.Bounds.yMin; y <= generateGem.Bounds.yMax; ++y)
             {
                 for (int x = generateGem.Bounds.xMin; x <= generateGem.Bounds.xMax; ++x)
                 {
@@ -109,13 +103,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         var topIdx = idx + Vector3Int.up;
                         var rightIdx = idx + Vector3Int.right;
 
-                        CreatePossibleSwap(idx, topIdx);
-                        CreatePossibleSwap(idx, rightIdx);
+                        CreatePossibleSwap(idx, topIdx,true);
+                        CreatePossibleSwap(idx, rightIdx,false);
                     }
                 }
             }
 
-            PickedSwap = Random.Range(0, possibleSwaps.Count);
+            pickedSwap = Random.Range(0, possibleSwaps.Count);
         }
 
         public bool DoCheck(Vector3Int startCell, bool createMatch = true)
@@ -214,7 +208,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void EmptyCheck()
         {
-            if (freezeMoveLock > 0)
+            if (gridBoard.freezeMoveLock > 0)
                 return;
             var contentCell = gridBoard.contentCell;
             //go over empty cells
@@ -296,7 +290,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             //emptyCells.Clear();
         }
 
-        private void CreatePossibleSwap(Vector3Int idx, Vector3Int directions)
+        private void CreatePossibleSwap(Vector3Int idx, Vector3Int directions, bool UpAndDown)
         {
             if (gridBoard.contentCell.TryGetValue(directions, out var topCell) && topCell.CanBeMoved)
             {
@@ -306,22 +300,26 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 if (DoCheck(directions, false))
                 {
+                    var direct = UpAndDown == true ? Vector3Int.up : Vector3Int.right;
+
                     possibleSwaps.Add(new PossibleSwap()
                     {
                         StartPosition = idx,
-                        Direction = Vector3Int.up
+                        Direction = direct
                     });
                 }
-
+               
                 if (DoCheck(idx, false))
                 {
+                    var direct = UpAndDown == true ? Vector3Int.down : Vector3Int.left;
+
                     possibleSwaps.Add(new PossibleSwap()
                     {
                         StartPosition = directions,
-                        Direction = Vector3Int.down
+                        Direction = direct
                     });
                 }
-
+              
                 //swapHandler back
                 (gridBoard.contentCell[idx].ContainingGem, gridBoard.contentCell[directions].ContainingGem) = (
                     gridBoard.contentCell[directions].ContainingGem, gridBoard.contentCell[idx].ContainingGem);
@@ -426,7 +424,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         j--;
                         continue;
                     }
-
+                
                     StopBouncing(gemIdx, gem);
 
                     //forced deletion doesn't wait for end of timer
@@ -487,7 +485,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                     foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                     {
-                        //GameManager.Instance.PoolSystem.PlayInstanceAt(matchEffectPrefab, m_Grid.GetCellCenterWorld(gem.CurrentIndex));
+                        PoolService.instance.PlayInstanceAt(matchEffectPrefab,gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
                     }
 
                     gem.gameObject.SetActive(false);
@@ -501,7 +499,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                 {
-                    //GameManager.Instance.PoolSystem.PlayInstanceAt(matchEffectPrefab, m_Grid.GetCellCenterWorld(gem.CurrentIndex));
+                    PoolService.instance.PlayInstanceAt(matchEffectPrefab, gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
                 }
 
                 gem.gameObject.SetActive(false);

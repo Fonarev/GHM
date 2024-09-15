@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GemType: -2
-  MatchEffectPrefabs:
+  effectMatchPrefabs:
   - {fileID: 2140072152015084999, guid: 139556ecb17152c4ab373f6aba9c4fc2, type: 3}
   UISprite: {fileID: 21300000, guid: 5f238c18c8bd9164da615c5e93a4b4de, type: 3}
   SpeedMultiplier: 1
@@ -212,6 +212,6 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

@@ -1,3 +1,5 @@
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 
 namespace Match3
@@ -17,7 +19,7 @@ namespace Match3
             //we call awake as some bonus gem have setup steps there that need to be done before being used (e.g. color
             //bonus create a texture etc.)
             UsedBonusGem.Awake();
-            UsedBonusGem.Use(GameManager.Instance.Board.CellContent[target].ContainingGem, true);
+            UsedBonusGem.Use(GridBoard.instance.contentCell[target].ContainingGem, true);
             //most bonus gem effect are the effect triggered when they get destroyed. But that special gem don't get destroyed
             //so we use a special function that trigger those effects manually.
             UsedBonusGem.BonusTriggerEffect();

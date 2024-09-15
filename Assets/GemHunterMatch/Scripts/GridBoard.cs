@@ -6,8 +6,12 @@ using Match3;
 using System;
 using System.Collections.Generic;
 
+using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.VFX;
+
+using static UnityEditor.PlayerSettings;
 
 using Random = UnityEngine.Random;
 
@@ -43,6 +47,8 @@ namespace Assets.GemHunterMatch.Scripts
         internal BonusItem m_ActivatedBonus;
         public bool incrementHintTimer;
         private bool isInit;
+        public int freezeMoveLock;
+        private List<IBoardAction> m_BoardActions= new();
 
         private void Awake()
         {
@@ -86,13 +92,11 @@ namespace Assets.GemHunterMatch.Scripts
                 generateGem.NewGemAt(cellPosition, startingGem);
             }
         }
-
         public static void RegisterSpawnerPoint(Vector3Int cell)
         {
             CheckInstance();
             instance.spawnerPoints.Add(cell);
         }
-
         public static void AddObstacle(Vector3Int cell, Obstacle obstacle)
         {
             RegisterCell(cell);
@@ -100,14 +104,12 @@ namespace Assets.GemHunterMatch.Scripts
             obstacle.transform.position = instance.grid.GetCellCenterWorld(cell);
             instance.contentCell[cell].Obstacle = obstacle;
         }
-
         public static void ChangeLock(Vector3Int cellPosition, bool lockState)
         {
             CheckInstance();
 
             instance.contentCell[cellPosition].Locked = lockState;
         }
-
         public static void RegisterDeletedCallback(Vector3Int cellPosition, System.Action callback)
         {
             CheckInstance();
@@ -120,7 +122,6 @@ namespace Assets.GemHunterMatch.Scripts
                 instance.cellsCallbacks[cellPosition] += callback;
             }
         }
-
         public static void UnregisterDeletedCallback(Vector3Int cellPosition, System.Action callback)
         {
             if (!instance.cellsCallbacks.ContainsKey(cellPosition))
@@ -130,7 +131,6 @@ namespace Assets.GemHunterMatch.Scripts
             if (instance.cellsCallbacks[cellPosition] == null)
                 instance.cellsCallbacks.Remove(cellPosition);
         }
-
         public static void RegisterMatchedCallback(Vector3Int cellPosition, System.Action callback)
         {
             if (!instance.matchedCallback.ContainsKey(cellPosition))
@@ -142,7 +142,6 @@ namespace Assets.GemHunterMatch.Scripts
                 instance.matchedCallback[cellPosition] += callback;
             }
         }
-
         public static void UnregisterMatchedCallback(Vector3Int cellPosition, System.Action callback)
         {
             if (!instance.matchedCallback.ContainsKey(cellPosition))
@@ -152,7 +151,6 @@ namespace Assets.GemHunterMatch.Scripts
             if (instance.matchedCallback[cellPosition] == null)
                 instance.matchedCallback.Remove(cellPosition);
         }
-
         private static void CheckInstance()
         {
             if (instance == null)
@@ -171,10 +169,42 @@ namespace Assets.GemHunterMatch.Scripts
             if (matchHandler.emptyCells.Contains(cell)) matchHandler.emptyCells.Remove(cell);
         }
 
+        public Vector3 GetCellCenter(Vector3Int cell) => grid.GetCellCenterWorld(cell);
+        public Vector3Int WorldToCell(Vector3 pos) => grid.WorldToCell(pos);
+        public void LockMovement() => freezeMoveLock += 1;
+        public void UnlockMovement() => freezeMoveLock -= 1;
+        public void DestroyGem(Vector3Int cell, bool forcedDeletion = false)
+        {
+            if (contentCell[cell].ContainingGem?.CurrentMatch != null)
+                return;
+
+            var match = new Match()
+            {
+                DeletionTimer = 0.0f,
+                MatchingGem = new List<Vector3Int> { cell },
+                OriginPoint = cell,
+                SpawnedBonus = null,
+                ForcedDeletion = forcedDeletion
+            };
+
+            contentCell[cell].ContainingGem.CurrentMatch = match;
+
+            matchHandler.tickingMatch.Add(match);
+        }
+        public void AddNewBoardAction(IBoardAction action) => m_BoardActions.Add(action);
+
         private void Update()
         {
             if (!isInit) return;
-           
+
+            for (int i = 0; i < m_BoardActions.Count; ++i)
+            {
+                if (!m_BoardActions[i].Tick())
+                {
+                    m_BoardActions.RemoveAt(i);
+                    i--;
+                }
+            }
             inputHandler.UpData();
 
             incrementHintTimer = m_ActivatedBonus == null;
@@ -189,31 +219,5 @@ namespace Assets.GemHunterMatch.Scripts
           
         }
 
-       public Vector3 GetCellCenter(Vector3Int cell) => grid.GetCellCenterWorld(cell);
-
-        internal void LockMovement()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal Vector3Int WorldToCell(Vector3 position)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void DestroyGem(Vector3Int m_CurrentCell, bool v)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void UnlockMovement()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void AddNewBoardAction(RocketAction rocketAction)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

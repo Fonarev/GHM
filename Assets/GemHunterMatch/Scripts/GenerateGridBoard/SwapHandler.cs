@@ -1,4 +1,6 @@
-﻿using Match3;
+﻿using Assets.GameMains.Scripts.AudiosSources;
+
+using Match3;
 
 using System.Collections.Generic;
 
@@ -122,7 +124,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             SwapStage = SwapStage.Forward;
             swappingCells = (startSwipe, endSwipe);
 
-            //GameManager.Instance.PlaySFX(GameManager.Instance.Settings.SoundSettings.SwipSound);
+            AudioManager.instance.PlayEffect("swipe");
 
             swipeQueued = false;
             gridBoard.incrementHintTimer = false;

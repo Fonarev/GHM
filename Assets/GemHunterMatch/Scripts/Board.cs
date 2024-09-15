@@ -1307,7 +1307,7 @@ namespace Match3
             var clickPos = GameManager.Instance.ClickPosition.ReadValue<Vector2>();
             var worldPos = mainCam.ScreenToWorldPoint(clickPos);
             worldPos.z = 0;
-            Debug.Log(worldPos);
+            
             if (m_HoldTrailInstance.gameObject.activeSelf)
             {
                 m_HoldTrailInstance.transform.position = worldPos;

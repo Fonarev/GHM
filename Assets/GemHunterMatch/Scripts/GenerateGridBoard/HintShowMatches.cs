@@ -25,31 +25,20 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         }
 
         public void Show(bool incrementHintTimer)
-       {
+        {
             if (incrementHintTimer)
             {
-                //nothing can happen anymore, if we were in the last stretch trigger the end
-                //if (m_FinalStretch)
-                //{
-                //    //this stop the end to be called in a loop. Input is still disabled to user cannot interact with board
-                //    m_FinalStretch = false;
-                //    UIHandler.Instance.ShowEnd();
-                //    return;
-                //}
-
                 //Nothing happened this frame, but the board was changed since last possible match check, so need to refresh
                 if (matchHandler.boardChanged)
                 {
                     matchHandler.FindAllPossibleMatch();
                     matchHandler.boardChanged = false;
                 }
-                if(matchHandler.newSwapMatch)
-                {
+               
                     var match = matchHandler.GetMatch();
-                    if (match != null)
-                        ShowHint(match);
-                }
 
+                if (match != null)
+                    ShowHint(match);
             }
             else
             {
