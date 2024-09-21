@@ -1,17 +1,12 @@
-﻿using Assets.GameMains.Scripts.EntryPoints;
-using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
+﻿using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using Match3;
 
 using System;
 using System.Collections.Generic;
 
-using Unity.VisualScripting;
-
 using UnityEngine;
 using UnityEngine.VFX;
-
-using static UnityEditor.PlayerSettings;
 
 using Random = UnityEngine.Random;
 
@@ -28,7 +23,7 @@ namespace Assets.GemHunterMatch.Scripts
         public static GridBoard instance;
         public Grid grid => GetComponent<Grid>();
 
-        public List<Vector3Int> spawnerPoints = new();
+        public List<Vector3Int> spawnerPoints { get; private set; } = new();
         public Dictionary<Vector3Int, BoardCell> contentCell = new();
 
         public Dictionary<Vector3Int, Action> cellsCallbacks = new();
@@ -42,22 +37,24 @@ namespace Assets.GemHunterMatch.Scripts
         private SwapHandler swapHandler;
         private HintShowMatches hint;
 
-        private GameEntryPoint gameEntry;
-       
-        internal BonusItem m_ActivatedBonus;
-        public bool incrementHintTimer;
+        private GamePlay gameEntry;
+        public LevelConfig levelConfig => _levelConfig;
+        public BonusItem activatedBonus;
+        public bool incrementHintTimer{ get; set; }
         private bool isInit;
-        public int freezeMoveLock;
-        private List<IBoardAction> m_BoardActions= new();
+        public int freezeMoveLock { get; private set; }
+        private List<IBoardAction> boardActions = new();
+        private LevelConfig _levelConfig;
 
         private void Awake()
         {
             if (instance == null) instance = this;
         }
 
-        public void Initialize(GameEntryPoint gameEntry)
-        {
-            this.gameEntry = gameEntry;
+        public void Initialize(GamePlay gamePlay, LevelConfig levelConfig)
+        { 
+            this.gameEntry = gamePlay;
+            _levelConfig = levelConfig;
 
             if (generateGem == null) 
                 generateGem = new(this);
@@ -159,7 +156,7 @@ namespace Assets.GemHunterMatch.Scripts
 
         public void ActivateSpawnerAt(Vector3Int cell)
         {
-            var gem = Instantiate(existingGems[Random.Range(0, existingGems.Length)], grid.GetCellCenterWorld(cell + Vector3Int.up), Quaternion.identity);
+            var gem = Instantiate(existingGems[Random.Range(0,existingGems.Length)], grid.GetCellCenterWorld(cell + Vector3Int.up), Quaternion.identity);
             contentCell[cell].IncomingGem = gem;
 
             gem.StartMoveTimer();
@@ -187,33 +184,41 @@ namespace Assets.GemHunterMatch.Scripts
                 ForcedDeletion = forcedDeletion
             };
 
-            contentCell[cell].ContainingGem.CurrentMatch = match;
+            if (contentCell[cell].ContainingGem != null)
+            {
+                contentCell[cell].ContainingGem.CurrentMatch = match;
+            }
 
             matchHandler.tickingMatch.Add(match);
         }
-        public void AddNewBoardAction(IBoardAction action) => m_BoardActions.Add(action);
+        public void AddNewBoardAction(IBoardAction action) => boardActions.Add(action);
+        private void HandleBonusAction()
+        {
+            for (int i = 0; i < boardActions.Count; ++i)
+            {
+                if (!boardActions[i].Tick())
+                {
+                    boardActions.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
 
         private void Update()
         {
             if (!isInit) return;
 
-            for (int i = 0; i < m_BoardActions.Count; ++i)
-            {
-                if (!m_BoardActions[i].Tick())
-                {
-                    m_BoardActions.RemoveAt(i);
-                    i--;
-                }
-            }
+            HandleBonusAction();
+
             inputHandler.UpData();
 
-            incrementHintTimer = m_ActivatedBonus == null;
+            incrementHintTimer = activatedBonus == null;
 
-            if (swapHandler != null) swapHandler.UpData();
+            swapHandler.UpData();
 
             if (matchHandler.tickingCells.Count > 0) moveController.MoveGems();
 
-            if (matchHandler != null) matchHandler.UpData();
+            matchHandler.UpData();
 
             hint.Show(incrementHintTimer);
           

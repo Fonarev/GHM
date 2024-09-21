@@ -8,7 +8,10 @@ namespace Assets.GameMains.Scripts
     public class GlobalMediator : MonoBehaviour
     {
         public event Action<int> OnSelectedLevel;
+        public int SelectLevel { get => selectLevel; private set { selectLevel = value; OnSelectedLevel.Invoke(selectLevel); } }
         public static GlobalMediator instance;
+        private int selectLevel;
+
         private void Awake()
         {
             if (instance != null)
@@ -21,6 +24,6 @@ namespace Assets.GameMains.Scripts
                 DontDestroyOnLoad(gameObject);
             }
         }
-        public void SelectedLevel(int level) => OnSelectedLevel.Invoke(level);
+        public void SelectedLevel(int level) => SelectLevel = level;
     }
 }

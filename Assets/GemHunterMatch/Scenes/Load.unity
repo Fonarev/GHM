@@ -476,7 +476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
       propertyPath: effectClips.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
       propertyPath: effectClips.Array.data[0]
@@ -486,6 +486,10 @@ PrefabInstance:
       propertyPath: effectClips.Array.data[1]
       value: 
       objectReference: {fileID: 8300000, guid: 19f9c3a78814cdc4c93e90b0e5d65add, type: 3}
+    - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
+      propertyPath: effectClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 651835b9a2fdcb74b832232d2f86fdb2, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

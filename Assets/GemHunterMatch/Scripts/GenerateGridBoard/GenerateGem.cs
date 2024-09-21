@@ -11,7 +11,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
     {
         public BoundsInt Bounds => bounds;
         private BoundsInt bounds;
-        private Gem[] existingGems;
         private List<Vector3Int> listOfCells;
         private Dictionary<int, Gem> gemLookup = new();
         private readonly GridBoard gridBoard;
@@ -20,10 +19,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public GenerateGem(GridBoard gridBoard)
         {
             this.gridBoard = gridBoard;
-            existingGems = gridBoard.existingGems;
-            listOfCells = this.gridBoard.contentCell.Keys.ToList();
 
-            foreach (var gem in this.gridBoard.existingGems)
+            foreach (var gem in gridBoard.existingGems)
             {
                 gemLookup.Add(gem.GemType, gem);
             }
@@ -34,6 +31,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public void FillBoardGems()
         {
             bounds = new BoundsInt();
+
+            listOfCells = gridBoard.contentCell.Keys.ToList();
 
             bounds.xMin = listOfCells[0].x;
             bounds.xMax = bounds.xMin;
@@ -60,7 +59,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public Gem NewGemAt(Vector3Int cell, Gem gemPrefab)
         {
             if (gemPrefab == null)
-                gemPrefab = existingGems[Random.Range(0, existingGems.Length)];
+                gemPrefab = gridBoard.existingGems[Random.Range(0, gridBoard.existingGems.Length)];
 
             if (gemPrefab.effectMatchPrefabs.Length != 0)
             {

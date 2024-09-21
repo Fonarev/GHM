@@ -12,7 +12,7 @@ namespace Match3
     {
         public bool CanBeDestroyedWithAdjacentMatch = true;
         public Sprite[] HealthStates;
-        public int Health = 3;
+        public int Health;
 
         public AudioClip DamagedClip;
         public VisualEffect DamageEffect;
@@ -31,8 +31,10 @@ namespace Match3
             base.Init(startIdx);
             
             if(DamageEffect != null)
-                PoolService.instance.AddNewInstance(DamageEffect, 6);
-
+            {
+                //PoolService.instance.AddNewInstance(DamageEffect, 6);
+            }
+               
             if (CanBeDestroyedWithAdjacentMatch)
             {
                 foreach (var neighbour in BoardCell.Neighbours)
@@ -46,10 +48,10 @@ namespace Match3
         public override bool Damage(int damage)
         {
             AudioManager.instance.PlayEffect(DamagedClip);
-            
-            if(DamageEffect != null)
+
+            if (DamageEffect != null)
                 PoolService.instance.PlayInstanceAt(DamageEffect, transform.position);
-            
+
             var ret = base.Damage(damage);
             UpdateState();
             return ret;

@@ -34,7 +34,7 @@ namespace Match3
             //a place for a gem, then delete the GameObject that was just visual aid at design time. The Board will take care
             //of creating a gem there.
             GridBoard.RegisterCell(position, PlacedGem);
-            //Board.RegisterCell(position, PlacedGem);
+
             return base.StartUp(position, tilemap, go);
         }
     }

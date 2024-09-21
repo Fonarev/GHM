@@ -51,7 +51,7 @@ namespace Match3
             Instance = this;
             RemainingMove = MaxMove;
             GoalLeft = Goals.Length;
-            GameManager.Instance.StartLevel();
+            //GameManager.Instance.StartLevel();
         }
 
         void Start()
@@ -69,7 +69,7 @@ namespace Match3
             //and recompute camera zoom
             if (Screen.width != m_StartingWidth || Screen.height != m_StartingHeight)
             {
-                GameManager.Instance.ComputeCamera();
+                //GameManager.Instance.ComputeCamera();
             }
         }
 
@@ -92,8 +92,8 @@ namespace Match3
                         GoalLeft -= 1;
                         if (GoalLeft == 0)
                         {
-                            GameManager.Instance.WinStar();
-                            GameManager.Instance.Board.ToggleInput(false);
+                            //GameManager.Instance.WinStar();
+                            //GameManager.Instance.Board.ToggleInput(false);
                             OnAllGoalFinished?.Invoke();
                         }
                     }

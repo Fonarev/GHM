@@ -1,4 +1,5 @@
-﻿using Assets.GameMains.Scripts.AudiosSources;
+﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts.Loaders;
 using Assets.YG.Scripts;
@@ -46,7 +47,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 button.onClick.AddListener(OpenPanel);
                 if (!completed)
                 {
-                    OpenPanel();
+                   OpenPanel();
                 }
             }
            
@@ -60,14 +61,20 @@ namespace Assets.GemHunterMatch.Scripts.UI
             }
             return false;
         }
-        private async void OpenPanel()
+
+        private void OpenPanel()
         {
             if (selectLevels == null)
             {
                 loader = new(true);
-                selectLevels = await loader.Load<UISelectLevels>("SelectLevels", rootPrefabs);
-                selectLevels.Init(startcountLevel, amountLevel);
-                rootPrefabs.gameObject.SetActive(true);
+                StartCoroutine(LoaderAsset.InstantiateAsset<UISelectLevels>("SelectLevels", rootPrefabs, op => 
+                { 
+                    selectLevels = op;
+                    selectLevels.Init(startcountLevel, amountLevel);
+                    rootPrefabs.gameObject.SetActive(true);
+                }));
+               
+                
             }
             else
             {

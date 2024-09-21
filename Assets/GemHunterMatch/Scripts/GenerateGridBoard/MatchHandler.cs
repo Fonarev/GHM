@@ -450,7 +450,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 {
                     gridBoard.contentCell[gemIdx].Obstacle.Clear();
                 }
-
+                
                 //callback are only called when this was a match from swipe and not from bonus or other source 
                 if (!match.ForcedDeletion && gridBoard.cellsCallbacks.TryGetValue(gemIdx, out var clbk))
                 {
@@ -464,9 +464,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 //we only spawn coins for non bonus match
                 if (match.DeletedCount >= 4 && !match.ForcedDeletion)
                 {
-                    //GameManager.Instance.ChangeCoins(1);
-                    //GameManager.Instance.PoolSystem.PlayInstanceAt(GameManager.Instance.Settings.VisualSettings.CoinVFX,
-                    //    gem.transform.position);
+                    GamePlay.instance.ChangeCoins(1);
+                    PoolService.instance.PlayInstanceAt(GridBoard.instance.visualSettings.CoinVFX, gem.transform.position);
+
                 }
 
                 if (match.SpawnedBonus != null && match.OriginPoint == gemIdx)
@@ -478,10 +478,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     emptyCells.Add(gemIdx);
                 }
 
-                //
                 if (gem.CurrentState != Gem.State.Disappearing)
                 {
-                    //LevelData.Instance.Matched(gem);
+                    GamePlay.instance.Matched(gem);
 
                     foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                     {
@@ -495,7 +494,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             }
             else if (gem.CurrentState != Gem.State.Disappearing)
             {
-                //LevelData.Instance.Matched(gem);
+                GamePlay.instance.Matched(gem);
 
                 foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                 {

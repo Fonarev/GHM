@@ -27,18 +27,41 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 600de3337dbc1ce428ba9e7723b0c8c0
-    m_Address: NameGame
+  - m_GUID: 3a95727ab637c7c46a958fff3c394df4
+    m_Address: BG
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bb8c5ba4fedd9a2448897edbc9fb9231
-    m_Address: Grid
+  - m_GUID: 301303d5229efb14caa52a73dc04ba9c
+    m_Address: Levels
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 870d7e27b72b5dd44ac7a4eb8a3f6f66
+    m_Address: BonusGems
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bonusGems
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 10eac29673e72674185fd617b9196d4b
+    m_Address: Gems
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - gems
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3df3f42a6475ed448a3f4afdb96a9e04
+    m_Address: GridBords
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 50fe6cbee81a7d743b6643e08fe38117
-    m_Address: LevelData
+  - m_GUID: 10ea696e29395914db5dc2b1291f9db2
+    m_Address: Logo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8cc7358452eeaa14b8a878a8a60beae8
+    m_Address: GoalEntry
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

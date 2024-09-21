@@ -1,4 +1,5 @@
-﻿using Assets.GemHunterMatch.Scripts.Loaders;
+﻿using Assets.AssetLoaders;
+using Assets.GemHunterMatch.Scripts.Loaders;
 
 using System.Collections.Generic;
 
@@ -23,7 +24,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
            if(loader!= null) loader.UnLoadAll();
         }
 
-        public async void Init(int startCount,int amountLevel)
+        public void Init(int startCount,int amountLevel)
         {
             for (int i = 0; i < amountLevel; i++)
             {
@@ -35,10 +36,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 }
                 else
                 {
-                    loader = new LocalAssetLoader(true);
-                    UILevelEntry newLevel = await loader.Load<UILevelEntry>("LevelEntry", rootLevelEntry);
-                    levels.Add(newLevel);   
-                    newLevel.Init(number);
+                    StartCoroutine(LoaderAsset.InstantiateAsset<UILevelEntry>("LevelEntry", rootLevelEntry, op =>
+                    {
+                        var newLevel = op;
+                        levels.Add(newLevel);
+                        newLevel.Init(number);
+                    }));
+                   
                 }
             }
         }
