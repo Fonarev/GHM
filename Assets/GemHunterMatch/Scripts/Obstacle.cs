@@ -5,7 +5,7 @@ using UnityEngine.VFX;
 
 namespace Match3
 {
-    //Base class for everything filling a gem space and that get notified when a match is made adjacent to it
+    //Base class for everything filling a BonusGem space and that get notified when a match is made adjacent to it
     public abstract class Obstacle : MonoBehaviour
     {
         [System.Serializable]

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Match3;
+
+using UnityEngine;
 
 namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
@@ -22,11 +24,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
        
         private readonly VFXController effectController;
         private readonly GridBoard gridBoard;
+        private readonly GamePlay gamePlay;
         private readonly SwapHandler swapHandler;
 
-        public InputHandler(GridBoard gridBoard, SwapHandler swapHandler, VFXController effectController, Camera mainCam)
+        public InputHandler(GridBoard gridBoard, GamePlay gamePlay, SwapHandler swapHandler, VFXController effectController, Camera mainCam)
         {
             this.gridBoard = gridBoard;
+            this.gamePlay = gamePlay;
             this.swapHandler = swapHandler;
             this.effectController = effectController;
             this.mainCam = mainCam;
@@ -51,6 +55,18 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 Vector3Int startCell = GetStartPosCell(gridBoard.grid);
 
+                if (gridBoard.activatedBonus != null)
+                {
+                    Vector3Int clickedCell = gridBoard.grid.WorldToCell(WorldPos);
+
+                    if (gridBoard.contentCell.TryGetValue(clickedCell, out var content) && content.ContainingGem != null)
+                    {
+                        gamePlay.UseBonusItem(gridBoard.activatedBonus, clickedCell);
+                        gridBoard.activatedBonus = null;
+                        return;
+                    }
+                }
+
                 if (gridBoard.contentCell.ContainsKey(startCell))
                 {
                     effectController.ShowVFX(gridBoard.grid.GetCellCenterWorld(startCell), WorldPos);
@@ -65,7 +81,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 float clickDelta = Time.time - lastClickTime;
                 lastClickTime = Time.time;
 
-                //if last than .3 second since last click, this is a double click, activate the gem if that is a gem.
+                //if last than .3 second since last click, this is a double click, activate the BonusGem if that is a BonusGem.
                 if (clickDelta < 0.3f)
                 {
                     if (gridBoard.contentCell.TryGetValue(StartPosCell, out var content)

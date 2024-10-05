@@ -1,11 +1,5 @@
-﻿using Match3;
-
-using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Analytics;
 
 namespace Assets.GemHunterMatch.Scripts
 {

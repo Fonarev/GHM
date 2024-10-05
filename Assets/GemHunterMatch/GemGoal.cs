@@ -4,8 +4,8 @@ using System;
 
 namespace Assets.GemHunterMatch
 {
-    //[Serializable]
-    public struct GemGoal
+    [Serializable]
+    public class GemGoal
     {
         public Gem Gem;
         public int Count;

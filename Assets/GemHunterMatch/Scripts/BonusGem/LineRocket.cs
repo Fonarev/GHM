@@ -24,7 +24,7 @@ namespace Match3
         public override void Use(Gem swappedGem, bool isBonus = true)
         {
             //this allow to stop recursion on some bonus (like bomb trying to explode themselve again and again)
-            //if isBonus is true, this is not a gem on the board so no risk of recursion we can ignore this
+            //if isBonus is true, this is not a BonusGem on the board so no risk of recursion we can ignore this
             if (!isBonus && m_Used)
                 return;
 
@@ -53,7 +53,7 @@ namespace Match3
     }
     
     /// <summary>
-    /// RocketAction is a board action that will delete gem along a direction at a given speed until it can no longer go
+    /// RocketAction is a board action that will delete BonusGem along a direction at a given speed until it can no longer go
     /// forward
     /// </summary>
     class RocketAction : IBoardAction

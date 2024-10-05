@@ -17,8 +17,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
        
         public void MoveGems()
         {
-            //sort bottom left to top right, so we minimize timing issue (a gem on top try to fall into a cell that is 
-            //not yet empty but will be empty once the bottom gem move away)
+            //sort bottom left to top right, so we minimize timing issue (a BonusGem on top try to fall into a cell that is 
+            //not yet empty but will be empty once the bottom BonusGem move away)
             var tickingCells = matchHandler.SortTickingCellsList();
 
             for (int i = 0; i < tickingCells.Count; i++)
@@ -59,7 +59,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         //reached target position, now check if continue falling or finished its fall.
                         if (matchHandler.emptyCells.Contains(cellIdx + Vector3Int.down) && gridBoard.contentCell.TryGetValue(cellIdx + Vector3Int.down, out var belowCell))
                         {
-                            //incoming gem goes to the below cell
+                            //incoming BonusGem goes to the below cell
                             currentCell.ContainingGem = null;
                             belowCell.IncomingGem = gem;
 
@@ -71,8 +71,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                             matchHandler.emptyCells.Remove(target);
                             matchHandler.emptyCells.Add(cellIdx);
 
-                            //if we continue falling, this is now an empty space, if there is a gem above it will fall by itself
-                            //but if this is a spawner above, we need to spawn a new gem
+                            //if we continue falling, this is now an empty space, if there is a BonusGem above it will fall by itself
+                            //but if this is a spawner above, we need to spawn a new BonusGem
                             if (gridBoard.spawnerPoints.Contains(cellIdx + Vector3Int.up))
                             {
                                gridBoard.ActivateSpawnerAt(cellIdx);
@@ -96,8 +96,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                             matchHandler.emptyCells.Remove(target);
                             matchHandler.emptyCells.Add(cellIdx);
 
-                            //if we continue falling, this is now an empty space, if there is a gem above it will fall by itself
-                            //but if this is a spawner above, we need to spawn a new gem
+                            //if we continue falling, this is now an empty space, if there is a BonusGem above it will fall by itself
+                            //but if this is a spawner above, we need to spawn a new BonusGem
                             if (gridBoard.spawnerPoints.Contains(cellIdx + Vector3Int.up))
                             {
                                 gridBoard.ActivateSpawnerAt(cellIdx);
@@ -109,7 +109,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                                  gridBoard.contentCell.TryGetValue(cellIdx + Vector3Int.down + Vector3Int.right, out var belowRightCell))
                         {
                             //we couldn't fall directly below, so we check diagonally
-                            //incoming gem goes to the below cell
+                            //incoming BonusGem goes to the below cell
                             currentCell.ContainingGem = null;
                             belowRightCell.IncomingGem = gem;
 
@@ -122,8 +122,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                             matchHandler.emptyCells.Remove(target);
                             matchHandler.emptyCells.Add(cellIdx);
 
-                            //if we continue falling, this is now an empty space, if there is a gem above it will fall by itself
-                            //but if this is a spawner above, we need to spawn a new gem
+                            //if we continue falling, this is now an empty space, if there is a BonusGem above it will fall by itself
+                            //but if this is a spawner above, we need to spawn a new BonusGem
                             if (gridBoard.spawnerPoints.Contains(cellIdx + Vector3Int.up))
                             {
                                 gridBoard.ActivateSpawnerAt(cellIdx);

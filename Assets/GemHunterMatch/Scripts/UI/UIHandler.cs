@@ -393,7 +393,7 @@ namespace Match3
         {
             Rect safeArea = Screen.safeArea;
 
-            // Calculate borders based on safe area rect
+            // Calculate borders based on safe area Rect
             var left = safeArea.x;
             var right = Screen.width - safeArea.xMax;
             var top = Screen.height - safeArea.yMax;
@@ -582,8 +582,8 @@ namespace Match3
                     float amount = anim.Curve.Evaluate(anim.Time) * angleAmount;
                     perpendicular *= amount;
                     
-                    //we need the length of that vector in the panel space, so we add this perpendicular to the world start
-                    //point then transform the point into the panel
+                        //we need the length of that vector in the panel space, so we add this perpendicular to the world start
+                        //point then transform the point into the panel
                     var worldPos = anim.WorldPosition + perpendicular;
                     var panelPos = (Vector3)RuntimePanelUtils.CameraTransformWorldToPanel(m_Document.rootVisualElement.panel, worldPos,
                         mainCamera);

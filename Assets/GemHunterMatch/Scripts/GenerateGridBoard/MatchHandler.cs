@@ -91,7 +91,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             //we use a double loop instead of directly querying the cells, so we access them in increasing x then y coordinate
             //this allow to just have to test swapping upward then right, as down and left will have been tested by previous
-            //gem already
+            //BonusGem already
 
             for (int y = generateGem.Bounds.yMin; y <= generateGem.Bounds.yMax; ++y)
             {
@@ -118,7 +118,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             if (!gridBoard.contentCell.TryGetValue(startCell, out var centerGem) || centerGem.ContainingGem == null)
                 return false;
 
-            //we ignore that gem if it's already part of another match.
+            //we ignore that BonusGem if it's already part of another match.
             if (centerGem.ContainingGem.CurrentMatch != null)
                 return false;
 
@@ -127,7 +127,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 Vector3Int.up, Vector3Int.right, Vector3Int.down, Vector3Int.left
             };
 
-            //First find all the connected gem of the same type
+            //First find all the connected BonusGem of the same typeGoal
             List<Vector3Int> gemList = new List<Vector3Int>();
             List<Vector3Int> checkedCells = new();
 
@@ -171,7 +171,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         if (matchedShape == null || matchedShape.Cells.Count < shape.Cells.Count)
                         {
                             matchedShape = shape;
-                            //we have a new shape that have more gem, so we clear our existing list of bonus
+                            //we have a new shape that have more BonusGem, so we clear our existing list of bonus
                             matchedBonusGem.Clear();
                             matchedBonusGem.Add(bonusGem);
                         }
@@ -226,7 +226,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 var aboveCellIdx = emptyCell + Vector3Int.up;
                 bool aboveCellExist = contentCell.TryGetValue(aboveCellIdx, out var aboveCell);
 
-                //if we have a gem above an empty cell, make that gem fall
+                //if we have a BonusGem above an empty cell, make that BonusGem fall
                 if (aboveCellExist && aboveCell.ContainingGem != null && aboveCell.CanFall)
                 {
                     var incomingGem = aboveCell.ContainingGem;
@@ -236,7 +236,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     incomingGem.StartMoveTimer();
                     incomingGem.SpeedMultiplier = 1.0f;
 
-                    //add that empty cell to be ticked so the gem goes down into it
+                    //add that empty cell to be ticked so the BonusGem goes down into it
                     newTickingCells.Add(emptyCell);
 
                     //the above cell is now empty and this cell is not empty anymore
@@ -254,7 +254,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     incomingGem.StartMoveTimer();
                     incomingGem.SpeedMultiplier = 1.41421356237f;
 
-                    //add that empty cell to be ticked so the gem goes down into it
+                    //add that empty cell to be ticked so the BonusGem goes down into it
                     newTickingCells.Add(emptyCell);
 
                     //the above cell is now empty and this cell is not empty anymore
@@ -272,7 +272,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     incomingGem.StartMoveTimer();
                     incomingGem.SpeedMultiplier = 1.41421356237f;
 
-                    //add that empty cell to be ticked so the gem goes down into it
+                    //add that empty cell to be ticked so the BonusGem goes down into it
                     newTickingCells.Add(emptyCell);
 
                     //the above cell is now empty and this cell is not empty anymore
@@ -281,7 +281,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 }
                 else if (gridBoard.spawnerPoints.Contains(aboveCellIdx))
                 {
-                    //spawn a new gem
+                    //spawn a new BonusGem
                     gridBoard.ActivateSpawnerAt(emptyCell);
                 }
             }
@@ -332,8 +332,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             foreach (var idx in gemList)
             {
-                //for each dir (up/down/left/right) if there is no gem in that dir, that mean this could be the start of
-                //a matching line, so we check in the opposite direction till we have no more gem
+                //for each dir (up/down/left/right) if there is no BonusGem in that dir, that mean this could be the start of
+                //a matching line, so we check in the opposite direction till we have no more BonusGem
                 foreach (var dir in offsets)
                 {
                     if (!gemList.Contains(idx + dir))

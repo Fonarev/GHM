@@ -62,11 +62,9 @@ namespace Assets.AssetLoaders
           
         }
 
-        public IEnumerator LoadList<T>(string assetName, string label, Action<T> callback)
+        public static IEnumerator LoadList<T>(string assetName, Action<T> callback = null)
         {
-            List<string> keys = new List<string> { assetName, label };
-
-            AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(keys, op => 
+            AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(assetName, op => 
             {
                 if (op != null)
                     callback.Invoke(op);

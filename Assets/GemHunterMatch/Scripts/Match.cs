@@ -17,7 +17,7 @@ namespace Match3
         //this is forced deletion, usually from a bonus. Used to remove obstacle
         public bool ForcedDeletion = false;
 
-        //will be incremented with each gem deleted in that match, will allow to spawn coins when reaching 4+
+        //will be incremented with each BonusGem deleted in that match, will allow to spawn coins when reaching 4+
         public int DeletedCount = 0;
 
         public void AddGem(Gem gem)

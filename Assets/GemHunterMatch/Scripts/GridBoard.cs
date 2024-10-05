@@ -37,9 +37,9 @@ namespace Assets.GemHunterMatch.Scripts
         private SwapHandler swapHandler;
         private HintShowMatches hint;
 
-        private GamePlay gameEntry;
+        private GamePlay gamePlay;
         public LevelConfig levelConfig => _levelConfig;
-        public BonusItem activatedBonus;
+        public BonusGemBonusItem activatedBonus;
         public bool incrementHintTimer{ get; set; }
         private bool isInit;
         public int freezeMoveLock { get; private set; }
@@ -53,7 +53,7 @@ namespace Assets.GemHunterMatch.Scripts
 
         public void Initialize(GamePlay gamePlay, LevelConfig levelConfig)
         { 
-            this.gameEntry = gamePlay;
+            this.gamePlay = gamePlay;
             _levelConfig = levelConfig;
 
             if (generateGem == null) 
@@ -68,7 +68,7 @@ namespace Assets.GemHunterMatch.Scripts
             matchHandler.FindAllPossibleMatch();
             moveController = new(this, matchHandler);
             swapHandler = new(this,matchHandler);
-            inputHandler = new(this, swapHandler, effectController, Camera.main);
+            inputHandler = new(this, gamePlay, swapHandler, effectController, Camera.main);
             hint = new(matchHandler, grid, inactivityBeforeHint);
             hint.Instatiate(visualSettings.HintPrefab);
             isInit = true;

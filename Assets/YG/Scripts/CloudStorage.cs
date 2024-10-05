@@ -36,6 +36,7 @@ namespace Assets.YG.Scripts
             LoadData(sendback);
 #else
             yandex.progressData.CreateDefaultData();
+            yandex.isLoading = true;
 #endif
 
         }

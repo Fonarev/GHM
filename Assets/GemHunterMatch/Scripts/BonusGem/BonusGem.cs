@@ -12,8 +12,8 @@ namespace Match3
         private const int oneDamage = 1;
         public virtual void Awake(){}
 
-        //helper function that inheriting class can use to destroy a gem, but handle obstacle and bonus gem properly
-        //if the cell don't contains either an obstacle or usable gem and the targetted gem is destroyed, add it to the
+        //helper function that inheriting class can use to destroy a BonusGem, but handle obstacle and bonus BonusGem properly
+        //if the cell don't contains either an obstacle or usable BonusGem and the targetted BonusGem is destroyed, add it to the
         //given match
         protected void HandleContent(BoardCell cell, Match receivingMatch)
         {
@@ -49,7 +49,7 @@ namespace Match3
     }
 
     /// <summary>
-    /// A MatchShape defines a list of cells that will form a shape to match against during a gem match.
+    /// A MatchShape defines a list of cells that will form a shape to match against during a BonusGem match.
     /// </summary>
     [System.Serializable]
     public class MatchShape : ISerializationCallbackReceiver
@@ -117,10 +117,10 @@ namespace Match3
         {
             var targetBound = GetBoundOf(cellList);
         
-            //we move the shape bound rect inside the cellList bound rect to check if all cell part of the shape can match cell
+            //we move the shape bound Rect inside the cellList bound Rect to check if all cell part of the shape can match cell
             //inside the cell list.
 
-            //we make the shape rect into a square, so we can rotate & mirror the shape in the same bound.  
+            //we make the shape Rect into a square, so we can rotate & mirror the shape in the same bound.  
             var largestBoundSize = Mathf.Max(targetBound.width, targetBound.height);
             var smallestBoundSize = Mathf.Min(targetBound.width, targetBound.height);
 
@@ -229,7 +229,7 @@ namespace Match3
         /// Return the bound of a list of cells
         /// </summary>
         /// <param name="cellList">The list of the cells for which to get the bounds</param>
-        /// <returns>The bounding rect of all the cells in the cellList</returns>
+        /// <returns>The bounding Rect of all the cells in the cellList</returns>
         public static RectInt GetBoundOf(List<Vector3Int> cellList)
         {
             if (cellList.Count == 0)

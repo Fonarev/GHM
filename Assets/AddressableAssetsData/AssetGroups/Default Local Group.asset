@@ -65,6 +65,17 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fcd77f43dd756b643bd9e288de0e669d
+    m_Address: VFX_Bubbles
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 576be794790e0e24eb8d7dd1a30d8ba0
+    m_Address: BonusItems
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bonusItem
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e1261942c0e7c0c47ba4270a26f5bf42, type: 2}
   m_SchemaSet:

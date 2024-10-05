@@ -27,7 +27,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             instance = this;
         }
 
-        //generate a gem in every cell, making sure we don't have any match 
+        //generate a BonusGem in every cell, making sure we don't have any match 
         public void FillBoardGems()
         {
             bounds = new BoundsInt();
@@ -126,7 +126,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(-2, 0, 0), out var leftLeftContent) &&
                     leftLeftContent.ContainingGem != null && leftGemType == leftLeftContent.ContainingGem.GemType)
                 {
-                    //we have two gem of a given type on the left, so we can't ue that type anymore
+                    //we have two BonusGem of a given typeGoal on the left, so we can't ue that typeGoal anymore
                     availableGems.Remove(leftGemType);
                 }
             }
@@ -143,18 +143,18 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(0, -2, 0), out var bottomBottomContent) &&
                     bottomBottomContent.ContainingGem != null && bottomGemType == bottomBottomContent.ContainingGem.GemType)
                 {
-                    //we have two gem of a given type on the bottom, so we can't ue that type anymore
+                    //we have two BonusGem of a given typeGoal on the bottom, so we can't ue that typeGoal anymore
                     availableGems.Remove(bottomGemType);
                 }
 
                 if (leftGemType != -1 && leftGemType == bottomGemType)
                 {
-                    //if the left and bottom gem are the same type, we need to check if the bottom left gem is ALSO
-                    //of the same type, as placing that type here would create a square, which is a valid match
+                    //if the left and bottom BonusGem are the same typeGoal, we need to check if the bottom left BonusGem is ALSO
+                    //of the same typeGoal, as placing that typeGoal here would create a square, which is a valid match
                     if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(-1, -1, 0), out var bottomLeftContent) &&
                         bottomLeftContent.ContainingGem != null && bottomGemType == leftGemType)
                     {
-                        //we already have a corner of gem on left, bottom left and bottom position, so remove that type
+                        //we already have a corner of BonusGem on left, bottom left and bottom position, so remove that typeGoal
                         availableGems.Remove(leftGemType);
                     }
                 }
@@ -169,7 +169,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 rightGemType = rightContent.ContainingGem.GemType;
 
-                //we have the same type on left and right, so placing that type here would create a 3 line
+                //we have the same typeGoal on left and right, so placing that typeGoal here would create a 3 line
                 if (rightGemType != -1 && leftGemType == rightGemType)
                 {
                     availableGems.Remove(rightGemType);
@@ -178,11 +178,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(2, 0, 0), out var rightRightContent) &&
                     rightRightContent.ContainingGem != null && rightGemType == rightRightContent.ContainingGem.GemType)
                 {
-                    //we have two gem of a given type on the right, so we can't ue that type anymore
+                    //we have two BonusGem of a given typeGoal on the right, so we can't ue that typeGoal anymore
                     availableGems.Remove(rightGemType);
                 }
 
-                //right and bottom gem are the same, check the bottom right to avoid creating a square
+                //right and bottom BonusGem are the same, check the bottom right to avoid creating a square
                 if (rightGemType != -1 && rightGemType == bottomGemType)
                 {
                     if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(1, -1, 0), out var bottomRightContent) &&
@@ -202,7 +202,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 topGemType = topContent.ContainingGem.GemType;
 
-                //we have the same type on top and bottom, so placing that type here would create a 3 line
+                //we have the same typeGoal on top and bottom, so placing that typeGoal here would create a 3 line
                 if (topGemType != -1 && topGemType == bottomGemType)
                 {
                     availableGems.Remove(topGemType);
@@ -211,11 +211,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(0, 1, 0), out var topTopContent) &&
                     topTopContent.ContainingGem != null && topGemType == topTopContent.ContainingGem.GemType)
                 {
-                    //we have two gem of a given type on the top, so we can't ue that type anymore
+                    //we have two BonusGem of a given typeGoal on the top, so we can't ue that typeGoal anymore
                     availableGems.Remove(topGemType);
                 }
 
-                //right and top gem are the same, check the top right to avoid creating a square
+                //right and top BonusGem are the same, check the top right to avoid creating a square
                 if (topGemType != -1 && topGemType == rightGemType)
                 {
                     if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(1, 1, 0), out var topRightContent) &&
@@ -225,7 +225,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     }
                 }
 
-                //left and top gem are the same, check the top left to avoid creating a square
+                //left and top BonusGem are the same, check the top left to avoid creating a square
                 if (topGemType != -1 && topGemType == leftGemType)
                 {
                     if (gridBoard.contentCell.TryGetValue(idx + new Vector3Int(-1, 1, 0), out var topLeftContent) &&

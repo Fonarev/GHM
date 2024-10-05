@@ -20,7 +20,7 @@ namespace Match3
         public override void Use(Gem swappedGem, bool isBonus = true)
         {
             //this allow to stop recursion on some bonus (like bomb trying to explode themselve again and again)
-            //if isBonus is true, this is not a gem on the board so no risk of recursion we can ignore this
+            //if isBonus is true, this is not a BonusGem on the board so no risk of recursion we can ignore this
             if (!isBonus && m_Used)
                 return;
 
@@ -30,7 +30,7 @@ namespace Match3
             newMatch.ForcedDeletion = true;
 
             //we still test the content of the index as this could be a bonus used from the Ui so the clicked position
-            //won't contains "this" but a different gem
+            //won't contains "this" but a different BonusGem
             var currentContent = GridBoard.instance.contentCell[currentIndex];
             HandleContent(currentContent, newMatch);
 

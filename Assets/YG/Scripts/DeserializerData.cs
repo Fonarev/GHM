@@ -36,7 +36,7 @@ namespace Assets.YG.Scripts
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             //JObject jo = JObject.Load(reader);
-            //string typeName = jo["type"].ToString();
+            //string typeName = jo["typeGoal"].ToString();
 
             //Mission mission;
 
@@ -59,7 +59,7 @@ namespace Assets.YG.Scripts
             //        break;
 
             //    default:
-            //        throw new Exception(string.Format("Unexpected type name '{0}'", typeName));
+            //        throw new Exception(string.Format("Unexpected typeGoal name '{0}'", typeName));
             //}
 
             //serializer.Populate(jo.CreateReader(), mission);

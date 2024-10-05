@@ -18,14 +18,9 @@ namespace Assets.YG.Scripts
         [SerializeField] private bool isMessage;
         [SerializeField] private bool switchInLangRu;
 
-        private CloudStorage storage;
-        private FullAd fullAd;
-        private RewardeVideo rv;
-        private Leaderboard lb;
-        private Languages langs;
-
         public static YandexGame Instance;
         public ProgressData progressData;
+
         public PlayerAuth player { get; private set; }
         public LBData lbData{ get; private set; }
         public bool isAllowed { get; private set; }
@@ -46,6 +41,12 @@ namespace Assets.YG.Scripts
 
         public bool NowFullAd { get => nowFullAd; set { nowFullAd = value; OnNowAdsShow?.Invoke(NowFullAd); Message($"{NowFullAd}"); } }
         public bool NowVideoAd { get => nowVideoAd; set { nowVideoAd = value; OnNowAdsShow?.Invoke(NowVideoAd); Message($"{NowVideoAd}"); } }
+
+        private CloudStorage storage;
+        private FullAd fullAd;
+        private RewardeVideo rv;
+        private Leaderboard lb;
+        private Languages langs;
 
         private bool auth;
         private bool gameReadyUsed;

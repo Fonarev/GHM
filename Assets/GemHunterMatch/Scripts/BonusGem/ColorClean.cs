@@ -10,7 +10,7 @@ using UnityEngine.VFX;
 namespace Match3
 {
     /// <summary>
-    /// Bonus that will delete all gems of a given type in the board.
+    /// Bonus that will delete all gems of a given typeGoal in the board.
     /// </summary>
     public class ColorClean : BonusGem
     {
@@ -30,7 +30,7 @@ namespace Match3
         public override void Use(Gem swappedGem, bool isBonus = true)
         {
             //this allow to stop recursion on some bonus (like bomb trying to explode themselve again and again)
-            //if isBonus is true, this is not a gem on the board so no risk of recursion we can ignore this
+            //if isBonus is true, this is not a BonusGem on the board so no risk of recursion we can ignore this
             if (!isBonus && m_Used)
                 return;
 
@@ -38,12 +38,12 @@ namespace Match3
             
             int type = -1;
         
-            //first find which type to delete. If we swapped a gem, this is this gem type
+            //first find which typeGoal to delete. If we swapped a BonusGem, this is this BonusGem typeGoal
             if (swappedGem != null)
                 type = swappedGem.GemType;
 
             if (type < 0)
-            {//we either swapped with another bonus or we double clicked, so that bonus will clear the gem with the most type
+            {//we either swapped with another bonus or we double clicked, so that bonus will clear the BonusGem with the most typeGoal
                 Dictionary<int, int> typeCount = new();
 
                 foreach (var (cell, content) in GridBoard.instance.contentCell)
@@ -74,10 +74,10 @@ namespace Match3
             Color[] infoColor = new Color[64];
             int currentColor = 0;
 
-            //we create a new match in the board, set its type to force deletion (as this match came from a bonus, not a swapHandler)
+            //we create a new match in the board, set its typeGoal to force deletion (as this match came from a bonus, not a swapHandler)
             var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
             newMatch.ForcedDeletion = true;
-            //we grab from the cell and not use "this" because when used as a Bonus Item, the item at this index won't be the gem
+            //we grab from the cell and not use "this" because when used as a Bonus Item, the item at this index won't be the BonusGem
             HandleContent(GridBoard.instance.contentCell[currentIndex], newMatch);
 
             foreach (var (cell, content) in GridBoard.instance.contentCell)

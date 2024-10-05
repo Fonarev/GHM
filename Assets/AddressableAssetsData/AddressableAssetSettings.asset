@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 87ad9d16b3f859c4f97c01aa695bdeb0
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 73b5757a889d6dcb8090916294ca8686
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 1
@@ -90,6 +90,7 @@ MonoBehaviour:
     - level
     - gems
     - bonusGems
+    - bonusItem
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 479a58cdc8b37d34189e531f86a4c35b, type: 2}

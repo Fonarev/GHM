@@ -62,7 +62,7 @@ namespace Match3
         private int m_PickedSwap;
         private float m_SinceLastHint = 0.0f;
 
-        //this is set by some bonus like the rocket to stop gem moving in/out of the rocket path. Once rocket is done
+        //this is set by some bonus like the rocket to stop BonusGem moving in/out of the rocket path. Once rocket is done
         //it unfreeze to let everything fall again. Increment at each lock, decrement on unlock so multiple lock are
         //possible
         private int m_FreezeMoveLock = 0;
@@ -172,7 +172,7 @@ namespace Match3
             }
 #endif
 
-            //fill a lookup of gem type to gem
+            //fill a lookup of BonusGem typeGoal to BonusGem
             m_GemLookup = new Dictionary<int, Gem>();
             foreach (var gem in ExistingGems)
             {
@@ -306,7 +306,7 @@ namespace Match3
             s_Instance.SpawnerPosition.Add(cell);
         }
 
-        //generate a gem in every cell, making sure we don't have any match 
+        //generate a BonusGem in every cell, making sure we don't have any match 
         void GenerateBoard()
         {
             m_BoundsInt = new BoundsInt();
@@ -347,7 +347,7 @@ namespace Match3
                     int rightGemType = -1;
                     int topGemType = -1;
 
-                    //check if there is two gem of the same type of the left
+                    //check if there is two BonusGem of the same typeGoal of the left
                     if (CellContent.TryGetValue(idx + new Vector3Int(-1, 0, 0), out var leftContent) &&
                         leftContent.ContainingGem != null)
                     {
@@ -356,12 +356,12 @@ namespace Match3
                         if (CellContent.TryGetValue(idx + new Vector3Int(-2, 0, 0), out var leftLeftContent) &&
                             leftLeftContent.ContainingGem != null && leftGemType == leftLeftContent.ContainingGem.GemType)
                         {
-                            //we have two gem of a given type on the left, so we can't ue that type anymore
+                            //we have two BonusGem of a given typeGoal on the left, so we can't ue that typeGoal anymore
                             availableGems.Remove(leftGemType);
                         }
                     }
                 
-                    //check if there is two gem of the same type below
+                    //check if there is two BonusGem of the same typeGoal below
                     if (CellContent.TryGetValue(idx + new Vector3Int(0, -1, 0), out var bottomContent) &&
                         bottomContent.ContainingGem != null)
                     {
@@ -370,18 +370,18 @@ namespace Match3
                         if (CellContent.TryGetValue(idx + new Vector3Int(0, -2, 0), out var bottomBottomContent) &&
                             bottomBottomContent.ContainingGem != null && bottomGemType == bottomBottomContent.ContainingGem.GemType)
                         {
-                            //we have two gem of a given type on the bottom, so we can't ue that type anymore
+                            //we have two BonusGem of a given typeGoal on the bottom, so we can't ue that typeGoal anymore
                             availableGems.Remove(bottomGemType);
                         }
 
                         if (leftGemType != -1 && leftGemType == bottomGemType)
                         {
-                            //if the left and bottom gem are the same type, we need to check if the bottom left gem is ALSO
-                            //of the same type, as placing that type here would create a square, which is a valid match
+                            //if the left and bottom BonusGem are the same typeGoal, we need to check if the bottom left BonusGem is ALSO
+                            //of the same typeGoal, as placing that typeGoal here would create a square, which is a valid match
                             if (CellContent.TryGetValue(idx + new Vector3Int(-1, -1, 0), out var bottomLeftContent) &&
                                 bottomLeftContent.ContainingGem != null && bottomGemType == leftGemType)
                             {
-                                //we already have a corner of gem on left, bottom left and bottom position, so remove that type
+                                //we already have a corner of BonusGem on left, bottom left and bottom position, so remove that typeGoal
                                 availableGems.Remove(leftGemType);
                             }
                         }
@@ -396,7 +396,7 @@ namespace Match3
                     {
                         rightGemType = rightContent.ContainingGem.GemType;
 
-                        //we have the same type on left and right, so placing that type here would create a 3 line
+                        //we have the same typeGoal on left and right, so placing that typeGoal here would create a 3 line
                         if (rightGemType != -1 && leftGemType == rightGemType)
                         {
                             availableGems.Remove(rightGemType);
@@ -405,11 +405,11 @@ namespace Match3
                         if (CellContent.TryGetValue(idx + new Vector3Int(2, 0, 0), out var rightRightContent) &&
                             rightRightContent.ContainingGem != null && rightGemType == rightRightContent.ContainingGem.GemType)
                         {
-                            //we have two gem of a given type on the right, so we can't ue that type anymore
+                            //we have two BonusGem of a given typeGoal on the right, so we can't ue that typeGoal anymore
                             availableGems.Remove(rightGemType);
                         }
 
-                        //right and bottom gem are the same, check the bottom right to avoid creating a square
+                        //right and bottom BonusGem are the same, check the bottom right to avoid creating a square
                         if (rightGemType != -1 && rightGemType == bottomGemType)
                         {
                             if (CellContent.TryGetValue(idx + new Vector3Int(1, -1, 0), out var bottomRightContent) &&
@@ -426,7 +426,7 @@ namespace Match3
                     {
                         topGemType = topContent.ContainingGem.GemType;
 
-                        //we have the same type on top and bottom, so placing that type here would create a 3 line
+                        //we have the same typeGoal on top and bottom, so placing that typeGoal here would create a 3 line
                         if (topGemType != -1 && topGemType == bottomGemType)
                         {
                             availableGems.Remove(topGemType);
@@ -435,11 +435,11 @@ namespace Match3
                         if (CellContent.TryGetValue(idx + new Vector3Int(0, 1, 0), out var topTopContent) &&
                             topTopContent.ContainingGem != null && topGemType == topTopContent.ContainingGem.GemType)
                         {
-                            //we have two gem of a given type on the top, so we can't ue that type anymore
+                            //we have two BonusGem of a given typeGoal on the top, so we can't ue that typeGoal anymore
                             availableGems.Remove(topGemType);
                         }
 
-                        //right and top gem are the same, check the top right to avoid creating a square
+                        //right and top BonusGem are the same, check the top right to avoid creating a square
                         if (topGemType != -1 && topGemType == rightGemType)
                         {
                             if (CellContent.TryGetValue(idx + new Vector3Int(1, 1, 0), out var topRightContent) &&
@@ -449,7 +449,7 @@ namespace Match3
                             }
                         }
                         
-                        //left and top gem are the same, check the top left to avoid creating a square
+                        //left and top BonusGem are the same, check the top left to avoid creating a square
                         if (topGemType != -1 && topGemType == leftGemType)
                         {
                             if (CellContent.TryGetValue(idx + new Vector3Int(-1, 1, 0), out var topLeftContent) &&
@@ -606,8 +606,8 @@ namespace Match3
 
         void MoveGems()
         {
-            //sort bottom left to top right, so we minimize timing issue (a gem on top try to fall into a cell that is 
-            //not yet empty but will be empty once the bottom gem move away)
+            //sort bottom left to top right, so we minimize timing issue (a BonusGem on top try to fall into a cell that is 
+            //not yet empty but will be empty once the bottom BonusGem move away)
             m_TickingCells.Sort((a, b) =>
             {
                 int yCmp = a.y.CompareTo(b.y);
@@ -657,7 +657,7 @@ namespace Match3
                         //reached target position, now check if continue falling or finished its fall.
                         if (m_EmptyCells.Contains(cellIdx + Vector3Int.down) && CellContent.TryGetValue(cellIdx + Vector3Int.down, out var belowCell))
                         {
-                            //incoming gem goes to the below cell
+                            //incoming BonusGem goes to the below cell
                             currentCell.ContainingGem = null;
                             belowCell.IncomingGem = gem;
 
@@ -669,8 +669,8 @@ namespace Match3
                             m_EmptyCells.Remove(target);
                             m_EmptyCells.Add(cellIdx);
 
-                            //if we continue falling, this is now an empty space, if there is a gem above it will fall by itself
-                            //but if this is a spawner above, we need to spawn a new gem
+                            //if we continue falling, this is now an empty space, if there is a BonusGem above it will fall by itself
+                            //but if this is a spawner above, we need to spawn a new BonusGem
                             if (SpawnerPosition.Contains(cellIdx + Vector3Int.up))
                             {
                                 ActivateSpawnerAt(cellIdx);
@@ -694,8 +694,8 @@ namespace Match3
                             m_EmptyCells.Remove(target);
                             m_EmptyCells.Add(cellIdx);
 
-                            //if we continue falling, this is now an empty space, if there is a gem above it will fall by itself
-                            //but if this is a spawner above, we need to spawn a new gem
+                            //if we continue falling, this is now an empty space, if there is a BonusGem above it will fall by itself
+                            //but if this is a spawner above, we need to spawn a new BonusGem
                             if (SpawnerPosition.Contains(cellIdx + Vector3Int.up))
                             {
                                 ActivateSpawnerAt(cellIdx);
@@ -707,7 +707,7 @@ namespace Match3
                                  CellContent.TryGetValue(cellIdx + Vector3Int.down + Vector3Int.right, out var belowRightCell))
                         {
                             //we couldn't fall directly below, so we check diagonally
-                            //incoming gem goes to the below cell
+                            //incoming BonusGem goes to the below cell
                             currentCell.ContainingGem = null;
                             belowRightCell.IncomingGem = gem;
 
@@ -720,8 +720,8 @@ namespace Match3
                             m_EmptyCells.Remove(target);
                             m_EmptyCells.Add(cellIdx);
 
-                            //if we continue falling, this is now an empty space, if there is a gem above it will fall by itself
-                            //but if this is a spawner above, we need to spawn a new gem
+                            //if we continue falling, this is now an empty space, if there is a BonusGem above it will fall by itself
+                            //but if this is a spawner above, we need to spawn a new BonusGem
                             if (SpawnerPosition.Contains(cellIdx + Vector3Int.up))
                             {
                                 ActivateSpawnerAt(cellIdx);
@@ -955,7 +955,7 @@ namespace Match3
                 var aboveCellIdx = emptyCell + Vector3Int.up;
                 bool aboveCellExist = CellContent.TryGetValue(aboveCellIdx, out var aboveCell);
 
-                //if we have a gem above an empty cell, make that gem fall
+                //if we have a BonusGem above an empty cell, make that BonusGem fall
                 if (aboveCellExist && aboveCell.ContainingGem != null && aboveCell.CanFall)
                 {
                     var incomingGem = aboveCell.ContainingGem;
@@ -965,7 +965,7 @@ namespace Match3
                     incomingGem.StartMoveTimer();
                     incomingGem.SpeedMultiplier = 1.0f;
 
-                    //add that empty cell to be ticked so the gem goes down into it
+                    //add that empty cell to be ticked so the BonusGem goes down into it
                     m_NewTickingCells.Add(emptyCell);
 
                     //the above cell is now empty and this cell is not empty anymore
@@ -983,7 +983,7 @@ namespace Match3
                     incomingGem.StartMoveTimer();
                     incomingGem.SpeedMultiplier = 1.41421356237f;
 
-                    //add that empty cell to be ticked so the gem goes down into it
+                    //add that empty cell to be ticked so the BonusGem goes down into it
                     m_NewTickingCells.Add(emptyCell);
 
                     //the above cell is now empty and this cell is not empty anymore
@@ -1001,7 +1001,7 @@ namespace Match3
                     incomingGem.StartMoveTimer();
                     incomingGem.SpeedMultiplier = 1.41421356237f;
 
-                    //add that empty cell to be ticked so the gem goes down into it
+                    //add that empty cell to be ticked so the BonusGem goes down into it
                     m_NewTickingCells.Add(emptyCell);
 
                     //the above cell is now empty and this cell is not empty anymore
@@ -1010,7 +1010,7 @@ namespace Match3
                 }
                 else if (SpawnerPosition.Contains(aboveCellIdx))
                 {
-                    //spawn a new gem
+                    //spawn a new BonusGem
                     ActivateSpawnerAt(emptyCell);
                 }
             }
@@ -1037,7 +1037,7 @@ namespace Match3
                 center + Vector3.right * 0.5f - Vector3.down * 0.5f);
         }
 
-        //if gemPrefab is null, will pick a random gem from the existing one
+        //if gemPrefab is null, will pick a random BonusGem from the existing one
         Gem NewGemAt(Vector3Int cell, Gem gemPrefab)
         {
             if (gemPrefab == null)
@@ -1130,7 +1130,7 @@ namespace Match3
 
                         m_SwapStage = SwapStage.None;
 
-                        // as swapHandler was successful, we count down 1 move from the level
+                        // as swapHandler was successful, we amount down 1 move from the level
                         LevelData.Instance.Moved();
                     }
                     else
@@ -1168,7 +1168,7 @@ namespace Match3
             if (!CellContent.TryGetValue(startCell, out var centerGem) || centerGem.ContainingGem == null)
                 return false;
 
-            //we ignore that gem if it's already part of another match.
+            //we ignore that BonusGem if it's already part of another match.
             if (centerGem.ContainingGem.CurrentMatch != null)
                 return false;
 
@@ -1177,7 +1177,7 @@ namespace Match3
                 Vector3Int.up, Vector3Int.right, Vector3Int.down, Vector3Int.left
             };
 
-            //First find all the connected gem of the same type
+            //First find all the connected BonusGem of the same typeGoal
             List<Vector3Int> gemList = new List<Vector3Int>();
             List<Vector3Int> checkedCells = new();
 
@@ -1221,7 +1221,7 @@ namespace Match3
                         if (matchedShape == null || matchedShape.Cells.Count < shape.Cells.Count)
                         {
                             matchedShape = shape;
-                            //we have a new shape that have more gem, so we clear our existing list of bonus
+                            //we have a new shape that have more BonusGem, so we clear our existing list of bonus
                             matchedBonusGem.Clear();
                             matchedBonusGem.Add(bonusGem);
                         }
@@ -1239,8 +1239,8 @@ namespace Match3
 
             foreach (var idx in gemList)
             {
-                //for each dir (up/down/left/right) if there is no gem in that dir, that mean this could be the start of
-                //a matching line, so we check in the opposite direction till we have no more gem
+                //for each dir (up/down/left/right) if there is no BonusGem in that dir, that mean this could be the start of
+                //a matching line, so we check in the opposite direction till we have no more BonusGem
                 foreach (var dir in offsets)
                 {
                     if (!gemList.Contains(idx + dir))
@@ -1316,7 +1316,7 @@ namespace Match3
             if (pressedThisFrame)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                //if the debug menu is open we instantiate the selected gem in the click cell
+                //if the debug menu is open we instantiate the selected BonusGem in the click cell
                 if (UIHandler.Instance.DebugMenuOpen)
                 {
                     if (UIHandler.Instance.SelectedDebugGem != null)
@@ -1387,7 +1387,7 @@ namespace Match3
                 var startCell = m_Grid.WorldToCell(worldStart);
                 startCell.z = 0;
             
-                //if last than .3 second since last click, this is a double click, activate the gem if that is a gem.
+                //if last than .3 second since last click, this is a double click, activate the BonusGem if that is a BonusGem.
                 if (clickDelta < 0.3f)
                 {
                     if (CellContent.TryGetValue(startCell, out var content) 
@@ -1463,7 +1463,7 @@ namespace Match3
         
             //we use a double loop instead of directly querying the cells, so we access them in increasing x then y coordinate
             //this allow to just have to test swapping upward then right, as down and left will have been tested by previous
-            //gem already
+            //BonusGem already
 
             for (int y = m_BoundsInt.yMin; y <= m_BoundsInt.yMax; ++y)
             {

@@ -45,8 +45,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (vfx.Instance.gameObject.activeInHierarchy)
                 {
                     var frameDiff = Time.frameCount - vfx.FrameCount;
-                    //particle count is updated every 60 frame, so we make sure we have enough frame since starting the vfx
-                    //to check particle count. if no particles left, we disable the vfx. This is because as most VFX use
+                    //particle amount is updated every 60 frame, so we make sure we have enough frame since starting the vfx
+                    //to check particle amount. if no particles left, we disable the vfx. This is because as most VFX use
                     //GPU event they never get to sleep. This would break if we had vfx that have moment with no particle,
                     //but non of our vfx are like this in this project so this is good enough for us.
                     if (frameDiff > 100 && vfx.Instance.aliveParticleCount == 0)
@@ -104,9 +104,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             if (!m_Lookup.TryGetValue(prefab, out var vfxInstance))
             {
-                var queue = new Queue<VFXInstance>(2);
+                var queue = new Queue<VFXInstance>(3);
 
-                for (int i = 0; i < 2; ++i)
+                for (int i = 0; i < 3; ++i)
                 {
                     var instance = Instantiate(prefab,transform);
                     instance.gameObject.SetActive(false);

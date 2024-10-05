@@ -44,7 +44,7 @@ namespace Match3
     }
 
     /// <summary>
-    /// Setting related to bonus gem, list all the existing bonus gems. 
+    /// Setting related to bonus BonusGem, list all the existing bonus gems. 
     /// </summary>
     [System.Serializable]
     public class BonusSetting

@@ -225,7 +225,7 @@ namespace Match3
 
         private void Update()
         {
-            //In the editor or a development build, F12 can open a debug menu to add any gem anywhere, but in final build
+            //In the editor or a development build, F12 can open a debug menu to add any BonusGem anywhere, but in final build
             //we do not need to test for that.
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if (Keyboard.current.f12Key.wasPressedThisFrame)

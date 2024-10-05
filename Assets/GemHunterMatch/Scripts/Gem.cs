@@ -6,7 +6,7 @@ namespace Match3
     /// <summary>
     /// A Gem is the base class of all thing that live inside cell on the board. It can be subclassed to specialize them (see
     /// BonusGem and WoodenCrate).
-    /// This class contains a bunch of cached data mainly used for visual effect on the gem (movement, bounce etc..)
+    /// This class contains a bunch of cached data mainly used for visualGem effect on the BonusGem (movement, bounce etc..)
     /// </summary>
     public class Gem : MonoBehaviour
     {
@@ -23,7 +23,7 @@ namespace Match3
         public VisualEffect[] effectMatchPrefabs;
         public Sprite UISprite;
         
-        //When a gem get added to a match, this match get stored here so we can now if this gem is currently in a match and 
+        //When a BonusGem get added to a match, this match get stored here so we can now if this BonusGem is currently in a match and 
         //cannot be used for anything else.
         public Match CurrentMatch = null;
         //this is set to sqrt(2) when falling in diagonal so the time of a diagonal fall is the same as a direct one
@@ -37,7 +37,7 @@ namespace Match3
         public State CurrentState => m_CurrentState;
         public int HitPoint => m_HitPoints;
     
-        //If this is set to true, the Use function will be called when swapping or double clicking the gem.
+        //If this is set to true, the Use function will be called when swapping or double clicking the BonusGem.
         //Not used in this base class, but useful for BonusGem.
         protected bool m_Usable = false;
         protected bool m_Used = false;
@@ -55,10 +55,10 @@ namespace Match3
             currentIndex = startIdx;
         }
 
-        // Called when swapping a Gem that have its Usable set to true. SwappedGem will contains the other gem it was swiped
+        // Called when swapping a Gem that have its Usable set to true. SwappedGem will contains the other BonusGem it was swiped
         // with or null if that was a use triggered by a double click
         //deleteSelf will be true in most case but is set to false when a bonus item is used. Bonus item just call Use on
-        //a "temporary" gem it hold, and that gem should not be deleted
+        //a "temporary" BonusGem it hold, and that BonusGem should not be deleted
         public virtual void Use(Gem swappedGem, bool isBonus = false)
         {
         
