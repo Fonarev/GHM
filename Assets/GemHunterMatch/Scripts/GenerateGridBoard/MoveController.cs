@@ -41,8 +41,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     var gem = currentCell.IncomingGem;
                     gem.TickMoveTimer(Time.deltaTime);
 
-                    var maxDistance = gridBoard.visualSettings.FallAccelerationCurve.Evaluate(gem.FallTime) *
-                                      Time.deltaTime * gridBoard.visualSettings.FallSpeed * gem.SpeedMultiplier;
+                    var maxDistance = GamePlay.instance.visualSettings.FallAccelerationCurve.Evaluate(gem.FallTime) *
+                                      Time.deltaTime * GamePlay.instance.visualSettings.FallSpeed * gem.SpeedMultiplier;
 
                     gem.transform.position = Vector3.MoveTowards(gem.transform.position, targetPosition,
                         maxDistance);
@@ -143,8 +143,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     gem.TickMoveTimer(Time.deltaTime);
                     Vector3 center = gridBoard.grid.GetCellCenterWorld(cellIdx);
 
-                    float maxTime = gridBoard.visualSettings.BounceCurve
-                        .keys[gridBoard.visualSettings.BounceCurve.length - 1].time;
+                    float maxTime = GamePlay.instance.visualSettings.BounceCurve
+                        .keys[GamePlay.instance.visualSettings.BounceCurve.length - 1].time;
 
                     if (gem.FallTime >= maxTime)
                     {
@@ -159,9 +159,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     else
                     {
                         gem.transform.position =
-                            center + Vector3.up * gridBoard.visualSettings.BounceCurve.Evaluate(gem.FallTime);
+                            center + Vector3.up * GamePlay.instance.visualSettings.BounceCurve.Evaluate(gem.FallTime);
                         gem.transform.localScale =
-                            new Vector3(1, gridBoard.visualSettings.SquishCurve.Evaluate(gem.FallTime), 1);
+                            new Vector3(1, GamePlay.instance.visualSettings.SquishCurve.Evaluate(gem.FallTime), 1);
                     }
                 }
                 else if (currentCell.ContainingGem?.CurrentState == Gem.State.Still)

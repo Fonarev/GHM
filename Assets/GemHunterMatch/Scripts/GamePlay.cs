@@ -18,18 +18,14 @@ namespace Assets.GemHunterMatch.Scripts
 {
     public class GamePlay : MonoBehaviour
     {
-        public class Goals
-        {
-            public Gem gem;
-            public int count;
-        }
-
         public event Action<int, int> OnGoalChanged;
-        public event Action OnAllGoalFinished;
+        public event Action<bool> OnAllGoalFinished;
         public event Action<int> OnMoveHappened;
         public event Action<int,int> OnUsedBonusItem;
 
         public static GamePlay instance;
+
+        public VisualSetting visualSettings;
         public Dictionary<int, BonusGemBonusItem> bonusItems = new();
         public bool IsPlaying { get; private set; }
         public int GoalLeft { get; private set; }
@@ -40,6 +36,7 @@ namespace Assets.GemHunterMatch.Scripts
         public GridBoard gridBoard;
         public UIGamePlay ui;
         private Wallet wallet;
+        private bool isPlaying;
 
         private void Awake()
         {
@@ -69,11 +66,11 @@ namespace Assets.GemHunterMatch.Scripts
         {
             level = LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel);
 
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op => { gridBoard = op; }));
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op => { gridBoard = op; gridBoard.Initialize(this, level); }));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.LoadList<BonusGemBonusItem>("bonusItem", op => { bonusItems[op.UsedBonusGem.GemType] = op; }));
-
-            gridBoard.Initialize(this, level);
+          
             ui.Initialize(this, wallet, level);
+            IsPlaying = true;
         }
 
         public void Moved()
@@ -96,7 +93,7 @@ namespace Assets.GemHunterMatch.Scripts
 
         private void OnNoMoveLeft()
         {
-            Finish();
+            Finish(false);
         }
 
         public bool Matched(Gem gem)
@@ -119,8 +116,8 @@ namespace Assets.GemHunterMatch.Scripts
                         GoalLeft -= 1;
                         if (GoalLeft == 0)
                         {
-                            OnAllGoalFinished?.Invoke();
-                            Finish();
+                            //OnAllGoalFinished?.Invoke();
+                            Finish(true);
                             Debug.Log($"Finished");
                         }
                     }
@@ -142,9 +139,15 @@ namespace Assets.GemHunterMatch.Scripts
             IsPlaying = false;
         }
 
-        public void Finish()
+        public void Finish(bool isConditions)
         {
-           IsPlaying = false;
+            IsPlaying = false;
+            OnAllGoalFinished.Invoke(isConditions);
+            if(isConditions)
+            {
+
+            }
+
         }
 
         public void ChangeCoins(int amount)

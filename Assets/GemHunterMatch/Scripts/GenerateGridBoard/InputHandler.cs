@@ -39,12 +39,15 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         public void UpData()
         {
-            PressedThisFrame = InputService.instance.ClickAction.WasPressedThisFrame();
-            ReleasedThisFrame = InputService.instance.ClickAction.WasReleasedThisFrame();
-         
-            clickPos = InputService.instance.ClickPosition.ReadValue<Vector2>();
-            WorldPos = mainCam.ScreenToWorldPoint(clickPos);
-            CheckInput();
+            if (gamePlay.IsPlaying)
+            {
+                PressedThisFrame = InputService.instance.ClickAction.WasPressedThisFrame();
+                ReleasedThisFrame = InputService.instance.ClickAction.WasReleasedThisFrame();
+
+                clickPos = InputService.instance.ClickPosition.ReadValue<Vector2>();
+                WorldPos = mainCam.ScreenToWorldPoint(clickPos);
+                CheckInput();
+            }
         }
 
         private void CheckInput()

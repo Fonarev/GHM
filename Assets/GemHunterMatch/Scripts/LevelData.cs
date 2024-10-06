@@ -82,7 +82,7 @@ namespace Match3
                     if (goal.Count == 0)
                         return false;
                 
-                    UIHandler.Instance.AddMatchEffect(gem);
+                    //UIHandler.Instance.AddMatchEffect(gem);
                 
                     goal.Count -= 1;
                     OnGoalChanged?.Invoke(gem.GemType, goal.Count);
@@ -123,7 +123,7 @@ namespace Match3
 
             if (prev > LowMoveTrigger && RemainingMove <= LowMoveTrigger)
             {
-                UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.LowMove);
+                //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.LowMove);
             }
 
             if (RemainingMove <= 0)

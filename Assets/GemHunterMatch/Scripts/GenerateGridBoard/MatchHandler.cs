@@ -465,7 +465,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (match.DeletedCount >= 4 && !match.ForcedDeletion)
                 {
                     GamePlay.instance.ChangeCoins(1);
-                    PoolService.instance.PlayInstanceAt(GridBoard.instance.visualSettings.CoinVFX, gem.transform.position);
+                    //PoolService.instance.PlayInstanceAt("VFX_Coin", gem.transform.position);
 
                 }
 

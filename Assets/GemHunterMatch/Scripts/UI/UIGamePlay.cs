@@ -8,16 +8,18 @@ using System.Collections.Generic;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
     public class UIGamePlay : MonoBehaviour
     {
         [SerializeField] private UIPopupEntryHandler popupHandler;
-      
-        LevelConfig level;
+        [SerializeField] private AssetReference popupLevelGoals;
+        [SerializeField] private AssetReference popupWin;
+        private LevelConfig level;
         public RectTransform rootGoals;
-      
+        public RectTransform containerPopup;
         private Dictionary<int,UIGoalEntry> goals = new();
         public TextMeshProUGUI moveCounter;
         public TextMeshProUGUI cons;
@@ -30,8 +32,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
             this.level = level;
             gamePlay.OnGoalChanged += GoalChange;
             gamePlay.OnMoveHappened += MoveHappen;
+            gamePlay.OnAllGoalFinished += AllGoalFinished;
             moveCounter.text = level.MaxMove.ToString();
-
+            StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
             foreach (var goal in level.Goals)
             {
                 StartCoroutine(LoaderAsset.InstantiateAsset<UIGoalEntry>("GoalEntry", rootGoals, op =>
@@ -42,6 +45,12 @@ namespace Assets.GemHunterMatch.Scripts.UI
                
             }
             bonusGroup.Init(gamePlay);
+        }
+
+        private void AllGoalFinished(bool isCondition)
+        {
+        if(isCondition)
+            StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init()));
         }
 
         private void MoveHappen(int move)

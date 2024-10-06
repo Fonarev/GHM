@@ -76,6 +76,21 @@ MonoBehaviour:
     m_SerializedLabels:
     - bonusItem
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 28a108bc40db70e41868b1f293d26756
+    m_Address: PopupLevelGoals
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1f0d56228e90c474a936de31715b3252
+    m_Address: PopupWin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0e57c286bfbf10045b66afa053c4ad34
+    m_Address: VFX_CellHold
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e1261942c0e7c0c47ba4270a26f5bf42, type: 2}
   m_SchemaSet:

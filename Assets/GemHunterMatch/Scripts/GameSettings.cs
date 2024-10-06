@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Audio;
 using UnityEngine.VFX;
 
@@ -30,17 +31,27 @@ namespace Match3
         public AnimationCurve BounceCurve;
         public AnimationCurve SquishCurve;
 
+        [Header("OnMath")]
         public AnimationCurve MatchFlyCurve;
+        public AssetReference MatchEffect;
+        //public GameObject BonusModePrefab;
+
+        [Header("Hint")]
+        public float inactivityBeforeHint = 8.0f;
+        public AssetReference HintReference;
+       
+        [Header("InputEffect")]
+        public AssetReference GemHold;
+        public AssetReference HoldTrail;
+
+        [Header("CoinEffect")]
+        public AssetReference CoinVFX;
         public AnimationCurve CoinFlyCurve;
 
-        public GameObject BonusModePrefab;
-        
-        public GameObject HintPrefab;
+        [Header("EndEffect")]
+        public AssetReference WinEffect;
+        public AssetReference LoseEffect;
 
-        public VisualEffect CoinVFX;
-
-        public VisualEffect WinEffect;
-        public VisualEffect LoseEffect;
     }
 
     /// <summary>
@@ -64,10 +75,10 @@ namespace Match3
             public string ItemName;
             public int Price;
 
-            public virtual bool CanBeBought()
-            {
-                return GameManager.Instance.Coins >= Price; 
-            }
+            //public virtual bool CanBeBought()
+            //{
+            //    return GameManager.Instance.Coins >= Price; 
+            //}
         
             public abstract void Buy();
         }

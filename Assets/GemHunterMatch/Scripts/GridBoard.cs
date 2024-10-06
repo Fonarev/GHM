@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.VFX;
 
 using Random = UnityEngine.Random;
 
@@ -15,10 +14,6 @@ namespace Assets.GemHunterMatch.Scripts
     public class GridBoard : MonoBehaviour
     {
         public Gem[] existingGems;
-        public float inactivityBeforeHint = 8.0f;
-        public VisualEffect gemHoldPrefab;
-        public VisualEffect holdTrailPrefab;
-        public VisualSetting visualSettings;
         public BonusSetting bonusSettings;
         public static GridBoard instance;
         public Grid grid => GetComponent<Grid>();
@@ -42,9 +37,11 @@ namespace Assets.GemHunterMatch.Scripts
         public BonusGemBonusItem activatedBonus;
         public bool incrementHintTimer{ get; set; }
         private bool isInit;
+        public bool IsPlaying => isPlaying;
         public int freezeMoveLock { get; private set; }
         private List<IBoardAction> boardActions = new();
         private LevelConfig _levelConfig;
+        private bool isPlaying = true;
 
         private void Awake()
         {
@@ -55,13 +52,13 @@ namespace Assets.GemHunterMatch.Scripts
         { 
             this.gamePlay = gamePlay;
             _levelConfig = levelConfig;
-
+            //gamePlay.OnAllGoalFinished += (bool i) => { isPlaying = false; var condition = i; };
             if (generateGem == null) 
                 generateGem = new(this);
 
             generateGem.FillBoardGems();
 
-            effectController = new(gemHoldPrefab, holdTrailPrefab);
+            //effectController = new(gamePlay.visualSettings.GemHold, gamePlay.visualSettings.HoldTrail);
             effectController.Instatiate(transform);
 
             matchHandler = new(this, generateGem);
@@ -69,8 +66,8 @@ namespace Assets.GemHunterMatch.Scripts
             moveController = new(this, matchHandler);
             swapHandler = new(this,matchHandler);
             inputHandler = new(this, gamePlay, swapHandler, effectController, Camera.main);
-            hint = new(matchHandler, grid, inactivityBeforeHint);
-            hint.Instatiate(visualSettings.HintPrefab);
+            hint = new(matchHandler, grid, gamePlay.visualSettings.inactivityBeforeHint);
+            //hint.Instatiate(gamePlay.visualSettings.HintReference);
             isInit = true;
         }
 
