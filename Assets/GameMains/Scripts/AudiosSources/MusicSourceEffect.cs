@@ -11,18 +11,18 @@ namespace Assets.GameMains.Scripts.AudiosSources
         [SerializeField] private AudioClip effectClip;
         [SerializeField] private AudioClip[] effectClips;
         private Dictionary<string, AudioClip> effects;
-        private AudioSource audioBG => GetComponent<AudioSource>();
+        private AudioSource audioSourse => GetComponent<AudioSource>();
 
         public void Initialize()
         {
-            audioBG.loop = false;
-            audioBG.clip = effectClip;
+            audioSourse.loop = false;
+            audioSourse.clip = effectClip;
             effects = effectClips.ToDictionary(i => i.name, i => i);
         }
 
-        public void Play(string name) => audioBG.PlayOneShot(effects[name]);
-        public void Play(AudioClip name) => audioBG.PlayOneShot(name);
-        public void Pause() => audioBG.Pause();
+        public void Play(string name) => audioSourse.PlayOneShot(effects[name]);
+        public void Play(AudioClip name) => audioSourse.PlayOneShot(name);
+        public void Pause() => audioSourse.Pause();
 
     }
 }

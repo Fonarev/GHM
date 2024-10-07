@@ -50,7 +50,7 @@ namespace Match3
             AudioManager.instance.PlayEffect(DamagedClip);
 
             if (DamageEffect != null)
-                PoolService.instance.PlayInstanceAt(DamageEffect, transform.position);
+                GridBoard.instance.poolVFX.PlayInstance(DamageEffect, transform.position);
 
             var ret = base.Damage(damage);
             UpdateState();

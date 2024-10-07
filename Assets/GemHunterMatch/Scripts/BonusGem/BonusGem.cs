@@ -42,8 +42,8 @@ namespace Match3
             Vector3 position = GridBoard.instance.GetCellCenter(currentIndex); 
             foreach (var effectPrefab in effectMatchPrefabs)
             {
-                PoolService.instance.AddNewInstance(effectPrefab, 8);
-                PoolService.instance.PlayInstanceAt(effectPrefab, position);
+                GridBoard.instance.poolVFX.AddNewInstance(effectPrefab, 8);
+                GridBoard.instance.poolVFX.PlayInstance(effectPrefab, position);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
     public class MatchHandler
     {
-        public bool boardChanged { get; set; }
+       
         public List<Match> tickingMatch { get; set; } = new();
         public List<Vector3Int> tickingCells { get; set; } = new();
         public List<Vector3Int> newTickingCells { get; set; } = new();
@@ -36,21 +36,21 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 DoMatchCheck();
 
                 gridBoard.incrementHintTimer = false;
-                boardChanged = true;
+                gridBoard.boardChanged = true;
             }
             if (tickingMatch.Count > 0)
             {
                 MatchTicking();
 
                 gridBoard.incrementHintTimer = false;
-                boardChanged = true;
+                gridBoard.boardChanged = true;
             }
             if (emptyCells.Count > 0)
             {
                 EmptyCheck();
 
                 gridBoard.incrementHintTimer = false;
-                boardChanged = true;
+                gridBoard.boardChanged = true;
             }
             if (newTickingCells.Count > 0)
             {
@@ -465,7 +465,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (match.DeletedCount >= 4 && !match.ForcedDeletion)
                 {
                     GamePlay.Instance.ChangeCoins(1);
-                    //PoolService.Instance.PlayInstanceAt("VFX_Coin", gem.transform.position);
+                    //gridBoard.poolVFX.PlayInstance(GamePlay.Instance.visualSettings.CoinVFX, gem.transform.position);
 
                 }
 
@@ -484,7 +484,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                     foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                     {
-                        PoolService.instance.PlayInstanceAt(matchEffectPrefab,gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
+                        gridBoard.poolVFX.PlayInstance(matchEffectPrefab,gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
                     }
 
                     gem.gameObject.SetActive(false);
@@ -498,7 +498,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                 {
-                    PoolService.instance.PlayInstanceAt(matchEffectPrefab, gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
+                    gridBoard.poolVFX.PlayInstance(matchEffectPrefab, gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
                 }
 
                 gem.gameObject.SetActive(false);

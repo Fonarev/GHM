@@ -117,7 +117,6 @@ namespace Assets.GemHunterMatch.Scripts
                         GoalLeft -= 1;
                         if (GoalLeft == 0)
                         {
-                            //OnAllGoalFinished?.Invoke();
                             Finish(true);
                             Debug.Log($"Finished");
                         }
@@ -143,12 +142,33 @@ namespace Assets.GemHunterMatch.Scripts
         public void Finish(bool isConditions)
         {
             IsPlaying = false;
-            OnAllGoalFinished.Invoke(isConditions);
-            if(isConditions)
-            {
 
+            StartCoroutine(ShowVisualFinish(isConditions));
+        }
+
+        private IEnumerator ShowVisualFinish(bool isConditions)
+        {
+            yield return new WaitForSeconds(1);
+
+            if (isConditions)
+            {
+                yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform));
+
+                AudioManager.instance.PlayEffect("chime");
+
+                while (gridBoard.boardChanged)
+                {
+                    yield return new WaitForSeconds(2);
+                    yield return gridBoard.boardChanged;
+                }
+            }
+            else
+            {
+                AudioManager.instance.PlayEffect("jingle_chime");
             }
 
+            OnAllGoalFinished.Invoke(isConditions);
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.WinEffect, transform));
         }
 
         public void ChangeCoins(int amount)

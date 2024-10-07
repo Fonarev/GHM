@@ -32,7 +32,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             this.level = level;
             gamePlay.OnGoalChanged += GoalChange;
             gamePlay.OnMoveHappened += MoveHappen;
-            gamePlay.OnAllGoalFinished += AllGoalFinished;
+            gamePlay.OnAllGoalFinished += Finished;
             moveCounter.text = level.MaxMove.ToString();
             StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
             foreach (var goal in level.Goals)
@@ -47,9 +47,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
             bonusGroup.Init(gamePlay);
         }
 
-        private void AllGoalFinished(bool isCondition)
+        private void Finished(bool isCondition)
         {
-        if(isCondition)
             StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init()));
         }
 

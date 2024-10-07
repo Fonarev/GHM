@@ -23,7 +23,7 @@ namespace Match3
         {
             m_Usable = true;
 
-            PoolService.instance.AddNewInstance(UseEffect, 2);
+            GridBoard.instance.poolVFX.AddNewInstance(UseEffect, 2);
             m_PositionMap = new Texture2D(64, 1, TextureFormat.RGBAFloat, false);
         }
 
@@ -104,7 +104,7 @@ namespace Match3
             m_PositionMap.SetPixels(infoColor, 0);
             m_PositionMap.Apply();
 
-            VisualEffect vfxInst = PoolService.instance.GetInstance(UseEffect);
+            VisualEffect vfxInst = GridBoard.instance.poolVFX.GetInstance(UseEffect);
             
             vfxInst.Stop();
             vfxInst.SetTexture(Shader.PropertyToID("PosMap"), m_PositionMap);

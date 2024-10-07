@@ -142,3 +142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectClip: {fileID: 8300000, guid: c37838e23935a314cb09e1f83c215b64, type: 3}
+  effectClips:
+  - {fileID: 8300000, guid: dc4fa3b4e75bbf24e8e51bc9f17ac22a, type: 3}
+  - {fileID: 8300000, guid: 651835b9a2fdcb74b832232d2f86fdb2, type: 3}
+  - {fileID: 8300000, guid: c37838e23935a314cb09e1f83c215b64, type: 3}
+  - {fileID: 8300000, guid: 6cc24d84ab29ccb42b10883a180916bc, type: 3}
+  - {fileID: 8300000, guid: 19f9c3a78814cdc4c93e90b0e5d65add, type: 3}

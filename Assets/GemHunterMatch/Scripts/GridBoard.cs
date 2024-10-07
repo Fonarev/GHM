@@ -31,13 +31,14 @@ namespace Assets.GemHunterMatch.Scripts
         private InputHandler inputHandler;
         private SwapHandler swapHandler;
         private HintShowMatches hint;
-
+        public PoolVFX poolVFX;
         private GamePlay gamePlay;
         public LevelConfig levelConfig => _levelConfig;
         public BonusGemBonusItem activatedBonus;
         public bool incrementHintTimer{ get; set; }
         private bool isInit;
         public bool IsPlaying => isPlaying;
+        public bool boardChanged { get; set; }
         public int freezeMoveLock { get; private set; }
         private List<IBoardAction> boardActions = new();
         private LevelConfig _levelConfig;
@@ -51,6 +52,7 @@ namespace Assets.GemHunterMatch.Scripts
         public void Initialize(GamePlay gamePlay, LevelConfig levelConfig)
         { 
             this.gamePlay = gamePlay;
+            poolVFX = new(transform);
             _levelConfig = levelConfig;
 
             if (generateGem == null) 
@@ -66,7 +68,7 @@ namespace Assets.GemHunterMatch.Scripts
             moveController = new(this, matchHandler);
             swapHandler = new(this,matchHandler);
             inputHandler = new(this, gamePlay, swapHandler, effectController, Camera.main);
-            hint = new(matchHandler, grid, gamePlay.visualSettings);
+            hint = new(matchHandler, this, gamePlay.visualSettings);
             hint.Instatiate(gamePlay.transform);
             isInit = true;
         }
@@ -208,6 +210,7 @@ namespace Assets.GemHunterMatch.Scripts
             HandleBonusAction();
 
             inputHandler.UpData();
+            poolVFX.UpDate();
 
             incrementHintTimer = activatedBonus == null;
 

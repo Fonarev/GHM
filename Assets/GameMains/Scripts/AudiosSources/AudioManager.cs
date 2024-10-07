@@ -56,7 +56,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
                 if (YandexGame.Instance.nowAdsShow)
                 {
                     //this.isSilence = isSilence;
-                    //audioBG.Play();
+                    //audioSourse.Play();
                   
                 }
 
@@ -64,7 +64,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
             else
             {
                 //this.isSilence = isSilence;
-                //audioBG.Pause();
+                //audioSourse.Pause();
                 AudioListener.pause = isSilence;
             }
 

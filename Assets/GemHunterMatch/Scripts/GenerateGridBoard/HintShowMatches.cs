@@ -13,13 +13,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private GameObject hintIndicator;
 
         private readonly MatchHandler matchHandler;
-        private readonly Grid grid;
+        private readonly GridBoard gridBoard;
         private readonly VisualSetting visual;
 
-        public HintShowMatches(MatchHandler matchHandler,Grid grid, VisualSetting visual)
+        public HintShowMatches(MatchHandler matchHandler,GridBoard gridBoard, VisualSetting visual)
         {
             this.matchHandler = matchHandler;
-            this.grid = grid;
+            this.gridBoard = gridBoard;
             this.visual = visual;
         }
 
@@ -39,10 +39,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (incrementHintTimer)
                 {
                     //Nothing happened this frame, but the board was changed since last possible match check, so need to refresh
-                    if (matchHandler.boardChanged)
+                    if (gridBoard.boardChanged)
                     {
                         matchHandler.FindAllPossibleMatch();
-                        matchHandler.boardChanged = false;
+                        gridBoard.boardChanged = false;
                     }
 
                     var match = matchHandler.GetMatch();
@@ -62,8 +62,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             if (hintIndicator.activeSelf)
             {
-                var startPos = grid.GetCellCenterWorld(match.StartPosition);
-                var endPos = grid.GetCellCenterWorld(match.StartPosition + match.Direction);
+                var startPos = gridBoard.grid.GetCellCenterWorld(match.StartPosition);
+                var endPos = gridBoard.grid.GetCellCenterWorld(match.StartPosition + match.Direction);
 
                 var current = hintIndicator.transform.position;
                 current = Vector3.MoveTowards(current, endPos, 1.0f * Time.deltaTime);
@@ -75,7 +75,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 sinceLastHint += Time.deltaTime;
                 if (sinceLastHint >= visual.inactivityTimeBeforeHint)
                 {
-                    hintIndicator.transform.position = grid.GetCellCenterWorld(match.StartPosition);
+                    hintIndicator.transform.position = gridBoard.grid.GetCellCenterWorld(match.StartPosition);
                     hintIndicator.SetActive(true);
                 }
             }

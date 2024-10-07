@@ -63,7 +63,7 @@ namespace Match3
             //play the undone effect of the state before this one
             if(m_CurrentState-1 >= 0)
             {
-                //GameManager.Instance.PoolSystem.PlayInstanceAt(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
+                //GameManager.Instance.PoolSystem.PlayInstance(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
                 Debug.Log("instatiate obj Pool");
             }
 
