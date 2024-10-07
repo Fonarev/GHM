@@ -99,7 +99,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             return inst;
         }
 
-        //This both activate the gameobject and update the starting framecount for that instance so you need to call play the same frame!
+        //This both activate the gameobject and update the starting framecount for that Instance so you need to call play the same frame!
         public VisualEffect GetInstance(VisualEffect prefab)
         {
             if (!m_Lookup.TryGetValue(prefab, out var vfxInstance))

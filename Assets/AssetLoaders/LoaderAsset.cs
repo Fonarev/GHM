@@ -75,6 +75,28 @@ namespace Assets.AssetLoaders
           
         }
 
+        public static IEnumerator InstantiateAsset(AssetReference reference, Transform parent = null, Action<GameObject> callback = null)
+        {
+            AsyncOperationHandle<GameObject> handle = reference.InstantiateAsync(parent);
+
+            yield return handle;
+
+            GameObject asset = handle.Result;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                if (callback != null)
+                {
+                    callback.Invoke(asset);
+                }
+
+                instatiateAssets[asset] = handle;
+            }
+            else
+            {
+                throw new NullReferenceException($"Failed to load Asset: {reference}");
+            }
+        }
         public static IEnumerator InstantiateAsset(string assetName, Transform parent = null, Action<GameObject> callback = null)
         {
             AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(assetName, parent);

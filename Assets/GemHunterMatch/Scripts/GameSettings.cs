@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Audio;
-using UnityEngine.VFX;
 
 namespace Match3
 {
@@ -26,7 +25,8 @@ namespace Match3
     [System.Serializable]
     public class VisualSetting
     {
-        public float FallSpeed = 10.0f;
+        [Header("OnFall")]
+        [Range(5.0f, 15.0f)] public float FallSpeed = 10.0f;
         public AnimationCurve FallAccelerationCurve;
         public AnimationCurve BounceCurve;
         public AnimationCurve SquishCurve;
@@ -37,7 +37,7 @@ namespace Match3
         //public GameObject BonusModePrefab;
 
         [Header("Hint")]
-        public float inactivityBeforeHint = 8.0f;
+        [Range(5.0f, 10.0f)] public float inactivityTimeBeforeHint = 8.0f;
         public AssetReference HintReference;
        
         [Header("InputEffect")]
@@ -51,7 +51,7 @@ namespace Match3
         [Header("EndEffect")]
         public AssetReference WinEffect;
         public AssetReference LoseEffect;
-
+        public AssetReference Bubbles;
     }
 
     /// <summary>

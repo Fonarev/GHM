@@ -464,8 +464,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 //we only spawn coins for non bonus match
                 if (match.DeletedCount >= 4 && !match.ForcedDeletion)
                 {
-                    GamePlay.instance.ChangeCoins(1);
-                    //PoolService.instance.PlayInstanceAt("VFX_Coin", gem.transform.position);
+                    GamePlay.Instance.ChangeCoins(1);
+                    //PoolService.Instance.PlayInstanceAt("VFX_Coin", gem.transform.position);
 
                 }
 
@@ -480,7 +480,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 if (gem.CurrentState != Gem.State.Disappearing)
                 {
-                    GamePlay.instance.Matched(gem);
+                    GamePlay.Instance.Matched(gem);
 
                     foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                     {
@@ -494,7 +494,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             }
             else if (gem.CurrentState != Gem.State.Disappearing)
             {
-                GamePlay.instance.Matched(gem);
+                GamePlay.Instance.Matched(gem);
 
                 foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                 {

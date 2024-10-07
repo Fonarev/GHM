@@ -91,6 +91,36 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 021bbf96a19906642a0e41fb58b29fc4
+    m_Address: VFX_CellTrail
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 761d00c63087d1f4b806eeca34a1625e
+    m_Address: HintLight
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 202ea16d4263b8746948d26a69af75b9
+    m_Address: VFX_Coin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2571ff47b782206499bc35b1ce8a17ae
+    m_Address: VFX_Win
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d22cf45439fda9d40b3e13e2404543da
+    m_Address: VFX_Loose
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f4f22f7bed44e2f4abeb41e8a2af3af6
+    m_Address: VFX_CellCrash
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e1261942c0e7c0c47ba4270a26f5bf42, type: 2}
   m_SchemaSet:

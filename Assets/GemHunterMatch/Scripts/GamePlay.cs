@@ -23,7 +23,7 @@ namespace Assets.GemHunterMatch.Scripts
         public event Action<int> OnMoveHappened;
         public event Action<int,int> OnUsedBonusItem;
 
-        public static GamePlay instance;
+        public static GamePlay Instance => instance;
 
         public VisualSetting visualSettings;
         public Dictionary<int, BonusGemBonusItem> bonusItems = new();
@@ -37,6 +37,7 @@ namespace Assets.GemHunterMatch.Scripts
         public UIGamePlay ui;
         private Wallet wallet;
         private bool isPlaying;
+        private static GamePlay instance;
 
         private void Awake()
         {

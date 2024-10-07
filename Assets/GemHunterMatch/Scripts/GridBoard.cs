@@ -52,22 +52,22 @@ namespace Assets.GemHunterMatch.Scripts
         { 
             this.gamePlay = gamePlay;
             _levelConfig = levelConfig;
-            //gamePlay.OnAllGoalFinished += (bool i) => { isPlaying = false; var condition = i; };
+
             if (generateGem == null) 
                 generateGem = new(this);
 
             generateGem.FillBoardGems();
 
-            //effectController = new(gamePlay.visualSettings.GemHold, gamePlay.visualSettings.HoldTrail);
-            effectController.Instatiate(transform);
+            effectController = new(gamePlay.visualSettings);
+            effectController.Instatiate(gamePlay.transform);
 
             matchHandler = new(this, generateGem);
             matchHandler.FindAllPossibleMatch();
             moveController = new(this, matchHandler);
             swapHandler = new(this,matchHandler);
             inputHandler = new(this, gamePlay, swapHandler, effectController, Camera.main);
-            hint = new(matchHandler, grid, gamePlay.visualSettings.inactivityBeforeHint);
-            //hint.Instatiate(gamePlay.visualSettings.HintReference);
+            hint = new(matchHandler, grid, gamePlay.visualSettings);
+            hint.Instatiate(gamePlay.transform);
             isInit = true;
         }
 

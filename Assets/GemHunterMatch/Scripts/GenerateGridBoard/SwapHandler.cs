@@ -85,7 +85,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         SwapStage = SwapStage.None;
 
                         // as swapHandler was successful, we amount down 1 move from the level
-                        GamePlay.instance.Moved();
+                        GamePlay.Instance.Moved();
                     }
                     else
                     {

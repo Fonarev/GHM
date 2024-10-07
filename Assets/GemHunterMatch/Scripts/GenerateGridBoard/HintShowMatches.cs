@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts.Expansion;
+
+using Match3;
+
+using UnityEngine;
 
 namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
@@ -7,46 +12,52 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private  float sinceLastHint;
         private GameObject hintIndicator;
 
-        private readonly float inactivityBeforeHint;
         private readonly MatchHandler matchHandler;
         private readonly Grid grid;
+        private readonly VisualSetting visual;
 
-        public HintShowMatches(MatchHandler matchHandler,Grid grid, float inactivityBeforeHint)
+        public HintShowMatches(MatchHandler matchHandler,Grid grid, VisualSetting visual)
         {
             this.matchHandler = matchHandler;
             this.grid = grid;
-            this.inactivityBeforeHint = inactivityBeforeHint;
+            this.visual = visual;
         }
 
-        public void Instatiate(GameObject prefab)
+        public void Instatiate(Transform container = null)
         {
-            hintIndicator = Object.Instantiate(prefab);
-            hintIndicator.SetActive(false);
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visual.HintReference, container, op =>
+            {
+                hintIndicator = op;
+                hintIndicator.SetActive(false);
+            }));
         }
 
         public void Show(bool incrementHintTimer)
         {
-            if (incrementHintTimer)
+            if (hintIndicator != null)
             {
-                //Nothing happened this frame, but the board was changed since last possible match check, so need to refresh
-                if (matchHandler.boardChanged)
+                if (incrementHintTimer)
                 {
-                    matchHandler.FindAllPossibleMatch();
-                    matchHandler.boardChanged = false;
-                }
-               
+                    //Nothing happened this frame, but the board was changed since last possible match check, so need to refresh
+                    if (matchHandler.boardChanged)
+                    {
+                        matchHandler.FindAllPossibleMatch();
+                        matchHandler.boardChanged = false;
+                    }
+
                     var match = matchHandler.GetMatch();
 
-                if (match != null)
-                    ShowHint(match);
-            }
-            else
-            {
-                hintIndicator.SetActive(false);
-                sinceLastHint = 0.0f;
+                    if (match != null)
+                        ShowHint(match);
+                }
+                else
+                {
+                    hintIndicator.SetActive(false);
+                    sinceLastHint = 0.0f;
+                }
             }
         }
-        
+
         private void ShowHint(PossibleSwap match)
         {
             if (hintIndicator.activeSelf)
@@ -62,7 +73,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             else
             {
                 sinceLastHint += Time.deltaTime;
-                if (sinceLastHint >= inactivityBeforeHint)
+                if (sinceLastHint >= visual.inactivityTimeBeforeHint)
                 {
                     hintIndicator.transform.position = grid.GetCellCenterWorld(match.StartPosition);
                     hintIndicator.SetActive(true);

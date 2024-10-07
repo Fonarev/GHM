@@ -1,39 +1,49 @@
-﻿using UnityEngine;
+﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts.Expansion;
+
+using Match3;
+
+using UnityEngine;
 using UnityEngine.VFX;
 
 namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
     public class VFXController
     {
-        private VisualEffect gemHoldPrefab;
-        private VisualEffect holdTrailPrefab;
+        private VisualSetting visualSetting;
+       
         private VisualEffect gemHoldVFXInstance;
         private VisualEffect holdTrailInstance;
 
-        public VFXController(VisualEffect gemHoldPrefab, VisualEffect holdTrailPrefab)
+        public VFXController(VisualSetting visualSetting)
         {
-            this.gemHoldPrefab = gemHoldPrefab;
-            this.holdTrailPrefab = holdTrailPrefab;
+            this.visualSetting = visualSetting;
         }
 
-        public void Instatiate(Transform parent = null)
+        public void Instatiate(Transform container = null)
         {
-            if (gemHoldPrefab != null)
+            if (gemHoldVFXInstance == null)
             {
-                gemHoldVFXInstance = Object.Instantiate(gemHoldPrefab, parent);
-                gemHoldVFXInstance.gameObject.SetActive(false);
+                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<VisualEffect>(visualSetting.GemHold, container, op =>
+                {
+                    gemHoldVFXInstance = op;
+                    gemHoldVFXInstance.gameObject.SetActive(false);
+                }));
             }
 
-            if (holdTrailPrefab != null)
+            if (holdTrailInstance == null)
             {
-                holdTrailInstance = Object.Instantiate(holdTrailPrefab,parent);
-                holdTrailInstance.gameObject.SetActive(false);
+                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<VisualEffect>(visualSetting.HoldTrail, container, op =>
+                {
+                    holdTrailInstance = op;
+                    holdTrailInstance.gameObject.SetActive(false);
+                }));
             }
         }
 
         public void SetPos(Vector3 worldPos)
         {
-            if (holdTrailInstance.gameObject.activeSelf)
+            if (holdTrailInstance.gameObject.activeSelf && holdTrailInstance != null)
                 holdTrailInstance.transform.position = worldPos;
         }
 

@@ -32,7 +32,7 @@ namespace Match3
             
             if(DamageEffect != null)
             {
-                //PoolService.instance.AddNewInstance(DamageEffect, 6);
+                //PoolService.Instance.AddNewInstance(DamageEffect, 6);
             }
                
             if (CanBeDestroyedWithAdjacentMatch)
