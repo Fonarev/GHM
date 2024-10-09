@@ -11,7 +11,7 @@ namespace Assets.YG.Scripts
         public int coins;
         public int topScore;
         public bool isSilence;
-        public Dictionary<int,bool> levels = new();
+        public Dictionary<int,LevelData> levels = new();
         public Dictionary<int, Location> locations = new();
         public Dictionary<int, int> bonusGemItem = new();
 
@@ -19,8 +19,11 @@ namespace Assets.YG.Scripts
         {
             coins = 0;
             topScore = 0;
-            levels.Add(1, false);
-            locations[1]= new Location(){ number = 1,completedLevels = 1 };
+
+            levels.Add(1, new LevelData() { level = 1, isOpened = true });
+
+
+            locations[1] = new Location() { number = 1, isLock = true };
 
             bonusGemItem[-1] = 5;
             bonusGemItem[-2] = 5;

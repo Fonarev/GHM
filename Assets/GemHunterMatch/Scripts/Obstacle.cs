@@ -1,4 +1,7 @@
+using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts;
+
+using System.Collections;
 
 using UnityEngine;
 using UnityEngine.VFX;
@@ -23,7 +26,7 @@ namespace Match3
 
         private bool m_Done = false;
 
-        public virtual void Init(Vector3Int cell)
+        public virtual IEnumerator Init(Vector3Int cell)
         {
             m_SpriteRenderer = GetComponent<SpriteRenderer>();
             m_SpriteRenderer.sprite = LockState[0].Sprite;
@@ -31,7 +34,7 @@ namespace Match3
 
             m_Cell = cell;
 
-            GridBoard.AddObstacle(cell, this);
+           yield return CoroutineHandler.StartRoutine(GridBoard.AddObstacle(cell, this));
             
             foreach (var state in LockState)
             {

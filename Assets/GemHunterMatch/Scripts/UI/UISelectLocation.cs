@@ -9,7 +9,6 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private RectTransform rootSpawn;
         [SerializeField] private UILocationEntry[] locations;
        
-        private LocalAssetLoader loader;
         public void Init()
         {
            for (int i = 0; i < locations.Length; i++) 

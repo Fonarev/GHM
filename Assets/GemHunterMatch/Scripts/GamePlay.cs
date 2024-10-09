@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts
 {
@@ -38,7 +39,7 @@ namespace Assets.GemHunterMatch.Scripts
         private Wallet wallet;
         private bool isPlaying;
         private static GamePlay instance;
-
+       
         private void Awake()
         {
             instance = this;
@@ -67,7 +68,11 @@ namespace Assets.GemHunterMatch.Scripts
         {
             level = LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel);
 
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op => { gridBoard = op; gridBoard.Initialize(this, level); }));
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op => 
+            {
+                gridBoard = op;
+                CoroutineHandler.StartRoutine(gridBoard.Initialize(this, level)); 
+            }));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.LoadList<BonusGemBonusItem>("bonusItem", op => { bonusItems[op.UsedBonusGem.GemType] = op; }));
           
             ui.Initialize(this, wallet, level);
@@ -142,7 +147,7 @@ namespace Assets.GemHunterMatch.Scripts
         public void Finish(bool isConditions)
         {
             IsPlaying = false;
-
+          
             StartCoroutine(ShowVisualFinish(isConditions));
         }
 
@@ -153,7 +158,7 @@ namespace Assets.GemHunterMatch.Scripts
             if (isConditions)
             {
                 yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform));
-
+                SetCompletedLevel();
                 AudioManager.instance.PlayEffect("chime");
 
                 while (gridBoard.boardChanged)
@@ -169,6 +174,20 @@ namespace Assets.GemHunterMatch.Scripts
 
             OnAllGoalFinished.Invoke(isConditions);
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.WinEffect, transform));
+        }
+
+        private void SetCompletedLevel()
+        {
+            YandexGame.Instance.progressData.levels[level.level].isCompleted = true;
+
+            int nextLevel = level.level;
+            nextLevel++;
+            if (!YandexGame.Instance.progressData.levels.ContainsKey(nextLevel))
+            {
+                YandexGame.Instance.progressData.levels[nextLevel] = new LevelData(){ level = nextLevel, isOpened = true};
+            }
+
+            YandexGame.Instance.Save();
         }
 
         public void ChangeCoins(int amount)

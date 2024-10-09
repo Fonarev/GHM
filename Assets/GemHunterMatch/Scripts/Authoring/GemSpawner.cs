@@ -1,3 +1,4 @@
+using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts;
 
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace Match3
             //This tile is only used in editor to help design the level. At runtime, we notify the board that this tile is
             //a place for a BonusGem. The Board will take care of creating a BonusGem there.
             //Board.RegisterSpawner(position);
-            GridBoard.RegisterSpawnerPoint(position);
+           CoroutineHandler.StartRoutine(GridBoard.RegisterSpawnerPoint(position));
 
             return base.StartUp(position, tilemap, go);
         }

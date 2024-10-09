@@ -13,6 +13,10 @@ namespace Assets.GameMains.Scripts.EntryPoints
     {
         private LoaderScenes loaderScenes;
         [SerializeField] private SpriteRenderer logo;
+        private void OnDisable()
+        {
+            GlobalMediator.instance.OnSelectedLevel -= SelectedLevel;
+        }
         public void Initialize(AudioManager audio,LoaderScenes loaderScenes)
         {
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG"));

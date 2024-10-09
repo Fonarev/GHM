@@ -49,7 +49,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private void Finished(bool isCondition)
         {
-            StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init()));
+            StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init(isCondition)));
         }
 
         private void MoveHappen(int move)

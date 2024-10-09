@@ -122,7 +122,7 @@ namespace Assets.YG.Scripts
         public void InitStorege() => storage.Initialize();
 
         public void Save(object progressData) => storage.Save(progressData);
-
+        public void Save() => storage.Save(progressData);
         public void Load() => storage.Load();
 
         public void OnLoadData(string data) => storage.SetLoadedData(data);

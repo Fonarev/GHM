@@ -8,12 +8,18 @@ namespace Assets.GameMains.Scripts.EntryPoints
     public class GameEntryPoint : MonoBehaviour
     {
         [SerializeField] private Transform rootBackground;
-        
-        public void Initialize()
+        private void OnDisable()
+        {
+            GlobalMediator.instance.OnExitMenu -= () => { };
+            GlobalMediator.instance.OnSelectedLevel -= (lvl) => { };
+        }
+        public void Initialize(LoaderScenes loaderScenes)
         {
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG", rootBackground));
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("VFX_Bubbles", rootBackground));
+            GlobalMediator.instance.OnExitMenu += () => { loaderScenes.LoadLevel(Scenes.menu); };
+            GlobalMediator.instance.OnSelectedLevel += (lvl) => { loaderScenes.LoadLevel(Scenes.game); };
         }
-
+       
     }
 }

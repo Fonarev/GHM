@@ -1,8 +1,10 @@
-﻿using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
+﻿using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using Match3;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -17,7 +19,7 @@ namespace Assets.GemHunterMatch.Scripts
         public BonusSetting bonusSettings;
         public static GridBoard instance;
         public Grid grid => GetComponent<Grid>();
-
+       
         public List<Vector3Int> spawnerPoints { get; private set; } = new();
         public Dictionary<Vector3Int, BoardCell> contentCell = new();
 
@@ -49,14 +51,15 @@ namespace Assets.GemHunterMatch.Scripts
             if (instance == null) instance = this;
         }
 
-        public void Initialize(GamePlay gamePlay, LevelConfig levelConfig)
-        { 
+        public IEnumerator Initialize(GamePlay gamePlay, LevelConfig levelConfig)
+        {
+            yield return instance != null;
             this.gamePlay = gamePlay;
             poolVFX = new(transform);
             _levelConfig = levelConfig;
 
             if (generateGem == null) 
-                generateGem = new(this);
+                generateGem = new(instance);
 
             generateGem.FillBoardGems();
 
@@ -73,9 +76,10 @@ namespace Assets.GemHunterMatch.Scripts
             isInit = true;
         }
 
-        public static void RegisterCell(Vector3Int cellPosition, Gem startingGem = null)
+        public static IEnumerator RegisterCell(Vector3Int cellPosition, Gem startingGem = null)
         {
-            CheckInstance();
+            yield return instance != null;
+            //CheckInstance();
 
             if (!instance.contentCell.ContainsKey(cellPosition))
                 instance.contentCell.Add(cellPosition, new BoardCell());
@@ -88,27 +92,30 @@ namespace Assets.GemHunterMatch.Scripts
                 generateGem.NewGemAt(cellPosition, startingGem);
             }
         }
-        public static void RegisterSpawnerPoint(Vector3Int cell)
+        public static IEnumerator RegisterSpawnerPoint(Vector3Int cell)
         {
-            CheckInstance();
+            yield return instance!= null;
+            //CheckInstance();
             instance.spawnerPoints.Add(cell);
         }
-        public static void AddObstacle(Vector3Int cell, Obstacle obstacle)
+        public static IEnumerator AddObstacle(Vector3Int cell, Obstacle obstacle)
         {
-            RegisterCell(cell);
+            yield return CoroutineHandler.StartRoutine(RegisterCell(cell));
 
             obstacle.transform.position = instance.grid.GetCellCenterWorld(cell);
             instance.contentCell[cell].Obstacle = obstacle;
         }
-        public static void ChangeLock(Vector3Int cellPosition, bool lockState)
+        public static IEnumerator ChangeLock(Vector3Int cellPosition, bool lockState)
         {
-            CheckInstance();
+            yield return instance != null;
+            //CheckInstance();
 
             instance.contentCell[cellPosition].Locked = lockState;
         }
-        public static void RegisterDeletedCallback(Vector3Int cellPosition, System.Action callback)
+        public static IEnumerator RegisterDeletedCallback(Vector3Int cellPosition, System.Action callback)
         {
-            CheckInstance();
+            yield return instance != null;
+            //CheckInstance();
             if (!instance.cellsCallbacks.ContainsKey(cellPosition))
             {
                 instance.cellsCallbacks[cellPosition] = callback;
@@ -220,7 +227,8 @@ namespace Assets.GemHunterMatch.Scripts
 
             matchHandler.UpData();
 
-            hint.Show(incrementHintTimer);
+            if (IsPlaying)
+                hint.Show(incrementHintTimer);
           
         }
 
