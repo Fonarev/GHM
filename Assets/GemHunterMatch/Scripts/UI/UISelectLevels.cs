@@ -12,24 +12,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public RectTransform rootLevelEntry;
         public List<UILevelEntry> levels;
 
-        private LocalAssetLoader loader;
-
-        private void OnEnable()
-        {
-          
-        }
-       
-        private void OnDisable()
-        {
-           if(loader!= null) loader.UnLoadAll();
-        }
-
         public void Init(int startCount,int amountLevel)
         {
             for (int i = 0; i < amountLevel; i++)
             {
                 int number = startCount + i;
                 var level = levels[i];
+
                 if (level != null)
                 {
                     level.Init(number);
@@ -46,9 +35,6 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 }
             }
         }
-        private void UpDateVeiw()
-        {
-            foreach (var level in levels) { level.UpDateView(); }
-        }
+       
     }
 }

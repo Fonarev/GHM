@@ -20,7 +20,7 @@ namespace Match3
             //we call awake as some bonus BonusGem have setup steps there that need to be done before being used (e.g. color
             //bonus create a texture etc.)
             UsedBonusGem.Awake();
-            UsedBonusGem.Use(GridBoard.instance.contentCell[target].ContainingGem, true);
+            UsedBonusGem.Use(GridBoard.Instance.contentCell[target].ContainingGem, true);
             //most bonus BonusGem effect are the effect triggered when they get destroyed. But that special BonusGem don't get destroyed
             //so we use a special function that trigger those effects manually.
             UsedBonusGem.BonusTriggerEffect();

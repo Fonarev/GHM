@@ -56,11 +56,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             if (PressedThisFrame)
             {
-                Vector3Int startCell = GetStartPosCell(gridBoard.grid);
+                Vector3Int startCell = GetStartPosCell(gridBoard.Grid);
 
                 if (gridBoard.activatedBonus != null)
                 {
-                    Vector3Int clickedCell = gridBoard.grid.WorldToCell(WorldPos);
+                    Vector3Int clickedCell = GridBoard.Instance.Grid.WorldToCell(WorldPos);
 
                     if (gridBoard.contentCell.TryGetValue(clickedCell, out var content) && content.ContainingGem != null)
                     {
@@ -72,7 +72,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 if (gridBoard.contentCell.ContainsKey(startCell))
                 {
-                    effectController.ShowVFX(gridBoard.grid.GetCellCenterWorld(startCell), WorldPos);
+                    effectController.ShowVFX(GridBoard.Instance.Grid.GetCellCenterWorld(startCell), WorldPos);
                 }
             }
             else if (ReleasedThisFrame)

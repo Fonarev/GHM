@@ -39,10 +39,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (incrementHintTimer)
                 {
                     //Nothing happened this frame, but the board was changed since last possible match check, so need to refresh
-                    if (gridBoard.boardChanged)
+                    if (gridBoard.BoardChanged)
                     {
                         matchHandler.FindAllPossibleMatch();
-                        gridBoard.boardChanged = false;
+                        gridBoard.BoardChanged = false;
                     }
 
                     var match = matchHandler.GetMatch();
@@ -62,8 +62,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             if (hintIndicator.activeSelf)
             {
-                var startPos = gridBoard.grid.GetCellCenterWorld(match.StartPosition);
-                var endPos = gridBoard.grid.GetCellCenterWorld(match.StartPosition + match.Direction);
+                var startPos = GridBoard.Instance.Grid.GetCellCenterWorld(match.StartPosition);
+                var endPos = GridBoard.Instance.Grid.GetCellCenterWorld(match.StartPosition + match.Direction);
 
                 var current = hintIndicator.transform.position;
                 current = Vector3.MoveTowards(current, endPos, 1.0f * Time.deltaTime);
@@ -75,7 +75,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 sinceLastHint += Time.deltaTime;
                 if (sinceLastHint >= visual.inactivityTimeBeforeHint)
                 {
-                    hintIndicator.transform.position = gridBoard.grid.GetCellCenterWorld(match.StartPosition);
+                    hintIndicator.transform.position = GridBoard.Instance.Grid.GetCellCenterWorld(match.StartPosition);
                     hintIndicator.SetActive(true);
                 }
             }

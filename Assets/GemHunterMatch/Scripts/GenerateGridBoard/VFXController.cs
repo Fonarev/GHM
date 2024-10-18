@@ -43,8 +43,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         public void SetPos(Vector3 worldPos)
         {
-            if (holdTrailInstance.gameObject.activeSelf && holdTrailInstance != null)
-                holdTrailInstance.transform.position = worldPos;
+            if (holdTrailInstance != null)
+            {
+                if (holdTrailInstance.gameObject.activeSelf)
+                    holdTrailInstance.transform.position = worldPos;
+            }
         }
 
         public void HideVFX()

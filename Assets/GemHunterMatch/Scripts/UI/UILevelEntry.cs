@@ -14,25 +14,29 @@ namespace Assets.GemHunterMatch.Scripts.UI
     public class UILevelEntry : MonoBehaviour
     {
         [SerializeField] private Image Lock;
+
         private int level;
+
+        private Image view => GetComponent<Image>();
         private Button button => GetComponent<Button>();
         private TextMeshProUGUI numberLevel => GetComponentInChildren<TextMeshProUGUI>();
        
         public void Init(int number)
         {
             level = number;
+            button.interactable = false;
+            Lock.gameObject.SetActive(true);
             numberLevel.text = number.ToString();
 
-            if (YandexGame.Instance.progressData.levels.ContainsKey(number))
+            if (YandexGame.Instance.progressData.levels.TryGetValue(number,out var levelData))
             {
                 button.interactable = true;
                 Lock.gameObject.SetActive(false);
+               if(levelData.isCompleted)
+               {
+                    view.color = Color.green;
+               }
                 button.onClick.AddListener(OnClick);
-            }
-            else
-            {
-                button.interactable = false;
-                Lock.gameObject.SetActive(true);
             }
 
         }
@@ -43,11 +47,5 @@ namespace Assets.GemHunterMatch.Scripts.UI
             AudioManager.instance.PlayEffect(EffectClip.click);
         }
 
-        public void UpDateView()
-        {
-            //bool isLock = TryLevel(level);
-            //button.interactable = isLock;
-            //Lock.gameObject.SetActive(isLock);
-        }
     }
 }

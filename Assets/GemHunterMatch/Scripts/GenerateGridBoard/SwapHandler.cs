@@ -18,12 +18,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private (Vector3Int, Vector3Int) swappingCells;
         private SwapStage SwapStage = SwapStage.None;
         private Dictionary<Vector3Int, BoardCell> contentCell;
-       
+        private readonly GamePlay gamePlay;
         private readonly GridBoard gridBoard;
         private readonly MatchHandler matchHandler;
 
-        public SwapHandler(GridBoard gridBoard, MatchHandler matchHandler, float swapSpeed = 10)
+        public SwapHandler(GamePlay gamePlay, GridBoard gridBoard, MatchHandler matchHandler, float swapSpeed = 10)
         {
+            this.gamePlay = gamePlay;
             this.gridBoard = gridBoard;
             this.matchHandler = matchHandler;
             this.swapSpeed = swapSpeed;
@@ -55,8 +56,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             Gem gemToStart = contentCell[swappingCells.Item1].IncomingGem;
             Gem gemToEnd = contentCell[swappingCells.Item2].IncomingGem;
 
-            Vector3 startPosition = gridBoard.grid.GetCellCenterWorld(swappingCells.Item1);
-            Vector3 endPosition = gridBoard.grid.GetCellCenterWorld(swappingCells.Item2);
+            Vector3 startPosition = gridBoard.Grid.GetCellCenterWorld(swappingCells.Item1);
+            Vector3 endPosition = gridBoard.Grid.GetCellCenterWorld(swappingCells.Item2);
 
             gemToStart.transform.position =
                 Vector3.MoveTowards(gemToStart.transform.position, startPosition, Time.deltaTime * swapSpeed);
@@ -85,7 +86,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         SwapStage = SwapStage.None;
 
                         // as swapHandler was successful, we amount down 1 move from the level
-                        GamePlay.Instance.Moved();
+                        gamePlay.Moved();
                     }
                     else
                     {
@@ -127,7 +128,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             AudioManager.instance.PlayEffect("swipe");
 
             swipeQueued = false;
-            gridBoard.incrementHintTimer = false;
+            gridBoard.IncrementHintTimer = false;
         }
 
         private bool Check(Vector3Int item1, Vector3Int item2)

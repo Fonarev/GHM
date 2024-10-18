@@ -23,9 +23,9 @@ namespace Match3
 
             m_Used = true;
             
-            var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
+            var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(currentIndex);
             newMatch.ForcedDeletion = true;
-            HandleContent(GridBoard.instance.contentCell[currentIndex], newMatch);
+            HandleContent(GridBoard.Instance.contentCell[currentIndex], newMatch);
 
             AudioManager.instance.PlayEffect(TriggerSound);
 
@@ -39,7 +39,7 @@ namespace Match3
         
             foreach (var idx in spaces)
             {
-                if (GridBoard.instance.contentCell.TryGetValue(idx, out var content) &&
+                if (GridBoard.Instance.contentCell.TryGetValue(idx, out var content) &&
                     content.ContainingGem != null)
                 {
                     HandleContent(content, newMatch);

@@ -7,7 +7,6 @@ using Match3;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
@@ -18,19 +17,23 @@ namespace Assets.GemHunterMatch.Scripts.UI
         private int selectedType;
         private Dictionary<int, UIItemEntry> bonusItems = new();
         private GamePlay gamePlay;
-
+        
         private void OnDisable()
         {
-            gamePlay.OnUsedBonusItem -= UsedBonusItem;
+            if (gamePlay != null) gamePlay.OnUsedBonusItem -= UsedBonusItem;
+            foreach (var entry in bonusItems)
+            {
+                entry.Value.Button.onClick.RemoveAllListeners();
+            }
         }
 
         public void Init(GamePlay gamePlay)
         {
             this.gamePlay = gamePlay;
 
-            foreach (var bonus in gamePlay.bonusItems)
+            foreach (var bonus in gamePlay.bonusList)
             {
-                if (bonus.Value.UsedBonusGem.GemType != -2)
+                if (bonus.UsedBonusGem.GemType != -2)
                 {
                     CreateEntry(bonus);
                 }
@@ -39,25 +42,25 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnUsedBonusItem += UsedBonusItem;
         }
 
-        private void CreateEntry(KeyValuePair<int, BonusGemBonusItem> bonus)
+        private void CreateEntry(BonusGemBonusItem bonus)
         {
-            int amountData = YandexGame.Instance.progressData.bonusGemItem[bonus.Value.UsedBonusGem.GemType];
+            int amountData = YandexGame.Instance.progressData.bonusGemItem[bonus.UsedBonusGem.GemType];
             UIItemEntry entry = Instantiate(item, transform);
-            entry.Init(bonus.Value.DisplaySprite, amountData);
-            bonusItems[bonus.Key] = entry;
+            entry.Init(bonus.DisplaySprite, amountData);
+            bonusItems[bonus.UsedBonusGem.GemType] = entry;
 
             entry.Button.onClick.AddListener(() =>
             {
-                int currentType = bonus.Value.UsedBonusGem.GemType;
+                int currentType = bonus.UsedBonusGem.GemType;
 
                 if (selectedType != currentType)
                 {
                    if(selectedType != 0) 
                       bonusItems[selectedType].SwitchView(false);
 
-                    selectedType = bonus.Value.UsedBonusGem.GemType;
+                    selectedType = bonus.UsedBonusGem.GemType;
                     entry.SwitchView(true);
-                    gamePlay.ActivateBonusItem(bonus.Value);
+                    gamePlay.ActivateBonusItem(bonus);
                 }
                 else
                 {

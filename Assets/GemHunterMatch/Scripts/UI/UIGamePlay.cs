@@ -1,5 +1,6 @@
 ﻿using Assets.AssetLoaders;
 using Assets.GameMains.Scripts.Bank;
+using Assets.GameMains.Scripts.Expansion;
 
 using Match3;
 
@@ -17,6 +18,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private UIPopupEntryHandler popupHandler;
         [SerializeField] private AssetReference popupLevelGoals;
         [SerializeField] private AssetReference popupWin;
+        private GamePlay gamePlay;
+        private Wallet wallet;
         private LevelConfig level;
         public RectTransform rootGoals;
         public RectTransform containerPopup;
@@ -24,28 +27,47 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public TextMeshProUGUI moveCounter;
         public TextMeshProUGUI cons;
         public UIBonusGroup bonusGroup;
-        
+        private void OnDisable()
+        {
+            wallet.OnValueChanged -= ValueChange;
+            gamePlay.OnGoalChanged -= GoalChange;
+            gamePlay.OnMoveHappened -= MoveHappen;
+            gamePlay.OnAllGoalFinished -= Finished;
+            gamePlay.OnMachted -= MatchEffect;
+        }
         public void Initialize(GamePlay gamePlay, Wallet wallet, LevelConfig level)
         {
-            cons.text = wallet.Coins.ToString();
-            wallet.OnValueChanged += value => cons.text = value.ToString();
+            this.gamePlay = gamePlay;
+            this.wallet = wallet;
             this.level = level;
+            cons.text = wallet.Coins.ToString();
+            wallet.OnValueChanged += ValueChange;
+            
             gamePlay.OnGoalChanged += GoalChange;
             gamePlay.OnMoveHappened += MoveHappen;
             gamePlay.OnAllGoalFinished += Finished;
+            gamePlay.OnMachted += MatchEffect;
+
             moveCounter.text = level.MaxMove.ToString();
-            StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
+
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
+
             foreach (var goal in level.Goals)
             {
-                StartCoroutine(LoaderAsset.InstantiateAsset<UIGoalEntry>("GoalEntry", rootGoals, op =>
+                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIGoalEntry>("GoalEntry", rootGoals, op =>
                 {
                     op.Init(goal);
                     goals[op.GetTypeGoal()] = op;
                 }));
-               
             }
             bonusGroup.Init(gamePlay);
         }
+
+        private void ValueChange(int value)
+        {
+            cons.text = value.ToString();
+        }
+       
 
         private void Finished(bool isCondition)
         {
@@ -57,7 +79,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             moveCounter.text = move.ToString();
         }
 
-        public void AddMatchEffect(Gem gem)
+        public void MatchEffect(Gem gem)
         {
             popupHandler.Show(gem.UISprite, gem.transform.position, goals[gem.GemType].transform.position);
         }

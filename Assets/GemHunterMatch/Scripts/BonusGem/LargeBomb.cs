@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Match3
 {
     /// <summary>
-    /// Bonus Gem that will delete gems in a 5x5 grid around itself.
+    /// Bonus Gem that will delete gems in a 5x5 Grid around itself.
     /// </summary>
     public class LargeBomb : BonusGem
     {
@@ -26,12 +26,12 @@ namespace Match3
 
             m_Used = true;
             
-            var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
+            var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(currentIndex);
             newMatch.ForcedDeletion = true;
 
             //we still test the content of the index as this could be a bonus used from the Ui so the clicked position
             //won't contains "this" but a different BonusGem
-            var currentContent = GridBoard.instance.contentCell[currentIndex];
+            var currentContent = GridBoard.Instance.contentCell[currentIndex];
             HandleContent(currentContent, newMatch);
 
 
@@ -42,7 +42,7 @@ namespace Match3
                 for (int y = -2; y <= 2; ++y)
                 {
                     var idx = currentIndex + new Vector3Int(x, y, 0);
-                    if (GridBoard.instance.contentCell.TryGetValue(idx, out var content) &&
+                    if (GridBoard.Instance.contentCell.TryGetValue(idx, out var content) &&
                         content.ContainingGem != null)
                     {
                         HandleContent(content, newMatch);

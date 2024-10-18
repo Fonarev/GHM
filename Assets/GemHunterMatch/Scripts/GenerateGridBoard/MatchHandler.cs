@@ -20,11 +20,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public List<PossibleSwap> possibleSwaps { get; set; } = new();
 
         private int pickedSwap;
+        private readonly GamePlay gamePlay;
         private readonly GridBoard gridBoard;
-        private readonly GenerateGem generateGem;
+        private readonly Placements generateGem;
 
-        public MatchHandler(GridBoard gridBoard, GenerateGem generateGem)
+        public MatchHandler(GamePlay gamePlay, GridBoard gridBoard, Placements generateGem)
         {
+            this.gamePlay = gamePlay;
             this.gridBoard = gridBoard;
             this.generateGem = generateGem;
         }
@@ -35,28 +37,28 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 DoMatchCheck();
 
-                gridBoard.incrementHintTimer = false;
-                gridBoard.boardChanged = true;
+                gridBoard.IncrementHintTimer = false;
+                gridBoard.BoardChanged = true;
             }
             if (tickingMatch.Count > 0)
             {
                 MatchTicking();
 
-                gridBoard.incrementHintTimer = false;
-                gridBoard.boardChanged = true;
+                gridBoard.IncrementHintTimer = false;
+                gridBoard.BoardChanged = true;
             }
             if (emptyCells.Count > 0)
             {
                 EmptyCheck();
 
-                gridBoard.incrementHintTimer = false;
-                gridBoard.boardChanged = true;
+                gridBoard.IncrementHintTimer = false;
+                gridBoard.BoardChanged = true;
             }
             if (newTickingCells.Count > 0)
             {
                 tickingCells.AddRange(newTickingCells);
                 newTickingCells.Clear();
-                gridBoard.incrementHintTimer = false;
+                gridBoard.IncrementHintTimer = false;
             }
         }
 
@@ -208,7 +210,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void EmptyCheck()
         {
-            if (gridBoard.freezeMoveLock > 0)
+            if (gridBoard.FreezeMoveLock > 0)
                 return;
             var contentCell = gridBoard.contentCell;
             //go over empty cells
@@ -464,14 +466,14 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 //we only spawn coins for non bonus match
                 if (match.DeletedCount >= 4 && !match.ForcedDeletion)
                 {
-                    GamePlay.Instance.ChangeCoins(1);
-                    //gridBoard.poolVFX.PlayInstance(GamePlay.Instance.visualSettings.CoinVFX, gem.transform.position);
+                    gamePlay.ChangeCoins(1);
+                    //gridBoard.PoolVFX.PlayInstance(GamePlay.Instance.visualSettings.CoinVFX, gem.transform.position);
 
                 }
 
                 if (match.SpawnedBonus != null && match.OriginPoint == gemIdx)
                 {
-                    GenerateGem.instance.NewGemAt(match.OriginPoint, match.SpawnedBonus);
+                    gridBoard.NewGemAt(match.OriginPoint, match.SpawnedBonus);
                 }
                 else
                 {
@@ -480,11 +482,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 if (gem.CurrentState != Gem.State.Disappearing)
                 {
-                    GamePlay.Instance.Matched(gem);
+                    gamePlay.Matched(gem);
 
                     foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                     {
-                        gridBoard.poolVFX.PlayInstance(matchEffectPrefab,gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
+                        gridBoard.PoolVFX.PlayInstance(matchEffectPrefab,gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
                     }
 
                     gem.gameObject.SetActive(false);
@@ -494,11 +496,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             }
             else if (gem.CurrentState != Gem.State.Disappearing)
             {
-                GamePlay.Instance.Matched(gem);
+                gamePlay.Matched(gem);
 
                 foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
                 {
-                    gridBoard.poolVFX.PlayInstance(matchEffectPrefab, gridBoard.grid.GetCellCenterWorld(gem.CurrentIndex));
+                    gridBoard.PoolVFX.PlayInstance(matchEffectPrefab, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
                 }
 
                 gem.gameObject.SetActive(false);
@@ -519,7 +521,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (tickingCells.Contains(gemIdx)) tickingCells.Remove(gemIdx);
                 if (newTickingCells.Contains(gemIdx)) newTickingCells.Remove(gemIdx);
 
-                gem.transform.position = gridBoard.grid.GetCellCenterWorld(gemIdx);
+                gem.transform.position = gridBoard.Grid.GetCellCenterWorld(gemIdx);
                 gem.transform.localScale = Vector3.one;
                 gem.StopBouncing();
             }

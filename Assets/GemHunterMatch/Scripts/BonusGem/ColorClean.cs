@@ -23,7 +23,7 @@ namespace Match3
         {
             m_Usable = true;
 
-            GridBoard.instance.poolVFX.AddNewInstance(UseEffect, 2);
+            GridBoard.Instance.PoolVFX.AddNewInstance(UseEffect, 2);
             m_PositionMap = new Texture2D(64, 1, TextureFormat.RGBAFloat, false);
         }
 
@@ -46,7 +46,7 @@ namespace Match3
             {//we either swapped with another bonus or we double clicked, so that bonus will clear the BonusGem with the most typeGoal
                 Dictionary<int, int> typeCount = new();
 
-                foreach (var (cell, content) in GridBoard.instance.contentCell)
+                foreach (var (cell, content) in GridBoard.Instance.contentCell)
                 {
                     if (content.ContainingGem != null)
                     {
@@ -75,12 +75,12 @@ namespace Match3
             int currentColor = 0;
 
             //we create a new match in the board, set its typeGoal to force deletion (as this match came from a bonus, not a swapHandler)
-            var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
+            var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(currentIndex);
             newMatch.ForcedDeletion = true;
             //we grab from the cell and not use "this" because when used as a Bonus Item, the item at this index won't be the BonusGem
-            HandleContent(GridBoard.instance.contentCell[currentIndex], newMatch);
+            HandleContent(GridBoard.Instance.contentCell[currentIndex], newMatch);
 
-            foreach (var (cell, content) in GridBoard.instance.contentCell)
+            foreach (var (cell, content) in GridBoard.Instance.contentCell)
             {
                 
                 if (content.ContainingGem?.GemType == type)
@@ -104,13 +104,13 @@ namespace Match3
             m_PositionMap.SetPixels(infoColor, 0);
             m_PositionMap.Apply();
 
-            VisualEffect vfxInst = GridBoard.instance.poolVFX.GetInstance(UseEffect);
+            VisualEffect vfxInst = GridBoard.Instance.PoolVFX.GetInstance(UseEffect);
             
             vfxInst.Stop();
             vfxInst.SetTexture(Shader.PropertyToID("PosMap"), m_PositionMap);
             vfxInst.SetInt(Shader.PropertyToID("PosCount"), currentColor);
 
-            vfxInst.transform.position = GridBoard.instance.GetCellCenter(currentIndex);
+            vfxInst.transform.position = GridBoard.Instance.GetCellCenter(currentIndex);
             vfxInst.Play();
             
             AudioManager.instance.PlayEffect(TriggerSound);

@@ -3,7 +3,6 @@ using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
-using Assets.GemHunterMatch.Scripts.UI;
 using Assets.YG.Scripts;
 
 using Match3;
@@ -13,7 +12,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts
 {
@@ -23,10 +21,10 @@ namespace Assets.GemHunterMatch.Scripts
         public event Action<bool> OnAllGoalFinished;
         public event Action<int> OnMoveHappened;
         public event Action<int,int> OnUsedBonusItem;
-
-        public static GamePlay Instance => instance;
+        public event Action<Gem> OnMachted;
 
         public VisualSetting visualSettings;
+        public BonusGemBonusItem[] bonusList;
         public Dictionary<int, BonusGemBonusItem> bonusItems = new();
         public bool IsPlaying { get; private set; }
         public int GoalLeft { get; private set; }
@@ -34,23 +32,15 @@ namespace Assets.GemHunterMatch.Scripts
 
         private List<Goals> gemGoals = new();
         private LevelConfig level;
-        public GridBoard gridBoard;
-        public UIGamePlay ui;
+        private GridBoard gridBoard;
+      
         private Wallet wallet;
         private bool isPlaying;
-        private static GamePlay instance;
-       
-        private void Awake()
-        {
-            instance = this;
-        }
 
         public void Initialize(Wallet wallet)
         {
             this.wallet = wallet;
-
             CoroutineHandler.StartRoutine(Load());
-
             foreach (var item in level.Goals)
             {
                 var goal = new Goals();
@@ -58,7 +48,7 @@ namespace Assets.GemHunterMatch.Scripts
                 goal.count = item.Count;
                 gemGoals.Add(goal);
             }
-
+          
             RemainingMove = level.MaxMove;
             GoalLeft = gemGoals.Count;
            
@@ -67,15 +57,15 @@ namespace Assets.GemHunterMatch.Scripts
         private IEnumerator Load()
         {
             level = LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel);
-
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op => 
+           
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op =>
             {
                 gridBoard = op;
-                CoroutineHandler.StartRoutine(gridBoard.Initialize(this, level)); 
+                gridBoard.Initialize(this); 
             }));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.LoadList<BonusGemBonusItem>("bonusItem", op => { bonusItems[op.UsedBonusGem.GemType] = op; }));
           
-            ui.Initialize(this, wallet, level);
+           
             IsPlaying = true;
         }
 
@@ -111,7 +101,7 @@ namespace Assets.GemHunterMatch.Scripts
                     if (goal.count == 0)
                         return false;
 
-                    ui.AddMatchEffect(gem);
+                    OnMachted.Invoke(gem);
 
                     goal.count -= 1;
                     OnGoalChanged?.Invoke(gem.GemType, goal.count);
@@ -161,10 +151,10 @@ namespace Assets.GemHunterMatch.Scripts
                 SetCompletedLevel();
                 AudioManager.instance.PlayEffect("chime");
 
-                while (gridBoard.boardChanged)
+                while (gridBoard.BoardChanged)
                 {
                     yield return new WaitForSeconds(2);
-                    yield return gridBoard.boardChanged;
+                    yield return gridBoard.BoardChanged;
                 }
             }
             else

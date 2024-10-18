@@ -39,11 +39,11 @@ namespace Match3
         //the effect won't be triggered. So Bonus item call this function to trigger the VFX
         public void BonusTriggerEffect()
         {
-            Vector3 position = GridBoard.instance.GetCellCenter(currentIndex); 
+            Vector3 position = GridBoard.Instance.GetCellCenter(currentIndex); 
             foreach (var effectPrefab in effectMatchPrefabs)
             {
-                GridBoard.instance.poolVFX.AddNewInstance(effectPrefab, 8);
-                GridBoard.instance.poolVFX.PlayInstance(effectPrefab, position);
+                GridBoard.Instance.PoolVFX.AddNewInstance(effectPrefab, 8);
+                GridBoard.Instance.PoolVFX.PlayInstance(effectPrefab, position);
             }
         }
     }

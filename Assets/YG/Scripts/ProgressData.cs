@@ -23,7 +23,13 @@ namespace Assets.YG.Scripts
             levels.Add(1, new LevelData() { level = 1, isOpened = true });
 
 
-            locations[1] = new Location() { number = 1, isLock = true };
+            locations[1] = new Location()
+            {
+                number = 1,
+                openLevels = 1,
+                isLock = true,
+                isSelected = true
+            };
 
             bonusGemItem[-1] = 5;
             bonusGemItem[-2] = 5;

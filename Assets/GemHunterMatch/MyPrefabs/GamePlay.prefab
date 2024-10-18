@@ -306,5 +306,8 @@ MonoBehaviour:
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-  gridBoard: {fileID: 0}
-  ui: {fileID: 5498732728491557579, guid: 0571ac4c50736dc4db04c9b72bb432e8, type: 3}
+  bonusList:
+  - {fileID: 11400000, guid: 3d73d22e97a64db4e9bfee4dfe1df1f6, type: 2}
+  - {fileID: 11400000, guid: b37a5206a85e15440865697e559cf2b3, type: 2}
+  - {fileID: 11400000, guid: c306e67a2c8a5604197f03d4cdc9b674, type: 2}
+  - {fileID: 11400000, guid: f10da6c8fb6b1dd4a8cc38a39bde513a, type: 2}

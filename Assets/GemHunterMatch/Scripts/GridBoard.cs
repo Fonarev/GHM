@@ -1,10 +1,9 @@
-﻿using Assets.GameMains.Scripts.Expansion;
+﻿using Assets.GameMains.Scripts;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using Match3;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -17,8 +16,9 @@ namespace Assets.GemHunterMatch.Scripts
     {
         public Gem[] existingGems;
         public BonusSetting bonusSettings;
-        public static GridBoard instance;
-        public Grid grid => GetComponent<Grid>();
+        public BonusGemBonusItem activatedBonus;
+
+        public static GridBoard Instance => instance;
        
         public List<Vector3Int> spawnerPoints { get; private set; } = new();
         public Dictionary<Vector3Int, BoardCell> contentCell = new();
@@ -26,156 +26,196 @@ namespace Assets.GemHunterMatch.Scripts
         public Dictionary<Vector3Int, Action> cellsCallbacks = new();
         public Dictionary<Vector3Int, Action> matchedCallback = new();
 
-        private static GenerateGem generateGem;
-        private VFXController effectController;
-        public MatchHandler matchHandler;
+        public bool IncrementHintTimer { get; set; }
+        public bool BoardChanged { get; set; }
+        public int FreezeMoveLock { get; private set; }
+        public PoolVFX PoolVFX { get; set; }
+        public MatchHandler MatchHandler { get; set; }
+        public Grid Grid => GetComponent<Grid>();
+
         private MoveController moveController;
         private InputHandler inputHandler;
         private SwapHandler swapHandler;
         private HintShowMatches hint;
-        public PoolVFX poolVFX;
+        private Placements placement;
+        private VFXController effectController;
         private GamePlay gamePlay;
-        public LevelConfig levelConfig => _levelConfig;
-        public BonusGemBonusItem activatedBonus;
-        public bool incrementHintTimer{ get; set; }
+
         private bool isInit;
-        public bool IsPlaying => isPlaying;
-        public bool boardChanged { get; set; }
-        public int freezeMoveLock { get; private set; }
         private List<IBoardAction> boardActions = new();
-        private LevelConfig _levelConfig;
-        private bool isPlaying = true;
+        private static GridBoard instance;
 
         private void Awake()
         {
-            if (instance == null) instance = this;
+            if (Instance == null) instance = this;
         }
 
-        public IEnumerator Initialize(GamePlay gamePlay, LevelConfig levelConfig)
+        private void Update()
         {
-            yield return instance != null;
+            if (!isInit) return;
+
+            HandleBonusAction();
+
+            if (gamePlay.IsPlaying)
+                inputHandler.UpData();
+
+            PoolVFX.UpDate();
+
+            IncrementHintTimer = activatedBonus == null;
+
+            swapHandler.UpData();
+
+            if (MatchHandler.tickingCells.Count > 0) moveController.MoveGems();
+
+            MatchHandler.UpData();
+
+            hint.Show(IncrementHintTimer);
+
+        }
+
+        public void Initialize(GamePlay gamePlay)
+        {
             this.gamePlay = gamePlay;
-            poolVFX = new(transform);
-            _levelConfig = levelConfig;
 
-            if (generateGem == null) 
-                generateGem = new(instance);
+            PoolVFX = new(transform);
 
-            generateGem.FillBoardGems();
+            placement = new(Instance);
+            placement.FillBoardGems();
 
             effectController = new(gamePlay.visualSettings);
             effectController.Instatiate(gamePlay.transform);
 
-            matchHandler = new(this, generateGem);
-            matchHandler.FindAllPossibleMatch();
-            moveController = new(this, matchHandler);
-            swapHandler = new(this,matchHandler);
+            MatchHandler = new(gamePlay, this, placement);
+            MatchHandler.FindAllPossibleMatch();
+
+            moveController = new(gamePlay, this, MatchHandler);
+
+            swapHandler = new(gamePlay, this, MatchHandler);
+
             inputHandler = new(this, gamePlay, swapHandler, effectController, Camera.main);
-            hint = new(matchHandler, this, gamePlay.visualSettings);
+
+            hint = new(MatchHandler, this, gamePlay.visualSettings);
             hint.Instatiate(gamePlay.transform);
+
             isInit = true;
         }
 
-        public static IEnumerator RegisterCell(Vector3Int cellPosition, Gem startingGem = null)
+        public static void RegisterCell(Vector3Int cellPosition, Gem startingGem = null)
         {
-            yield return instance != null;
-            //CheckInstance();
+            CheckInstance();
 
-            if (!instance.contentCell.ContainsKey(cellPosition))
-                instance.contentCell.Add(cellPosition, new BoardCell());
+            if (!Instance.contentCell.ContainsKey(cellPosition))
+                Instance.contentCell.Add(cellPosition, new BoardCell());
 
             if (startingGem != null)
+                Instance.NewGemAt(cellPosition, startingGem);
+        }
+        public static void RegisterSpawnerPoint(Vector3Int cell)
+        {
+            CheckInstance();
+            Instance.spawnerPoints.Add(cell);
+        }
+        public static void AddObstacle(Vector3Int cell, Obstacle obstacle)
+        {
+            RegisterCell(cell);
+
+            obstacle.transform.position = Instance.Grid.GetCellCenterWorld(cell);
+            Instance.contentCell[cell].Obstacle = obstacle;
+        }
+        public static void ChangeLock(Vector3Int cellPosition, bool lockState)
+        {
+            CheckInstance();
+            Instance.contentCell[cellPosition].Locked = lockState;
+        }
+        public static void RegisterDeletedCallback(Vector3Int cellPosition, Action callback)
+        {
+            CheckInstance();
+            if (!Instance.cellsCallbacks.ContainsKey(cellPosition))
             {
-               if(generateGem == null)
-                  generateGem = new(instance);
-
-                generateGem.NewGemAt(cellPosition, startingGem);
-            }
-        }
-        public static IEnumerator RegisterSpawnerPoint(Vector3Int cell)
-        {
-            yield return instance!= null;
-            //CheckInstance();
-            instance.spawnerPoints.Add(cell);
-        }
-        public static IEnumerator AddObstacle(Vector3Int cell, Obstacle obstacle)
-        {
-            yield return CoroutineHandler.StartRoutine(RegisterCell(cell));
-
-            obstacle.transform.position = instance.grid.GetCellCenterWorld(cell);
-            instance.contentCell[cell].Obstacle = obstacle;
-        }
-        public static IEnumerator ChangeLock(Vector3Int cellPosition, bool lockState)
-        {
-            yield return instance != null;
-            //CheckInstance();
-
-            instance.contentCell[cellPosition].Locked = lockState;
-        }
-        public static IEnumerator RegisterDeletedCallback(Vector3Int cellPosition, System.Action callback)
-        {
-            yield return instance != null;
-            //CheckInstance();
-            if (!instance.cellsCallbacks.ContainsKey(cellPosition))
-            {
-                instance.cellsCallbacks[cellPosition] = callback;
+                Instance.cellsCallbacks[cellPosition] = callback;
             }
             else
             {
-                instance.cellsCallbacks[cellPosition] += callback;
+                Instance.cellsCallbacks[cellPosition] += callback;
             }
         }
-        public static void UnregisterDeletedCallback(Vector3Int cellPosition, System.Action callback)
+        public static void RegisterMatchedCallback(Vector3Int cellPosition, Action callback)
         {
-            if (!instance.cellsCallbacks.ContainsKey(cellPosition))
-                return;
-
-            instance.cellsCallbacks[cellPosition] -= callback;
-            if (instance.cellsCallbacks[cellPosition] == null)
-                instance.cellsCallbacks.Remove(cellPosition);
-        }
-        public static void RegisterMatchedCallback(Vector3Int cellPosition, System.Action callback)
-        {
-            if (!instance.matchedCallback.ContainsKey(cellPosition))
+            if (!Instance.matchedCallback.ContainsKey(cellPosition))
             {
-                instance.matchedCallback[cellPosition] = callback;
+                Instance.matchedCallback[cellPosition] = callback;
             }
             else
             {
-                instance.matchedCallback[cellPosition] += callback;
+                Instance.matchedCallback[cellPosition] += callback;
             }
         }
-        public static void UnregisterMatchedCallback(Vector3Int cellPosition, System.Action callback)
+        public static void UnregisterMatchedCallback(Vector3Int cellPosition, Action callback)
         {
-            if (!instance.matchedCallback.ContainsKey(cellPosition))
+            if (!Instance.matchedCallback.ContainsKey(cellPosition))
                 return;
 
-            instance.matchedCallback[cellPosition] -= callback;
-            if (instance.matchedCallback[cellPosition] == null)
-                instance.matchedCallback.Remove(cellPosition);
+            Instance.matchedCallback[cellPosition] -= callback;
+            if (Instance.matchedCallback[cellPosition] == null)
+                Instance.matchedCallback.Remove(cellPosition);
         }
         private static void CheckInstance()
         {
-            if (instance == null)
-                instance = GameObject.Find("Grid(Clone)").GetComponent<GridBoard>();
+
+            if (Instance == null)
+                instance = GameObject.Find(LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel).gridBoardReference + "(Clone)").GetComponent<GridBoard>();
         }
 
+        public void UnregisterDeletedCallback(Vector3Int cellPosition, Action callback)
+        {
+            if (!Instance.cellsCallbacks.ContainsKey(cellPosition))
+                return;
+
+            Instance.cellsCallbacks[cellPosition] -= callback;
+            if (Instance.cellsCallbacks[cellPosition] == null)
+                Instance.cellsCallbacks.Remove(cellPosition);
+        }
+        public Gem NewGemAt(Vector3Int cell, Gem gemPrefab)
+        {
+            if (gemPrefab == null)
+                gemPrefab = Instance.existingGems[Random.Range(0, Instance.existingGems.Length)];
+
+            if (gemPrefab.effectMatchPrefabs.Length != 0)
+            {
+                foreach (var matchEffectPrefab in gemPrefab.effectMatchPrefabs)
+                {
+                    //GameManager.Instance.PoolSystem.AddNewInstance(matchEffectPrefab, 16);
+                }
+            }
+
+            //New Gem may be called after the board was init (as startup doesn't seem to be reliably called BEFORE init)
+            if (Instance.contentCell[cell].ContainingGem != null)
+            {
+                Destroy(Instance.contentCell[cell].ContainingGem.gameObject);
+            }
+
+            var gem = Instantiate(gemPrefab, Instance.Grid.GetCellCenterWorld(cell), Quaternion.identity);
+            Instance.contentCell[cell].ContainingGem = gem;
+            gem.Init(cell);
+
+            return gem;
+        }
         public void ActivateSpawnerAt(Vector3Int cell)
         {
-            var gem = Instantiate(existingGems[Random.Range(0,existingGems.Length)], grid.GetCellCenterWorld(cell + Vector3Int.up), Quaternion.identity);
+            var gem = Instantiate(existingGems[Random.Range(0,existingGems.Length)], Grid.GetCellCenterWorld(cell + Vector3Int.up), Quaternion.identity);
             contentCell[cell].IncomingGem = gem;
 
             gem.StartMoveTimer();
             gem.SpeedMultiplier = 1.0f;
-            matchHandler.newTickingCells.Add(cell);
+            MatchHandler.newTickingCells.Add(cell);
 
-            if (matchHandler.emptyCells.Contains(cell)) matchHandler.emptyCells.Remove(cell);
+            if (MatchHandler.emptyCells.Contains(cell)) MatchHandler.emptyCells.Remove(cell);
         }
 
-        public Vector3 GetCellCenter(Vector3Int cell) => grid.GetCellCenterWorld(cell);
-        public Vector3Int WorldToCell(Vector3 pos) => grid.WorldToCell(pos);
-        public void LockMovement() => freezeMoveLock += 1;
-        public void UnlockMovement() => freezeMoveLock -= 1;
+        public Vector3 GetCellCenter(Vector3Int cell) => Instance.Grid.GetCellCenterWorld(cell);
+        public Vector3Int WorldToCell(Vector3 pos) => Instance. Grid.WorldToCell(pos);
+        public void LockMovement() => FreezeMoveLock += 1;
+        public void UnlockMovement() => FreezeMoveLock -= 1;
         public void DestroyGem(Vector3Int cell, bool forcedDeletion = false)
         {
             if (contentCell[cell].ContainingGem?.CurrentMatch != null)
@@ -195,7 +235,7 @@ namespace Assets.GemHunterMatch.Scripts
                 contentCell[cell].ContainingGem.CurrentMatch = match;
             }
 
-            matchHandler.tickingMatch.Add(match);
+            MatchHandler.tickingMatch.Add(match);
         }
         public void AddNewBoardAction(IBoardAction action) => boardActions.Add(action);
         private void HandleBonusAction()
@@ -208,28 +248,6 @@ namespace Assets.GemHunterMatch.Scripts
                     i--;
                 }
             }
-        }
-
-        private void Update()
-        {
-            if (!isInit) return;
-
-            HandleBonusAction();
-
-            inputHandler.UpData();
-            poolVFX.UpDate();
-
-            incrementHintTimer = activatedBonus == null;
-
-            swapHandler.UpData();
-
-            if (matchHandler.tickingCells.Count > 0) moveController.MoveGems();
-
-            matchHandler.UpData();
-
-            if (IsPlaying)
-                hint.Show(incrementHintTimer);
-          
         }
 
     }

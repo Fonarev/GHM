@@ -13,27 +13,22 @@ namespace Assets.GameMains.Scripts.EntryPoints
     {
         private LoaderScenes loaderScenes;
         [SerializeField] private SpriteRenderer logo;
+
         private void OnDisable()
         {
             GlobalMediator.instance.OnSelectedLevel -= SelectedLevel;
         }
+
         public void Initialize(AudioManager audio,LoaderScenes loaderScenes)
         {
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG"));
-            CoroutineHandler.StartRoutine(LoaderAsset.Load<Sprite>("Logo",op=> { logo.sprite = op; Addressables.Release(op); }));
-            audio.Play();
             this.loaderScenes = loaderScenes;
-            GlobalMediator.instance.OnSelectedLevel += SelectedLevel;
-          
-        }
-        private IEnumerator Load()
-        {
-            var handle = Addressables.LoadAssetAsync<Sprite>("Logo");
-            yield return handle;
-            logo.sprite = handle.Result;
-            Addressables.Release(handle);
 
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG"));
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("VFX_Bubbles"));
+            GlobalMediator.instance.OnSelectedLevel += SelectedLevel;
+            audio.Play();
         }
+       
         private void SelectedLevel(int level)
         {
             loaderScenes.LoadLevel(Scenes.game);

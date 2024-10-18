@@ -1,5 +1,3 @@
-using Assets.GameMains.Scripts.Expansion;
-
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -25,7 +23,7 @@ namespace Match3
 
 
             var newObstacle = Instantiate(ObstaclePrefab);
-            CoroutineHandler.StartRoutine(newObstacle.Init(position));
+            newObstacle.Init(position);
 
             return true;
         }

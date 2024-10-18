@@ -6,11 +6,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
     public class MoveController 
     {
+        private readonly GamePlay gamePlay;
         private readonly GridBoard gridBoard;
         private readonly MatchHandler matchHandler;
 
-        public MoveController(GridBoard gridBoard, MatchHandler matchHandler)
+        public MoveController(GamePlay gamePlay, GridBoard gridBoard, MatchHandler matchHandler)
         {
+            this.gamePlay = gamePlay;
             this.gridBoard = gridBoard;
             this.matchHandler = matchHandler;
         }
@@ -26,7 +28,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 var cellIdx = tickingCells[i];
 
                 var currentCell = gridBoard.contentCell[cellIdx];
-                var targetPosition = gridBoard.grid.GetCellCenterWorld(cellIdx);
+                var targetPosition = gridBoard.Grid.GetCellCenterWorld(cellIdx);
 
                 if (currentCell.IncomingGem != null && currentCell.ContainingGem != null)
                 {
@@ -41,8 +43,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     var gem = currentCell.IncomingGem;
                     gem.TickMoveTimer(Time.deltaTime);
 
-                    var maxDistance = GamePlay.Instance.visualSettings.FallAccelerationCurve.Evaluate(gem.FallTime) *
-                                      Time.deltaTime * GamePlay.Instance.visualSettings.FallSpeed * gem.SpeedMultiplier;
+                    var maxDistance = gamePlay.visualSettings.FallAccelerationCurve.Evaluate(gem.FallTime) *
+                                      Time.deltaTime * gamePlay.visualSettings.FallSpeed * gem.SpeedMultiplier;
 
                     gem.transform.position = Vector3.MoveTowards(gem.transform.position, targetPosition,
                         maxDistance);
@@ -141,10 +143,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 {
                     var gem = currentCell.ContainingGem;
                     gem.TickMoveTimer(Time.deltaTime);
-                    Vector3 center = gridBoard.grid.GetCellCenterWorld(cellIdx);
+                    Vector3 center = gridBoard.Grid.GetCellCenterWorld(cellIdx);
 
-                    float maxTime = GamePlay.Instance.visualSettings.BounceCurve
-                        .keys[GamePlay.Instance.visualSettings.BounceCurve.length - 1].time;
+                    float maxTime = gamePlay.visualSettings.BounceCurve
+                        .keys[gamePlay.visualSettings.BounceCurve.length - 1].time;
 
                     if (gem.FallTime >= maxTime)
                     {
@@ -159,9 +161,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     else
                     {
                         gem.transform.position =
-                            center + Vector3.up * GamePlay.Instance.visualSettings.BounceCurve.Evaluate(gem.FallTime);
+                            center + Vector3.up * gamePlay.visualSettings.BounceCurve.Evaluate(gem.FallTime);
                         gem.transform.localScale =
-                            new Vector3(1, GamePlay.Instance.visualSettings.SquishCurve.Evaluate(gem.FallTime), 1);
+                            new Vector3(1, gamePlay.visualSettings.SquishCurve.Evaluate(gem.FallTime), 1);
                     }
                 }
                 else if (currentCell.ContainingGem?.CurrentState == Gem.State.Still)

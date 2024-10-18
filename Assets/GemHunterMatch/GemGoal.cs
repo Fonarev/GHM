@@ -9,5 +9,6 @@ namespace Assets.GemHunterMatch
     {
         public Gem Gem;
         public int Count;
+        //public Obstacle obstacle;
     }
 }

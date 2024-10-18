@@ -15,11 +15,9 @@ MonoBehaviour:
   level: 3
   MaxMove: 20
   LowMoveTrigger: 3
-  <Goals>k__BackingField: []
+  <Goals>k__BackingField:
+  - Gem: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
+    Count: 6
   BorderMargin: 0.3
   Background: {fileID: 0}
-  gridBoardReference:
-    m_AssetGUID: bb8c5ba4fedd9a2448897edbc9fb9231
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  gridBoardReference: Grid 3

@@ -24,6 +24,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             {
                 next.Init(ButtonType.Restart);
             }
+            exitMenu.Init(ButtonType.Menu);
         }
     }
 }

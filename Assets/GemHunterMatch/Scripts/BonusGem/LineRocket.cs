@@ -35,18 +35,18 @@ namespace Match3
             AudioManager.instance.PlayEffect(TriggerSound);
             
             //delete itself first.
-            var newMatch = GridBoard.instance.matchHandler.CreateCustomMatch(currentIndex);
-            HandleContent(GridBoard.instance.contentCell[currentIndex], newMatch);
+            var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(currentIndex);
+            HandleContent(GridBoard.Instance.contentCell[currentIndex], newMatch);
 
             //if there is a cell on a side, we add a new board action that will go in that direction.
-            if (GridBoard.instance.contentCell.ContainsKey(currentIndex + dir))
+            if (GridBoard.Instance.contentCell.ContainsKey(currentIndex + dir))
             {
-                GridBoard.instance.AddNewBoardAction(new RocketAction(currentIndex, dir, VisualPrefab, 0));
+                GridBoard.Instance.AddNewBoardAction(new RocketAction(currentIndex, dir, VisualPrefab, 0));
             }
 
-            if (GridBoard.instance.contentCell.ContainsKey(currentIndex - dir))
+            if (GridBoard.Instance.contentCell.ContainsKey(currentIndex - dir))
             {
-                GridBoard.instance.AddNewBoardAction(new RocketAction(currentIndex, -dir, VisualPrefab,
+                GridBoard.Instance.AddNewBoardAction(new RocketAction(currentIndex, -dir, VisualPrefab,
                     Vertical ? 2 : 1));
             }
         }
@@ -70,10 +70,10 @@ namespace Match3
             m_CurrentCell = startCell;
             m_Direction = direction;
             
-            GridBoard.instance.LockMovement();
+            GridBoard.Instance.LockMovement();
 
             m_Visual = GameObject.Instantiate(visualPrefab, 
-                GridBoard.instance.GetCellCenter(m_CurrentCell), 
+                GridBoard.Instance.GetCellCenter(m_CurrentCell), 
                 Quaternion.identity);
 
             switch (flip)
@@ -92,13 +92,13 @@ namespace Match3
         {
             m_Visual.transform.position += (Vector3)(m_Direction) * (Time.deltaTime * MoveSpeed);
 
-            Vector3 cell = GridBoard.instance.WorldToCell(m_Visual.transform.position);
+            Vector3 cell = GridBoard.Instance.WorldToCell(m_Visual.transform.position);
 
             while (m_CurrentCell != cell)
             {
                 m_CurrentCell += m_Direction;
 
-                if (GridBoard.instance.contentCell.TryGetValue(m_CurrentCell, out var content) && content.ContainingGem != null)
+                if (GridBoard.Instance.contentCell.TryGetValue(m_CurrentCell, out var content) && content.ContainingGem != null)
                 {
                     if (content.Obstacle != null)
                     {
@@ -110,15 +110,15 @@ namespace Match3
                     }
                     else if (!content.ContainingGem.Damage(1))
                     {
-                        GridBoard.instance.DestroyGem(m_CurrentCell, true);
+                        GridBoard.Instance.DestroyGem(m_CurrentCell, true);
                     }
                 }
 
-                if (!GridBoard.instance.contentCell.ContainsKey(m_CurrentCell + m_Direction))
+                if (!GridBoard.Instance.contentCell.ContainsKey(m_CurrentCell + m_Direction))
                 {
                     GameObject.Destroy(m_Visual);
                     //if we don't have a cell after that one, we reached the end, return false to finish that BoardAction
-                    GridBoard.instance.UnlockMovement();
+                    GridBoard.Instance.UnlockMovement();
                     return false;
                 }
             }

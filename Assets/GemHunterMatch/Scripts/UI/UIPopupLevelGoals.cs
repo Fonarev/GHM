@@ -33,20 +33,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             }
             Show();
         }
-        //private void Update()
-        //{
-        //    var maxDistance = GamePlay.Instance.visualSettings.FallAccelerationCurve.Evaluate(0) *
-        //                             Time.deltaTime * GamePlay.Instance.visualSettings.FallSpeed * 2.0f;
-
-        //    transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, 0, 0), maxDistance);
-        //    if (transform.position == new Vector3(0, 0, 0))
-        //    {
-        //        transform.position = Vector3.up * GamePlay.Instance.visualSettings.BounceCurve.Evaluate(0);
-
-        //        transform.localScale =
-        //            new Vector3(1, GamePlay.Instance.visualSettings.SquishCurve.Evaluate(0), 1);
-        //    }
-        //}
+      
         public void Show()
         {
             anim.Play();

@@ -24,8 +24,4 @@ MonoBehaviour:
     Count: 15
   BorderMargin: 0.3
   Background: {fileID: 0}
-  gridBoardReference:
-    m_AssetGUID: 6244564037fa2d9409b657b9625b58d1
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  gridBoardReference: Grid 2

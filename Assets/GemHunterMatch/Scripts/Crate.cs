@@ -50,7 +50,7 @@ namespace Match3
             AudioManager.instance.PlayEffect(DamagedClip);
 
             if (DamageEffect != null)
-                GridBoard.instance.poolVFX.PlayInstance(DamageEffect, transform.position);
+                GridBoard.Instance.PoolVFX.PlayInstance(DamageEffect, transform.position);
 
             var ret = base.Damage(damage);
             UpdateState();
@@ -64,7 +64,7 @@ namespace Match3
                 foreach (var neighbour in BoardCell.Neighbours)
                 {
                     var adjacentCell = currentIndex + neighbour;
-                    GridBoard.UnregisterDeletedCallback(adjacentCell, AdjacentMatch);
+                    GridBoard.Instance.UnregisterDeletedCallback(adjacentCell, AdjacentMatch);
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace Match3
         {
             if (!Damage(1))
             {
-                GridBoard.instance.DestroyGem(currentIndex);
+                GridBoard.Instance.DestroyGem(currentIndex);
             }
         }
 
