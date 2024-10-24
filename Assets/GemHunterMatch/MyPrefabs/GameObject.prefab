@@ -44,6 +44,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialMatch
       objectReference: {fileID: 0}
+    - target: {fileID: 371035099341358173, guid: 432c344abb25ca74ca975521c99b290d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4149622048618815912, guid: 432c344abb25ca74ca975521c99b290d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.23

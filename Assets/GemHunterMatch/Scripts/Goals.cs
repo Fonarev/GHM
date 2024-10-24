@@ -6,6 +6,6 @@ namespace Assets.GemHunterMatch.Scripts
     {
         public Gem gem;
         public int count;
-       
+        public bool isExecut;
     }
 }

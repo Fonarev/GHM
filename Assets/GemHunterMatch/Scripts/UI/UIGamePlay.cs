@@ -1,6 +1,7 @@
 ﻿using Assets.AssetLoaders;
 using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.UI;
 
 using Match3;
 
@@ -27,6 +28,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public TextMeshProUGUI moveCounter;
         public TextMeshProUGUI cons;
         public UIBonusGroup bonusGroup;
+
         private void OnDisable()
         {
             wallet.OnValueChanged -= ValueChange;
@@ -35,6 +37,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnAllGoalFinished -= Finished;
             gamePlay.OnMachted -= MatchEffect;
         }
+
         public void Initialize(GamePlay gamePlay, Wallet wallet, LevelConfig level)
         {
             this.gamePlay = gamePlay;
@@ -71,7 +74,10 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private void Finished(bool isCondition)
         {
-            StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init(isCondition)));
+            if (isCondition)
+                StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init(isCondition)));
+            else
+                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopup, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.gemGoals); })); 
         }
 
         private void MoveHappen(int move)
@@ -84,11 +90,11 @@ namespace Assets.GemHunterMatch.Scripts.UI
             popupHandler.Show(gem.UISprite, gem.transform.position, goals[gem.GemType].transform.position);
         }
 
-        private void GoalChange(int type, int count)
+        private void GoalChange(int type, int count, bool isExecut)
         {
             if(goals.TryGetValue(type, out UIGoalEntry entry)) 
             {
-                entry.Change(count);
+                entry.Change(count,isExecut);
             }
             else
             {

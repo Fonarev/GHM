@@ -17,7 +17,7 @@ namespace Assets.GemHunterMatch.Scripts
 {
     public class GamePlay : MonoBehaviour
     {
-        public event Action<int, int> OnGoalChanged;
+        public event Action<int, int,bool> OnGoalChanged;
         public event Action<bool> OnAllGoalFinished;
         public event Action<int> OnMoveHappened;
         public event Action<int,int> OnUsedBonusItem;
@@ -30,7 +30,7 @@ namespace Assets.GemHunterMatch.Scripts
         public int GoalLeft { get; private set; }
         public int RemainingMove { get; private set; }
 
-        private List<Goals> gemGoals = new();
+        public List<Goals> gemGoals = new();
         private LevelConfig level;
         private GridBoard gridBoard;
       
@@ -69,6 +69,12 @@ namespace Assets.GemHunterMatch.Scripts
             IsPlaying = true;
         }
 
+        public void AddMoves(int moves)
+        {
+            RemainingMove = moves;
+            Play();
+        }
+
         public void Moved()
         {
             var prev = RemainingMove;
@@ -104,11 +110,13 @@ namespace Assets.GemHunterMatch.Scripts
                     OnMachted.Invoke(gem);
 
                     goal.count -= 1;
-                    OnGoalChanged?.Invoke(gem.GemType, goal.count);
+                    OnGoalChanged?.Invoke(gem.GemType, goal.count, goal.isExecut);
                     Debug.Log($"{gem.GemType}, {goal.count}");
 
                     if (goal.count == 0)
                     {
+                        goal.isExecut = true;
+                        OnGoalChanged?.Invoke(gem.GemType, goal.count, goal.isExecut);
                         GoalLeft -= 1;
                         if (GoalLeft == 0)
                         {
@@ -147,18 +155,24 @@ namespace Assets.GemHunterMatch.Scripts
 
             if (isConditions)
             {
-                yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform));
-                SetCompletedLevel();
-                AudioManager.instance.PlayEffect("chime");
-
                 while (gridBoard.BoardChanged)
                 {
                     yield return new WaitForSeconds(2);
                     yield return gridBoard.BoardChanged;
                 }
+                yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform));
+                SetCompletedLevel();
+                AudioManager.instance.PlayEffect("chime");
+
+              
             }
             else
             {
+                while (gridBoard.BoardChanged)
+                {
+                    yield return new WaitForSeconds(2);
+                    yield return gridBoard.BoardChanged;
+                }
                 AudioManager.instance.PlayEffect("jingle_chime");
             }
 

@@ -24,9 +24,23 @@ namespace Assets.GemHunterMatch.Scripts.UI
             executed.gameObject.SetActive(false);
         }
 
+        public void Init(Goals goal)
+        {
+            icon.sprite = goal.gem.UISprite;
+            countDown.text = goal.count.ToString();
+            typeGoal = goal.gem.GemType;
+
+            if(goal.isExecut)
+            {
+                countDown.gameObject.SetActive(false);
+                executed.gameObject.SetActive(true);
+            }
+           
+        }
+
         public int GetTypeGoal() => typeGoal;
 
-        public void Change(int count)
+        public void Change(int count, bool isExecut)
         {
             if(count > 0) 
             {
@@ -35,7 +49,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             else
             {
                 countDown.gameObject.SetActive(false);
-                executed.gameObject.SetActive(true);
+                executed.gameObject.SetActive(isExecut);
             }
         }
     }

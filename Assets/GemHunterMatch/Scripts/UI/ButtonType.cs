@@ -8,7 +8,6 @@
         Open,
         Close,
         Menu,
-        Settings
-
+        Settings,
     }
 }

@@ -1,15 +1,12 @@
 ﻿using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GameMains.Scripts;
-using Assets.YG.Scripts;
-
-using System;
-using System.Collections;
 
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.GameMains.Scripts.Bank;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
@@ -20,9 +17,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         private Button button => GetComponent<Button>();
         private TextMeshProUGUI nameT => GetComponentInChildren<TextMeshProUGUI>();
 
-        internal void Init(ButtonType type)
+        public void Init(ButtonType type)
         {
-            Debug.Log(type.ToString());
             this.type = type;
             button.onClick.AddListener(OnClick);
         }
@@ -40,8 +36,11 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     GlobalMediator.instance.ExitMenu();
                     AudioManager.instance.PlayEffect(EffectClip.click);
                     break;
+                case ButtonType.Restart:
+                    AudioManager.instance.PlayEffect(EffectClip.click);
+                    break;
 
-            }
+           }
         }
     }
 }
