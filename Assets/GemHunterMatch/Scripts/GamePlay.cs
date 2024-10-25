@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts
 {
@@ -20,6 +21,7 @@ namespace Assets.GemHunterMatch.Scripts
         public event Action<int, int,bool> OnGoalChanged;
         public event Action<bool> OnAllGoalFinished;
         public event Action<int> OnMoveHappened;
+        public event Action<int> OnMoveTriger;
         public event Action<int,int> OnUsedBonusItem;
         public event Action<Gem> OnMachted;
 
@@ -36,7 +38,8 @@ namespace Assets.GemHunterMatch.Scripts
       
         private Wallet wallet;
         private bool isPlaying;
-
+        bool isConditions;
+        private GameObject objectSVX;
         public void Initialize(Wallet wallet)
         {
             this.wallet = wallet;
@@ -84,7 +87,7 @@ namespace Assets.GemHunterMatch.Scripts
 
             if (prev > level.LowMoveTrigger && RemainingMove <= level.LowMoveTrigger)
             {
-                //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.LowMove);
+                OnMoveTriger.Invoke(RemainingMove);
             }
 
             if (RemainingMove <= 0)
@@ -95,7 +98,8 @@ namespace Assets.GemHunterMatch.Scripts
 
         private void OnNoMoveLeft()
         {
-            Finish(false);
+             
+            Finish(isConditions);
         }
 
         public bool Matched(Gem gem)
@@ -120,7 +124,8 @@ namespace Assets.GemHunterMatch.Scripts
                         GoalLeft -= 1;
                         if (GoalLeft == 0)
                         {
-                            Finish(true);
+                            isConditions = true;
+                            Finish(isConditions);
                             Debug.Log($"Finished");
                         }
                     }
@@ -155,16 +160,21 @@ namespace Assets.GemHunterMatch.Scripts
 
             if (isConditions)
             {
+                yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform,op=>
+                {
+                    AudioManager.instance.PlayEffect("chime");
+                    objectSVX = op;
+                }));
                 while (gridBoard.BoardChanged)
                 {
                     yield return new WaitForSeconds(2);
                     yield return gridBoard.BoardChanged;
                 }
-                yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform));
+                OnAllGoalFinished.Invoke(isConditions);
+                objectSVX.SetActive(false);
+                Addressables.ReleaseInstance(objectSVX);
                 SetCompletedLevel();
-                AudioManager.instance.PlayEffect("chime");
-
-              
+               
             }
             else
             {
@@ -173,10 +183,15 @@ namespace Assets.GemHunterMatch.Scripts
                     yield return new WaitForSeconds(2);
                     yield return gridBoard.BoardChanged;
                 }
-                AudioManager.instance.PlayEffect("jingle_chime");
-            }
+                yield return new WaitForSeconds(2);
 
-            OnAllGoalFinished.Invoke(isConditions);
+                if (!isConditions)
+                {
+                    AudioManager.instance.PlayEffect("jingle_chime");
+                    OnAllGoalFinished.Invoke(isConditions);
+                }
+                
+            }
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.WinEffect, transform));
         }
 

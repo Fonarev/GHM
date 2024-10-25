@@ -23,7 +23,7 @@ namespace Match3
 
         public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
             if (!Application.isPlaying)
                 return false;
 #endif
@@ -32,7 +32,7 @@ namespace Match3
             //a place for a BonusGem. The Board will take care of creating a BonusGem there.
             //Board.RegisterSpawner(position);
             GridBoard.RegisterSpawnerPoint(position);
-
+            EditorPreviewSprite = null;
             return base.StartUp(position, tilemap, go);
         }
     }

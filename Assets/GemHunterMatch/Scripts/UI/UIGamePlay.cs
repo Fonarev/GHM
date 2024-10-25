@@ -34,6 +34,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             wallet.OnValueChanged -= ValueChange;
             gamePlay.OnGoalChanged -= GoalChange;
             gamePlay.OnMoveHappened -= MoveHappen;
+            gamePlay.OnMoveTriger -= GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished -= Finished;
             gamePlay.OnMachted -= MatchEffect;
         }
@@ -48,6 +49,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             
             gamePlay.OnGoalChanged += GoalChange;
             gamePlay.OnMoveHappened += MoveHappen;
+            gamePlay.OnMoveTriger += GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished += Finished;
             gamePlay.OnMachted += MatchEffect;
 
@@ -64,6 +66,11 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 }));
             }
             bonusGroup.Init(gamePlay);
+        }
+
+        private void GamePlay_OnMoveTriger(int moves)
+        {
+            StartCoroutine(LoaderAsset.InstantiateAsset("PopupWarning",containerPopup));
         }
 
         private void ValueChange(int value)
