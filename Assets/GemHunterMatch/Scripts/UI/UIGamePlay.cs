@@ -19,6 +19,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private UIPopupEntryHandler popupHandler;
         [SerializeField] private AssetReference popupLevelGoals;
         [SerializeField] private AssetReference popupWin;
+        [SerializeField] private TextMeshProUGUI levelNumber;
         private GamePlay gamePlay;
         private Wallet wallet;
         private LevelConfig level;
@@ -44,6 +45,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             this.gamePlay = gamePlay;
             this.wallet = wallet;
             this.level = level;
+            levelNumber.text = "level" + level.level.ToString();
             cons.text = wallet.Coins.ToString();
             wallet.OnValueChanged += ValueChange;
             

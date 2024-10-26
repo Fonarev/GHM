@@ -61,6 +61,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
+      propertyPath: GemType
+      value: 97
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
       propertyPath: HealthStates.Array.size
       value: 2
       objectReference: {fileID: 0}

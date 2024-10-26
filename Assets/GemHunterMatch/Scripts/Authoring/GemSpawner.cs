@@ -26,13 +26,15 @@ namespace Match3
 #if UNITY_EDITOR
             if (!Application.isPlaying)
                 return false;
+#else
+                 EditorPreviewSprite = null;
 #endif
 
             //This tile is only used in editor to help design the level. At runtime, we notify the board that this tile is
             //a place for a BonusGem. The Board will take care of creating a BonusGem there.
             //Board.RegisterSpawner(position);
             GridBoard.RegisterSpawnerPoint(position);
-            EditorPreviewSprite = null;
+           
             return base.StartUp(position, tilemap, go);
         }
     }
