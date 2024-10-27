@@ -39,7 +39,9 @@ namespace Match3
             //a place for a BonusGem, then delete the GameObject that was just visualGem aid at design time. The Board will take care
             //of creating a BonusGem there.
             GridBoard.RegisterCell(position, PlacedGem);
-
+#if! UNITY_EDITOR
+          PreviewEditorSprite = null;
+#endif
             return base.StartUp(position, tilemap, go);
         }
     }

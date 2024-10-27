@@ -163,26 +163,26 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 602f84318f94e7a4bb3ee8cc9060d9fe
-    m_Address: Grid 6
+    m_Address: Grid 25
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f34e750962be35a4e9056495dcc3bec8
-    m_Address: Grid 7
+    m_Address: Grid 26
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 673ad6ca3cfea234ca6716d3465a8197
-    m_Address: Grid 8
+    m_Address: Grid 27
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c0bd572d408a60e46a1f9957871eb6bf
+  - m_GUID: 1991a3e6e8864244c8d8cb0e1b668981
     m_Address: Grid 9
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3fd640f86f647bd47add19dee2554e8e
+  - m_GUID: 11b63a7e99aec2b44acbc564d33b2f6c
     m_Address: Grid 10
     m_ReadOnly: 0
     m_SerializedLabels: []
@@ -209,6 +209,41 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 887602cfa67ee4842a157e85d8b8658d
     m_Address: Grid 3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b8aa11cad68c30b4b93c92e3abca3664
+    m_Address: UIMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2833df03fde5bf84f8edd8c19a8288cf
+    m_Address: BegraundLogo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 864e5c5ce0cc62b4b81714b79790076d
+    m_Address: Prefab_PortraitCamera
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0571ac4c50736dc4db04c9b72bb432e8
+    m_Address: UIGamePlay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9728142d6d56ebe4e96cba5fd79cce20
+    m_Address: Grid 6
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65a87bb2470f75545ba04401b298ad68
+    m_Address: Grid 7
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e4d89282c7c6c942af614abd0b06ba3
+    m_Address: Grid 8
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

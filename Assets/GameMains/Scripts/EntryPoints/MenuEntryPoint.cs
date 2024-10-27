@@ -1,6 +1,8 @@
 ﻿using Assets.AssetLoaders;
 using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.Scripts.UI;
+using Assets.YG.Scripts;
 
 using System.Collections;
 
@@ -11,27 +13,41 @@ namespace Assets.GameMains.Scripts.EntryPoints
 {
     public class MenuEntryPoint : MonoBehaviour
     {
-        private LoaderScenes loaderScenes;
-        [SerializeField] private SpriteRenderer logo;
+        private LoaderScenes _loaderScenes;
+        private AudioManager _audioManager;
 
         private void OnDisable()
         {
             GlobalMediator.instance.OnSelectedLevel -= SelectedLevel;
         }
 
-        public void Initialize(AudioManager audio,LoaderScenes loaderScenes)
+        public void Initialize(AudioManager audioManager, LoaderScenes loaderScenes)
         {
-            this.loaderScenes = loaderScenes;
+            YandexGame.Instance.GameReady();
+            _audioManager = audioManager;
+            _loaderScenes = loaderScenes;
 
+            GlobalMediator.instance.OnSelectedLevel += SelectedLevel;
+
+            StartCoroutine(Load());
+        }
+
+        private IEnumerator Load()
+        {
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG"));
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("VFX_Bubbles"));
-            GlobalMediator.instance.OnSelectedLevel += SelectedLevel;
-            audio.Play();
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BegraundLogo"));
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIMenu>("UIMenu", null, op => { op.Initialize(); }));
+
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Prefab_PortraitCamera"));
+
+            _audioManager.Play();
+
         }
-       
+
         private void SelectedLevel(int level)
         {
-            loaderScenes.LoadLevel(Scenes.game);
+            _loaderScenes.LoadLevel(Scenes.game);
         }
     }
 }

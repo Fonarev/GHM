@@ -45,8 +45,11 @@ namespace Assets.GemHunterMatch.Scripts.UI
             this.gamePlay = gamePlay;
             this.wallet = wallet;
             this.level = level;
-            levelNumber.text = "level" + level.level.ToString();
+
+            levelNumber.text = "level " + level.level.ToString();
+            moveCounter.text = level.MaxMove.ToString();
             cons.text = wallet.Coins.ToString();
+
             wallet.OnValueChanged += ValueChange;
             
             gamePlay.OnGoalChanged += GoalChange;
@@ -55,9 +58,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnAllGoalFinished += Finished;
             gamePlay.OnMachted += MatchEffect;
 
-            moveCounter.text = level.MaxMove.ToString();
-
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
+            bonusGroup.Init(gamePlay);
 
             foreach (var goal in level.Goals)
             {
@@ -67,9 +68,10 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     goals[op.GetTypeGoal()] = op;
                 }));
             }
-            bonusGroup.Init(gamePlay);
-        }
 
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
+        }
+       
         private void GamePlay_OnMoveTriger(int moves)
         {
             StartCoroutine(LoaderAsset.InstantiateAsset("PopupWarning",containerPopup));

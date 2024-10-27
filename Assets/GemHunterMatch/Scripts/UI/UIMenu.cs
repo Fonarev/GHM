@@ -11,12 +11,12 @@ namespace Assets.GemHunterMatch.Scripts.UI
     {
         [SerializeField] private UISelectLocation locationLevels;
         [SerializeField] private Image logo;
-       
-         public void Initialize()
+
+        public void Initialize()
         {
             locationLevels.Init();
             CoroutineHandler.StartRoutine(LoaderAsset.Load<Sprite>("Logo", op => { logo.sprite = op; Addressables.Release(op); }));
         }
-       
+
     }
 }
