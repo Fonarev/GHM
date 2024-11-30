@@ -1,4 +1,4 @@
-using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using UnityEngine;
 
@@ -9,8 +9,8 @@ namespace Match3
         public override void Init(Vector3Int cell)
         {
             base.Init(cell);
-
-            // we also register the cell as a normal "BonusGem" cell so a BonusGem is spawn under the blocker on start.
+        
+            // we also register the cell as a normal "gem" cell so a gem is spawn under the blocker on start.
             GridBoard.RegisterCell(cell);
             GridBoard.ChangeLock(cell, true);
             GridBoard.RegisterMatchedCallback(cell, CellMatch);

@@ -1,5 +1,3 @@
-using Assets.GameMains.Scripts.AudiosSources;
-using Assets.GemHunterMatch.Scripts;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using System.Collections.Generic;
@@ -12,7 +10,7 @@ namespace Match3
     {
         public bool CanBeDestroyedWithAdjacentMatch = true;
         public Sprite[] HealthStates;
-        public int Health;
+        public int Health = 3;
 
         public AudioClip DamagedClip;
         public VisualEffect DamageEffect;
@@ -31,10 +29,8 @@ namespace Match3
             base.Init(startIdx);
             
             if(DamageEffect != null)
-            {
-                //PoolService.Instance.AddNewInstance(DamageEffect, 6);
-            }
-               
+                //GameManager.Instance.PoolSystem.AddNewInstance(DamageEffect, 6);
+
             if (CanBeDestroyedWithAdjacentMatch)
             {
                 foreach (var neighbour in BoardCell.Neighbours)
@@ -47,11 +43,11 @@ namespace Match3
 
         public override bool Damage(int damage)
         {
-            AudioManager.instance.PlayEffect(DamagedClip);
-
-            if (DamageEffect != null)
-                GridBoard.Instance.PoolVFX.PlayInstance(DamageEffect, transform.position);
-
+            //GameManager.Instance.PlaySFX(DamagedClip);
+            
+            //if(DamageEffect != null)
+                //GameManager.Instance.PoolSystem.PlayInstanceAt(DamageEffect, transform.position);
+            
             var ret = base.Damage(damage);
             UpdateState();
             return ret;
@@ -63,7 +59,7 @@ namespace Match3
             {
                 foreach (var neighbour in BoardCell.Neighbours)
                 {
-                    var adjacentCell = currentIndex + neighbour;
+                    var adjacentCell = m_CurrentIndex + neighbour;
                     GridBoard.Instance.UnregisterDeletedCallback(adjacentCell, AdjacentMatch);
                 }
             }
@@ -73,7 +69,7 @@ namespace Match3
         {
             if (!Damage(1))
             {
-                GridBoard.Instance.DestroyGem(currentIndex);
+                GridBoard.Instance.DestroyGem(m_CurrentIndex);
             }
         }
 

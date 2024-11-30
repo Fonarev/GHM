@@ -11,6 +11,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
         [SerializeField] private AudioClip effectClip;
         [SerializeField] private AudioClip[] effectClips;
         private Dictionary<string, AudioClip> effects;
+
         private AudioSource audioSourse => GetComponent<AudioSource>();
 
         public void Initialize()
@@ -19,7 +20,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
             audioSourse.clip = effectClip;
             effects = effectClips.ToDictionary(i => i.name, i => i);
         }
-
+        
         public void Play(string name) => audioSourse.PlayOneShot(effects[name]);
         public void Play(AudioClip name) => audioSourse.PlayOneShot(name);
         public void Pause() => audioSourse.Pause();

@@ -1,5 +1,7 @@
 ﻿using Assets.GemHunterMatch.Scripts;
 
+using Match3;
+
 using System;
 using System.Collections.Generic;
 
@@ -14,6 +16,7 @@ namespace Assets.YG.Scripts
         public Dictionary<int,LevelData> levels = new();
         public Dictionary<int, Location> locations = new();
         public Dictionary<int, int> bonusGemItem = new();
+        public int Score;
 
         public void CreateDefaultData()
         {
@@ -27,6 +30,8 @@ namespace Assets.YG.Scripts
             {
                 number = 1,
                 openLevels = 1,
+                startLevel = 1,
+                maxLevels = 20,
                 isLock = true,
                 isSelected = true
             };

@@ -5,6 +5,7 @@ using Assets.GemHunterMatch.UI;
 
 using Match3;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using TMPro;
@@ -27,7 +28,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public RectTransform containerPopup;
         private Dictionary<int,UIGoalEntry> goals = new();
         public TextMeshProUGUI moveCounter;
-        public TextMeshProUGUI cons;
+        public TextMeshProUGUI coins;
+        public TextMeshProUGUI score;
         public UIBonusGroup bonusGroup;
 
         private void OnDisable()
@@ -38,8 +40,17 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMoveTriger -= GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished -= Finished;
             gamePlay.OnMachted -= MatchEffect;
+            gamePlay.OnAddScore -= OnAddScore;
         }
-
+        public void Update()
+        {
+            
+        }
+        private void OnAddScore(int oldScore, int newScore)
+        {
+            score.text = "Score: " + newScore.ToString();
+        }
+       
         public void Initialize(GamePlay gamePlay, Wallet wallet, LevelConfig level)
         {
             this.gamePlay = gamePlay;
@@ -48,7 +59,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
             levelNumber.text = "level " + level.level.ToString();
             moveCounter.text = level.MaxMove.ToString();
-            cons.text = wallet.Coins.ToString();
+            coins.text = wallet.Coins.ToString();
 
             wallet.OnValueChanged += ValueChange;
             
@@ -57,7 +68,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMoveTriger += GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished += Finished;
             gamePlay.OnMachted += MatchEffect;
-
+            gamePlay.OnAddScore += OnAddScore;
+            score.text ="Score: "+ 0.ToString();
             bonusGroup.Init(gamePlay);
 
             foreach (var goal in level.Goals)
@@ -79,7 +91,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private void ValueChange(int value)
         {
-            cons.text = value.ToString();
+            coins.text = value.ToString();
         }
        
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Audio;
+using UnityEngine.VFX;
 
 namespace Match3
 {
@@ -25,37 +26,31 @@ namespace Match3
     [System.Serializable]
     public class VisualSetting
     {
-        [Header("OnFall")]
-        [Range(5.0f, 15.0f)] public float FallSpeed = 10.0f;
+        public float FallSpeed = 10.0f;
         public AnimationCurve FallAccelerationCurve;
         public AnimationCurve BounceCurve;
         public AnimationCurve SquishCurve;
 
-        [Header("OnMath")]
         public AnimationCurve MatchFlyCurve;
-        public AssetReference MatchEffect;
-        //public GameObject BonusModePrefab;
-
-        [Header("Hint")]
-        [Range(5.0f, 10.0f)] public float inactivityTimeBeforeHint = 8.0f;
-        public AssetReference HintReference;
-       
-        [Header("InputEffect")]
-        public AssetReference GemHold;
-        public AssetReference HoldTrail;
-
-        [Header("CoinEffect")]
-        public AssetReference CoinVFX;
         public AnimationCurve CoinFlyCurve;
 
-        [Header("EndEffect")]
-        public AssetReference WinEffect;
-        public AssetReference LoseEffect;
-        public AssetReference Bubbles;
+        public GameObject BonusModePrefab;
+        
+        public GameObject HintPrefab;
+
+        public VisualEffect CoinVFX;
+
+        public VisualEffect WinEffect;
+        public VisualEffect LoseEffect;
+
+        public AssetReference GemHold;
+        public AssetReference HoldTrail;
+        public AssetReference HintReference;
+        public float inactivityTimeBeforeHint;
     }
 
     /// <summary>
-    /// Setting related to bonus BonusGem, list all the existing bonus gems. 
+    /// Setting related to bonus gem, list all the existing bonus gems. 
     /// </summary>
     [System.Serializable]
     public class BonusSetting
@@ -75,10 +70,11 @@ namespace Match3
             public string ItemName;
             public int Price;
 
-            //public virtual bool CanBeBought()
-            //{
-            //    return GameManager.Instance.Coins >= Price; 
-            //}
+            public virtual bool CanBeBought()
+            {
+                //return GameManager.Instance.Coins >= Price; 
+                return true;
+            }
         
             public abstract void Buy();
         }

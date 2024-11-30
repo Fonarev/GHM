@@ -35,7 +35,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
         private IEnumerator Load()
         {
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG"));
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("VFX_Bubbles"));
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Bubbles_P"));
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BegraundLogo"));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIMenu>("UIMenu", null, op => { op.Initialize(); }));
 

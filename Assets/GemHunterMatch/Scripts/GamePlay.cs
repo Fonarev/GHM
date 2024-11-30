@@ -3,6 +3,7 @@ using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 using Assets.YG.Scripts;
 
 using Match3;
@@ -20,6 +21,7 @@ namespace Assets.GemHunterMatch.Scripts
     {
         public event Action<int, int,bool> OnGoalChanged;
         public event Action<bool> OnAllGoalFinished;
+        public event Action<int,int> OnAddScore;
         public event Action<int> OnMoveHappened;
         public event Action<int> OnMoveTriger;
         public event Action<int,int> OnUsedBonusItem;
@@ -33,6 +35,7 @@ namespace Assets.GemHunterMatch.Scripts
         public int RemainingMove { get; private set; }
 
         public List<Goals> gemGoals = new();
+        private int Score;
         private LevelConfig level;
         private GridBoard gridBoard;
       
@@ -70,6 +73,13 @@ namespace Assets.GemHunterMatch.Scripts
           
            
             IsPlaying = true;
+        }
+
+        public void AddScore(int score)
+        {
+            var oldScore = Score;
+            Score += score;
+            OnAddScore.Invoke(oldScore, Score);
         }
 
         public void AddMoves(int moves)
@@ -115,7 +125,7 @@ namespace Assets.GemHunterMatch.Scripts
 
                     goal.count -= 1;
                     OnGoalChanged?.Invoke(gem.GemType, goal.count, goal.isExecut);
-                    Debug.Log($"{gem.GemType}, {goal.count}");
+                    //Debug.Log($"{gem.GemType}, {goal.count}");
 
                     if (goal.count == 0)
                     {
@@ -160,16 +170,18 @@ namespace Assets.GemHunterMatch.Scripts
 
             if (isConditions)
             {
-                yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform,op=>
-                {
-                    AudioManager.instance.PlayEffect("chime");
-                    objectSVX = op;
-                }));
+                //yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform,op=>
+                //{
+                //    AudioManager.instance.PlayEffect("chime");
+                //    objectSVX = op;
+                //}));
+
                 while (gridBoard.BoardChanged)
                 {
                     yield return new WaitForSeconds(2);
                     yield return gridBoard.BoardChanged;
                 }
+
                 OnAllGoalFinished.Invoke(isConditions);
                 objectSVX.SetActive(false);
                 Addressables.ReleaseInstance(objectSVX);
@@ -180,27 +192,49 @@ namespace Assets.GemHunterMatch.Scripts
             {
                 while (gridBoard.BoardChanged)
                 {
-                    yield return new WaitForSeconds(2);
+                    yield return new WaitForSeconds(1);
                     yield return gridBoard.BoardChanged;
                 }
-                yield return new WaitForSeconds(2);
 
-                if (!isConditions)
+                if (!this.isConditions)
                 {
                     AudioManager.instance.PlayEffect("jingle_chime");
                     OnAllGoalFinished.Invoke(isConditions);
                 }
                 
             }
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.WinEffect, transform));
+            //yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.WinEffect, transform));
         }
 
         private void SetCompletedLevel()
         {
             YandexGame.Instance.progressData.levels[level.level].isCompleted = true;
-
+            int oldScore = YandexGame.Instance.progressData.Score;
+            YandexGame.Instance.progressData.Score += Score;
+            if (oldScore< YandexGame.Instance.progressData.Score)
+            {
+                YandexGame.Instance.NewLeaderboardScores("Score", YandexGame.Instance.progressData.Score);
+            }
+           
             int nextLevel = level.level;
             nextLevel++;
+            var currentLocotion = YandexGame.Instance.progressData.locations[1];
+
+            if (currentLocotion.endindexLevel < nextLevel)
+            {
+                currentLocotion.completed = true;
+                currentLocotion.isSelected = false;
+                YandexGame.Instance.progressData.locations[2] = new Location()
+                {
+                    number = 2,
+                    openLevels = 21,
+                    startLevel = 21,
+                    maxLevels = 20,
+                    isLock = true,
+                    isSelected = true
+                };
+            }
+
             if (!YandexGame.Instance.progressData.levels.ContainsKey(nextLevel))
             {
                 YandexGame.Instance.progressData.levels[nextLevel] = new LevelData(){ level = nextLevel, isOpened = true};

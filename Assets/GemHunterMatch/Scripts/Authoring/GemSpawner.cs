@@ -1,5 +1,4 @@
-using Assets.GameMains.Scripts.Expansion;
-using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -27,14 +26,11 @@ namespace Match3
             if (!Application.isPlaying)
                 return false;
 #endif
-
+        
             //This tile is only used in editor to help design the level. At runtime, we notify the board that this tile is
-            //a place for a BonusGem. The Board will take care of creating a BonusGem there.
-            //Board.RegisterSpawner(position);
+            //a place for a gem. The Board will take care of creating a gem there.
             GridBoard.RegisterSpawnerPoint(position);
-#if !UNITY_EDITOR
-          EditorPreviewSprite = null;
-#endif
+
             return base.StartUp(position, tilemap, go);
         }
     }

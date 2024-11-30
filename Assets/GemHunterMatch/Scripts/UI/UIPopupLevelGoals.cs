@@ -1,12 +1,8 @@
 ﻿using Assets.AssetLoaders;
 using Assets.GameMains.Scripts.AudiosSources;
 
-using Match3;
-
 using System.Collections;
 using System.Collections.Generic;
-
-using TMPro;
 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -52,7 +48,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
            
             Hide();
         }
+
         public void Hide() 
+        {
+            anim.PlayQueued("ClosePopupGoalsLevel");
+        }
+
+        public void AnimEventClose()
         {
             gameObject.SetActive(false);
             foreach (var entry in goalEntries)

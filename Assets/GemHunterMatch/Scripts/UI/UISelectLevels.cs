@@ -17,7 +17,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             for (int i = 0; i < amountLevel; i++)
             {
                 int number = startCount + i;
-                var level = levels[i];
+                var level = levels[number-1];
 
                 if (level != null)
                 {

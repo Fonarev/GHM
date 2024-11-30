@@ -22,12 +22,12 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private bool isHoldingTouch;
         private float lastClickTime = 0.0f;
        
-        private readonly VFXController effectController;
+        private readonly EffectController effectController;
         private readonly GridBoard gridBoard;
         private readonly GamePlay gamePlay;
         private readonly SwapHandler swapHandler;
 
-        public InputHandler(GridBoard gridBoard, GamePlay gamePlay, SwapHandler swapHandler, VFXController effectController, Camera mainCam)
+        public InputHandler(GridBoard gridBoard, GamePlay gamePlay, SwapHandler swapHandler, EffectController effectController, Camera mainCam)
         {
             this.gridBoard = gridBoard;
             this.gamePlay = gamePlay;
@@ -72,7 +72,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 if (gridBoard.contentCell.ContainsKey(startCell))
                 {
-                    effectController.ShowVFX(GridBoard.Instance.Grid.GetCellCenterWorld(startCell), WorldPos);
+                    effectController.ShowEffect(GridBoard.Instance.Grid.GetCellCenterWorld(startCell), WorldPos);
                 }
             }
             else if (ReleasedThisFrame)

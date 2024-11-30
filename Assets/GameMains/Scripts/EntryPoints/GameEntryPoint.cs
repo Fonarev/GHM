@@ -38,7 +38,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
         private IEnumerator Load()
         {
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG", rootBackground));
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("VFX_Bubbles", rootBackground));
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Bubbles_P", rootBackground));
 
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIGamePlay>("UIGamePlay", null,op=>
             { 

@@ -17,7 +17,10 @@ MonoBehaviour:
   LowMoveTrigger: 3
   <Goals>k__BackingField:
   - Gem: {fileID: 7927807542344970777, guid: bb60bc505e820734584f3d8bd0a16f53, type: 3}
-    Count: 6
+    Count: 33
+  - Gem: {fileID: 6911383413579268359, guid: 8f77ec4c0df856d48a96a85287ccb963, type: 3}
+    Count: 33
   BorderMargin: 0.3
   Background: {fileID: 0}
   gridBoardReference: Grid 7
+  tutorial: {fileID: 0}

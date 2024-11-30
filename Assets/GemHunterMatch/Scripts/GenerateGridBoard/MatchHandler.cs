@@ -1,4 +1,7 @@
-﻿using Match3;
+﻿using Assets.GameMains.Scripts;
+using Assets.GameMains.Scripts.AudiosSources;
+
+using Match3;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
     public class MatchHandler
     {
-       
         public List<Match> tickingMatch { get; set; } = new();
         public List<Vector3Int> tickingCells { get; set; } = new();
         public List<Vector3Int> newTickingCells { get; set; } = new();
@@ -20,6 +22,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public List<PossibleSwap> possibleSwaps { get; set; } = new();
 
         private int pickedSwap;
+        private int comboCount;
         private readonly GamePlay gamePlay;
         private readonly GridBoard gridBoard;
         private readonly Placements generateGem;
@@ -43,7 +46,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             if (tickingMatch.Count > 0)
             {
                 MatchTicking();
-
+               
                 gridBoard.IncrementHintTimer = false;
                 gridBoard.BoardChanged = true;
             }
@@ -59,6 +62,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 tickingCells.AddRange(newTickingCells);
                 newTickingCells.Clear();
                 gridBoard.IncrementHintTimer = false;
+            }
+            if(!gridBoard.BoardChanged)
+            {
+                comboCount = 0;
             }
         }
 
@@ -164,6 +171,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             List<Vector3Int> temporaryShapeMatch = new();
             MatchShape matchedShape = null;
             List<BonusGem> matchedBonusGem = new();
+
             foreach (var bonusGem in gridBoard.bonusSettings.Bonuses)
             {
                 foreach (var shape in bonusGem.Shapes)
@@ -192,9 +200,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             //no lines and no bonus match, so there is no match in that.
             if (lineList.Count == 0 && temporaryShapeMatch.Count == 0)
                 return false;
-
+           
             TryMatch(startCell, createMatch, temporaryShapeMatch, matchedBonusGem, lineList);
-
+          
             return true;
         }
 
@@ -342,6 +350,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     {
                         var currentList = new List<Vector3Int>() { idx };
                         var next = idx - dir;
+
                         while (gemList.Contains(next))
                         {
                             currentList.Add(next);
@@ -361,9 +370,12 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void TryMatch(Vector3Int startCell, bool createMatch, List<Vector3Int> temporaryShapeMatch, List<BonusGem> matchedBonusGem, List<Vector3Int> lineList)
         {
+          
             if (createMatch)
             {
+                comboCount++;
                 var finalMatch = CreateCustomMatch(startCell);
+
                 finalMatch.SpawnedBonus = matchedBonusGem.Count == 0 ? null : matchedBonusGem[Random.Range(0, matchedBonusGem.Count)];
 
                 foreach (var cell in lineList)
@@ -373,6 +385,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                     if (gridBoard.contentCell[cell].CanDelete())
                         finalMatch.AddGem(gridBoard.contentCell[cell].ContainingGem);
+                  
                 }
 
                 foreach (var cell in temporaryShapeMatch)
@@ -382,8 +395,16 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                     if (gridBoard.contentCell[cell].CanDelete())
                         finalMatch.AddGem(gridBoard.contentCell[cell].ContainingGem);
+                      
                 }
 
+                if (comboCount > 5) comboCount = 5;
+
+                finalMatch.Score = lineList.Count * 10 * comboCount;
+
+                AudioManager.instance.PlayEffect("math_"+ 1.ToString());
+                gridBoard.AddScore(finalMatch.Score);
+                Debug.Log(finalMatch.Score);
                 //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.Match);
             }
         }
@@ -392,14 +413,15 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             var newMatch = new Match()
             {
+                Score = 0,
                 DeletionTimer = 0.0f,
                 MatchingGem = new(),
                 OriginPoint = newCell,
                 SpawnedBonus = null
             };
-
+           
             tickingMatch.Add(newMatch);
-
+  
             return newMatch;
         }
 
@@ -408,7 +430,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             for (int i = 0; i < tickingMatch.Count; ++i)
             {
                 var match = tickingMatch[i];
-
+               
                 Debug.Assert(match.MatchingGem.Count == match.MatchingGem.Distinct().Count(),
                     "There is duplicate gems in the matching lists");
 
@@ -424,24 +446,28 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     {
                         match.MatchingGem.RemoveAt(j);
                         j--;
+                       
                         continue;
                     }
-                
+                  
                     StopBouncing(gemIdx, gem);
 
                     //forced deletion doesn't wait for end of timer
-                    j = ForseDeletoin(match, j, gemIdx, gem);
+                    j = ForseDeletion(match, j, gemIdx, gem);
+                  
                 }
-
+               
                 if (match.MatchingGem.Count == 0)
                 {
                     tickingMatch.RemoveAt(i);
                     i--;
                 }
+
             }
+            
         }
 
-        private int ForseDeletoin(Match match, int j, Vector3Int gemIdx, Gem gem)
+        private int ForseDeletion(Match match, int j, Vector3Int gemIdx, Gem gem)
         {
             if (match.ForcedDeletion || match.DeletionTimer > 1.0f)
             {
@@ -467,7 +493,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 if (match.DeletedCount >= 4 && !match.ForcedDeletion)
                 {
                     gamePlay.ChangeCoins(1);
-                    //gridBoard.PoolVFX.PlayInstance(GamePlay.Instance.visualSettings.CoinVFX, gem.transform.position);
+                    gridBoard.PoolEffect.PlayInstance(EffectType.CoinUp, gem.transform.position);
 
                 }
 
@@ -484,11 +510,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 {
                     gamePlay.Matched(gem);
 
-                    foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
+                    foreach (var matchEffect in gem.effectMatch)
                     {
-                        gridBoard.PoolVFX.PlayInstance(matchEffectPrefab,gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
+                        gridBoard.PoolEffect.PlayInstance(matchEffect.type,gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
                     }
-
                     gem.gameObject.SetActive(false);
 
                     gem.Destroyed();
@@ -498,9 +523,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 gamePlay.Matched(gem);
 
-                foreach (var matchEffectPrefab in gem.effectMatchPrefabs)
+                foreach (var matchEffect in gem.effectMatch)
                 {
-                    gridBoard.PoolVFX.PlayInstance(matchEffectPrefab, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
+                    gridBoard.PoolEffect.PlayInstance(matchEffect.type, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
                 }
 
                 gem.gameObject.SetActive(false);

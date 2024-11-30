@@ -1,4 +1,3 @@
-using Assets.GemHunterMatch.Scripts;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using System.Collections.Generic;
@@ -6,20 +5,28 @@ using UnityEngine;
 
 namespace Match3
 {
+    /// <summary>
+    /// Bonus Gem is a special gem that contains a list of MatchShape.
+    /// Bonus Gems are listed in the Game Settings on the GameManager.
+    /// When a match happens, the system goes over all BonusGem and check if one of the MatchShape match the shape of the
+    /// match and if it does, spawn that bonus gem there.
+    /// </summary>
     public class BonusGem : Gem
     {
         public List<MatchShape> Shapes;
-        private const int oneDamage = 1;
+        
         public virtual void Awake(){}
 
-        //helper function that inheriting class can use to destroy a BonusGem, but handle obstacle and bonus BonusGem properly
-        //if the cell don't contains either an obstacle or usable BonusGem and the targetted BonusGem is destroyed, add it to the
+        //helper function that inheriting class can use to destroy a gem, but handle obstacle and bonus gem properly
+        //if the cell don't contains either an obstacle or usable gem and the targetted gem is destroyed, add it to the
         //given match
         protected void HandleContent(BoardCell cell, Match receivingMatch)
         {
 
             if (cell.Obstacle != null)
-                cell.Obstacle.Damage(oneDamage);
+            {
+                cell.Obstacle.Damage(1);
+            }
 
             if (cell.ContainingGem == null)
                 return;
@@ -28,28 +35,27 @@ namespace Match3
             {
                 cell.ContainingGem.Use(null);
             }
-            else
-            {
-                if (cell.ContainingGem.CurrentMatch == null && !cell.ContainingGem.Damage(oneDamage))
-                    receivingMatch.AddGem(cell.ContainingGem);
-            }
+            else if (cell.ContainingGem.CurrentMatch == null && !cell.ContainingGem.Damage(1))
+                receivingMatch.AddGem(cell.ContainingGem);
         }
 
         //effect on the board are triggered by the gems being destroyed, but when using a bonus item ot use a Bonus Gem
         //the effect won't be triggered. So Bonus item call this function to trigger the VFX
         public void BonusTriggerEffect()
         {
-            Vector3 position = GridBoard.Instance.GetCellCenter(currentIndex); 
-            foreach (var effectPrefab in effectMatchPrefabs)
+            var position = GridBoard.Instance.GetCellCenter(m_CurrentIndex); 
+            foreach (var effectPrefab in effectMatch)
             {
-                GridBoard.Instance.PoolVFX.AddNewInstance(effectPrefab, 8);
-                GridBoard.Instance.PoolVFX.PlayInstance(effectPrefab, position);
+                //normally the game will instantiate the bonus vfx when it first get spawn, but if using a bonus item
+                //before that happen, this ensure the vfx will get instantiated first 
+                //GameManager.Instance.PoolSystem.AddNewInstance(effectPrefab, 8);
+                //GameManager.Instance.PoolSystem.PlayInstanceAt(effectPrefab, position);
             }
         }
     }
 
     /// <summary>
-    /// A MatchShape defines a list of cells that will form a shape to match against during a BonusGem match.
+    /// A MatchShape defines a list of cells that will form a shape to match against during a gem match.
     /// </summary>
     [System.Serializable]
     public class MatchShape : ISerializationCallbackReceiver
@@ -117,10 +123,10 @@ namespace Match3
         {
             var targetBound = GetBoundOf(cellList);
         
-            //we move the shape bound Rect inside the cellList bound Rect to check if all cell part of the shape can match cell
+            //we move the shape bound rect inside the cellList bound rect to check if all cell part of the shape can match cell
             //inside the cell list.
 
-            //we make the shape Rect into a square, so we can rotate & mirror the shape in the same bound.  
+            //we make the shape rect into a square, so we can rotate & mirror the shape in the same bound.  
             var largestBoundSize = Mathf.Max(targetBound.width, targetBound.height);
             var smallestBoundSize = Mathf.Min(targetBound.width, targetBound.height);
 
@@ -229,7 +235,7 @@ namespace Match3
         /// Return the bound of a list of cells
         /// </summary>
         /// <param name="cellList">The list of the cells for which to get the bounds</param>
-        /// <returns>The bounding Rect of all the cells in the cellList</returns>
+        /// <returns>The bounding rect of all the cells in the cellList</returns>
         public static RectInt GetBoundOf(List<Vector3Int> cellList)
         {
             if (cellList.Count == 0)

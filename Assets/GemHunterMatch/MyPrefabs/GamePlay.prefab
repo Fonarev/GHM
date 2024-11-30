@@ -232,32 +232,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    MatchEffect:
-      m_AssetGUID: f4f22f7bed44e2f4abeb41e8a2af3af6
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-    inactivityTimeBeforeHint: 8
-    HintReference:
-      m_AssetGUID: 761d00c63087d1f4b806eeca34a1625e
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-    GemHold:
-      m_AssetGUID: 0e57c286bfbf10045b66afa053c4ad34
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-    HoldTrail:
-      m_AssetGUID: 021bbf96a19906642a0e41fb58b29fc4
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
-    CoinVFX:
-      m_AssetGUID: 202ea16d4263b8746948d26a69af75b9
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_EditorAssetChanged: 0
     CoinFlyCurve:
       serializedVersion: 2
       m_Curve:
@@ -291,21 +265,27 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    WinEffect:
-      m_AssetGUID: 2571ff47b782206499bc35b1ce8a17ae
+    BonusModePrefab: {fileID: 0}
+    HintPrefab: {fileID: 225255149699016874, guid: 761d00c63087d1f4b806eeca34a1625e, type: 3}
+    CoinVFX: {fileID: 823917878632607669, guid: 202ea16d4263b8746948d26a69af75b9, type: 3}
+    WinEffect: {fileID: 5521151422817848708, guid: 2571ff47b782206499bc35b1ce8a17ae, type: 3}
+    LoseEffect: {fileID: 4472779639423090704, guid: d22cf45439fda9d40b3e13e2404543da, type: 3}
+    GemHold:
+      m_AssetGUID: 0e57c286bfbf10045b66afa053c4ad34
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-    LoseEffect:
-      m_AssetGUID: d22cf45439fda9d40b3e13e2404543da
+    HoldTrail:
+      m_AssetGUID: 021bbf96a19906642a0e41fb58b29fc4
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-    Bubbles:
-      m_AssetGUID: fcd77f43dd756b643bd9e288de0e669d
+    HintReference:
+      m_AssetGUID: 761d00c63087d1f4b806eeca34a1625e
       m_SubObjectName: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
+    inactivityTimeBeforeHint: 8
   bonusList:
   - {fileID: 11400000, guid: 3d73d22e97a64db4e9bfee4dfe1df1f6, type: 2}
   - {fileID: 11400000, guid: b37a5206a85e15440865697e559cf2b3, type: 2}

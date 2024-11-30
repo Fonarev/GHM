@@ -1,11 +1,11 @@
-using Assets.GemHunterMatch.Scripts;
+using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using UnityEngine;
 using UnityEngine.VFX;
 
 namespace Match3
 {
-    //Base class for everything filling a BonusGem space and that get notified when a match is made adjacent to it
+    //Base class for everything filling a gem space and that get notified when a match is made adjacent to it
     public abstract class Obstacle : MonoBehaviour
     {
         [System.Serializable]
@@ -35,8 +35,7 @@ namespace Match3
             
             foreach (var state in LockState)
             {
-                //GameManager.Instance.PoolSystem.AddNewInstance(state.UndoneVFX, 4);
-                Debug.Log("Create Pool");
+                //GridBoard.Instance.PoolEffect.Create.AddNewInstance(state.UndoneVFX, 4);
             }
         }
 
@@ -62,12 +61,8 @@ namespace Match3
             m_CurrentState = newState;
             //play the undone effect of the state before this one
             if(m_CurrentState-1 >= 0)
-            {
-                //GameManager.Instance.PoolSystem.PlayInstance(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
-                Debug.Log("instatiate obj Pool");
-            }
-
-
+                //GameManager.Instance.PoolSystem.PlayInstanceAt(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
+            
             if (m_CurrentState < LockState.Length)
             {
                 m_SpriteRenderer.sprite = LockState[m_CurrentState].Sprite;

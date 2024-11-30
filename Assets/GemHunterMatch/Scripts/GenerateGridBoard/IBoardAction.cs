@@ -2,6 +2,6 @@
 {
     public interface IBoardAction
     {
-        bool Tick();
+       public bool Tick();
     }
 }

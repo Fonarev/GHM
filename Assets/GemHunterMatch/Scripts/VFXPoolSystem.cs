@@ -40,8 +40,8 @@ namespace Match3
                 if (vfx.Instance.gameObject.activeInHierarchy)
                 {
                     var frameDiff = Time.frameCount - vfx.FrameCount;
-                    //particle amount is updated every 60 frame, so we make sure we have enough frame since starting the vfx
-                    //to check particle amount. if no particles left, we disable the vfx. This is because as most VFX use
+                    //particle count is updated every 60 frame, so we make sure we have enough frame since starting the vfx
+                    //to check particle count. if no particles left, we disable the vfx. This is because as most VFX use
                     //GPU event they never get to sleep. This would break if we had vfx that have moment with no particle,
                     //but non of our vfx are like this in this project so this is good enough for us.
                     if (frameDiff > 100 && vfx.Instance.aliveParticleCount == 0)
@@ -94,7 +94,7 @@ namespace Match3
             return inst;
         }
 
-        //This both activate the gameobject and update the starting framecount for that Instance so you need to call play the same frame!
+        //This both activate the gameobject and update the starting framecount for that instance so you need to call play the same frame!
         public VisualEffect GetInstance(VisualEffect prefab)
         {
             if (!m_Lookup.TryGetValue(prefab, out var vfxInstance))

@@ -22,13 +22,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private Image icon;
         [SerializeField] private Button button;
         [SerializeField] private RectTransform rootPrefabs;
-
+        public int endLevel { get => startcountLevel + maxLevel - 1; }
         private UISelectLevels selectLevels;
         private Location location;
-        private void OnDisable()
-        {
-           
-        }
 
         public void Init(int numberLoc)
         {

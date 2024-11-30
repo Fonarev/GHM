@@ -1,7 +1,7 @@
-using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
+using Match3;
 using UnityEngine;
 
 namespace Match3
@@ -24,7 +24,7 @@ namespace Match3
         public override void Use(Gem swappedGem, bool isBonus = true)
         {
             //this allow to stop recursion on some bonus (like bomb trying to explode themselve again and again)
-            //if isBonus is true, this is not a BonusGem on the board so no risk of recursion we can ignore this
+            //if isBonus is true, this is not a gem on the board so no risk of recursion we can ignore this
             if (!isBonus && m_Used)
                 return;
 
@@ -32,28 +32,28 @@ namespace Match3
             
             var dir = Vertical ? Vector3Int.up : Vector3Int.right;
 
-            AudioManager.instance.PlayEffect(TriggerSound);
+            //GameManager.Instance.PlaySFX(TriggerSound);
             
-            //delete itself first.
-            var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(currentIndex);
-            HandleContent(GridBoard.Instance.contentCell[currentIndex], newMatch);
+            ////delete itself first.
+            //var newMatch = GameManager.Instance.Board.CreateCustomMatch(m_CurrentIndex);
+            //HandleContent(GameManager.Instance.Board.CellContent[m_CurrentIndex], newMatch);
 
-            //if there is a cell on a side, we add a new board action that will go in that direction.
-            if (GridBoard.Instance.contentCell.ContainsKey(currentIndex + dir))
-            {
-                GridBoard.Instance.AddNewBoardAction(new RocketAction(currentIndex, dir, VisualPrefab, 0));
-            }
+            ////if there is a cell on a side, we add a new board action that will go in that direction.
+            //if (GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentIndex + dir))
+            //{
+            //    GameManager.Instance.Board.AddNewBoardAction(new RocketAction(m_CurrentIndex, dir, VisualPrefab, 0));
+            //}
 
-            if (GridBoard.Instance.contentCell.ContainsKey(currentIndex - dir))
-            {
-                GridBoard.Instance.AddNewBoardAction(new RocketAction(currentIndex, -dir, VisualPrefab,
-                    Vertical ? 2 : 1));
-            }
+            //if (GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentIndex - dir))
+            //{
+            //    GameManager.Instance.Board.AddNewBoardAction(new RocketAction(m_CurrentIndex, -dir, VisualPrefab,
+            //        Vertical ? 2 : 1));
+            //}
         }
     }
     
     /// <summary>
-    /// RocketAction is a board action that will delete BonusGem along a direction at a given speed until it can no longer go
+    /// RocketAction is a board action that will delete gem along a direction at a given speed until it can no longer go
     /// forward
     /// </summary>
     class RocketAction : IBoardAction
@@ -72,8 +72,8 @@ namespace Match3
             
             GridBoard.Instance.LockMovement();
 
-            m_Visual = GameObject.Instantiate(visualPrefab, 
-                GridBoard.Instance.GetCellCenter(m_CurrentCell), 
+            m_Visual = GameObject.Instantiate(visualPrefab,
+                 GridBoard.Instance.GetCellCenter(m_CurrentCell), 
                 Quaternion.identity);
 
             switch (flip)
@@ -92,7 +92,7 @@ namespace Match3
         {
             m_Visual.transform.position += (Vector3)(m_Direction) * (Time.deltaTime * MoveSpeed);
 
-            Vector3 cell = GridBoard.Instance.WorldToCell(m_Visual.transform.position);
+            var cell = GridBoard.Instance.WorldToCell(m_Visual.transform.position);
 
             while (m_CurrentCell != cell)
             {
@@ -111,6 +111,7 @@ namespace Match3
                     else if (!content.ContainingGem.Damage(1))
                     {
                         GridBoard.Instance.DestroyGem(m_CurrentCell, true);
+                        
                     }
                 }
 
