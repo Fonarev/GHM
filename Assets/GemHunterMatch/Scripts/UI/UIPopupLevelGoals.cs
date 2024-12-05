@@ -66,7 +66,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            AudioManager.instance.PlayEffect("bubble");
+            AudioManager.instance.PlayEffect("bubble_Effect");
             Hide();
         }
     }

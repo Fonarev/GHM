@@ -99,7 +99,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GemType: -3
   targetType: 0
-  effectMatch: []
+  effectMatch:
+  - {fileID: 7200335071828383946, guid: 2401511a26e0b614c80588680195d923, type: 3}
   UISprite: {fileID: 21300000, guid: 702553098af67a645a282ce8b329ec8e, type: 3}
   SpeedMultiplier: 1
   Shapes:

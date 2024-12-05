@@ -18,7 +18,7 @@ namespace Assets.ParticleEffects.Scripts
             this.container = container;
         }
 
-        public void Create(EffectType type, int size = 3)
+        public void Create(EffectType type, int size = 1)
         {
             for (int i = 0; i < size; i++)
             {

@@ -1,3 +1,4 @@
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using UnityEngine;
@@ -28,8 +29,7 @@ namespace Match3
             var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(m_CurrentIndex);
             newMatch.ForcedDeletion = true;
             HandleContent(GridBoard.Instance.contentCell[m_CurrentIndex], newMatch);
-
-            //GameManager.Instance.PlaySFX(TriggerSound);
+            AudioManager.instance.PlayEffect(TriggerSound);
 
             Vector3Int[] spaces = new[]
             {

@@ -1,3 +1,4 @@
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Match3
         {
             base.Init(startIdx);
             
-            if(DamageEffect != null)
+            //if(DamageEffect != null)
                 //GameManager.Instance.PoolSystem.AddNewInstance(DamageEffect, 6);
 
             if (CanBeDestroyedWithAdjacentMatch)
@@ -43,11 +44,11 @@ namespace Match3
 
         public override bool Damage(int damage)
         {
-            //GameManager.Instance.PlaySFX(DamagedClip);
-            
-            //if(DamageEffect != null)
-                //GameManager.Instance.PoolSystem.PlayInstanceAt(DamageEffect, transform.position);
-            
+            AudioManager.instance.PlayEffect(DamagedClip);
+
+            //if (DamageEffect != null)
+            //    GameManager.Instance.PoolSystem.PlayInstanceAt(DamageEffect, transform.position);
+
             var ret = base.Damage(damage);
             UpdateState();
             return ret;
@@ -69,7 +70,12 @@ namespace Match3
         {
             if (!Damage(1))
             {
+                //GridBoard.Instance.PoolEffect.PlayInstance(effectMatch[1].type, transform.position);
                 GridBoard.Instance.DestroyGem(m_CurrentIndex);
+            }
+            else
+            {
+                GridBoard.Instance.PoolEffect.PlayInstance(effectMatch[0].type, transform.position);
             }
         }
 

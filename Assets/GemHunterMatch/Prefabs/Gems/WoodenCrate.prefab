@@ -98,7 +98,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GemType: 99
-  effectMatch: []
+  targetType: 0
+  effectMatch:
+  - {fileID: 2408328076901025381, guid: ddbd0c1184b41bb41ad31feac90f51e0, type: 3}
+  - {fileID: 5671734947006627850, guid: 80cfd791a0d368343bc1f3d7eeeddc13, type: 3}
   UISprite: {fileID: 21300000, guid: 81f8cf05ae9961b4abfca62c818cef0f, type: 3}
   SpeedMultiplier: 1
   CanBeDestroyedWithAdjacentMatch: 1

@@ -1,3 +1,4 @@
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using UnityEngine;
@@ -33,8 +34,7 @@ namespace Match3
             var currentContent = GridBoard.Instance.contentCell[m_CurrentIndex];
             HandleContent(currentContent, newMatch);
 
-
-            //GameManager.Instance.PlaySFX(TriggerSound);
+            AudioManager.instance.PlayEffect(TriggerSound); 
 
             for (int x = -2; x <= 2; ++x)
             {

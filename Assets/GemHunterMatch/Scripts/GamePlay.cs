@@ -226,6 +226,8 @@ namespace Assets.GemHunterMatch.Scripts
                 //    objectSVX = op;
                 //}));
 
+                AudioManager.instance.PlayEffect("chime");
+
                 while (gridBoard.BoardChanged)
                 {
                     yield return new WaitForSeconds(2);
@@ -233,8 +235,8 @@ namespace Assets.GemHunterMatch.Scripts
                 }
 
                 OnAllGoalFinished.Invoke(isConditions);
-                objectSVX.SetActive(false);
-                Addressables.ReleaseInstance(objectSVX);
+                //objectSVX.SetActive(false);
+                //Addressables.ReleaseInstance(objectSVX);
                 SetCompletedLevel();
                
             }

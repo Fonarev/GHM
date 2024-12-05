@@ -7,6 +7,6 @@ namespace Assets.GameMains.Scripts.Expansion
     public class EffectClip 
     {
 
-        public static string click = "bubble";
+        public static string click = "bubble_Effect";
     }
 }

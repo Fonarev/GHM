@@ -3,8 +3,6 @@ using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
-using UnityEngine.VFX.Utility;
 
 namespace Match3
 {

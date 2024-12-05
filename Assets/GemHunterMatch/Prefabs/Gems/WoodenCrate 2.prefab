@@ -81,6 +81,10 @@ PrefabInstance:
       value: 97
       objectReference: {fileID: 0}
     - target: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
+      propertyPath: UISprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 300d57988ceb6154b8ebdc00614b5922, type: 3}
+    - target: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
       propertyPath: effectMatch.Array.size
       value: 2
       objectReference: {fileID: 0}

@@ -184,13 +184,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             if (gemPrefab == null)
                 gemPrefab = Instance.existingGems[Random.Range(0, Instance.existingGems.Length)];
 
-            if (gemPrefab.effectMatch.Length != 0)
-            {
-                foreach (var effect in gemPrefab.effectMatch)
-                {
-                    PoolEffect.Create(effect.type);
-                }
-            }
+            //if (gemPrefab.effectMatch.Length != 0)
+            //{
+            //    foreach (var effect in gemPrefab.effectMatch)
+            //    {
+            //        PoolEffect.Create(effect.type);
+            //    }
+            //}
 
             if (Instance.contentCell[cell].ContainingGem != null)
             {

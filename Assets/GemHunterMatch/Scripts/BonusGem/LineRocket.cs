@@ -36,7 +36,7 @@ namespace Match3
 
             ////delete itself first.
             var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(m_CurrentIndex);
-
+            HandleContent(GridBoard.Instance.contentCell[m_CurrentIndex], newMatch);
 
             //if there is a cell on a side, we add a new board action that will go in that direction.
             if (GridBoard.Instance.contentCell.ContainsKey(m_CurrentIndex + dir))
