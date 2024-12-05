@@ -29,7 +29,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public bool IncrementHintTimer { get; set; }
         public bool BoardChanged { get; set; }
         public int FreezeMoveLock { get; private set; }
-        //public PoolVFX PoolVFX { get; set; }
         public PoolEffect PoolEffect { get; set; }
         public MatchHandler MatchHandler { get; set; }
         public Grid Grid => GetComponent<Grid>();
@@ -60,8 +59,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             if (gamePlay.IsPlaying)
                 inputHandler.UpData();
 
-            //PoolVFX.UpDate();
-
             IncrementHintTimer = activatedBonus == null;
 
             swapHandler.UpData();
@@ -78,7 +75,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             this.gamePlay = gamePlay;
 
-            //PoolVFX = new(transform);
             PoolEffect = new(transform);
             placement = new(Instance);
             placement.FillBoardGems();
@@ -104,7 +100,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public static void RegisterCell(Vector3Int cellPosition, Gem startingGem = null)
         {
             CheckInstance();
-
+            
             if (!Instance.contentCell.ContainsKey(cellPosition))
                 Instance.contentCell.Add(cellPosition, new BoardCell());
 
@@ -122,6 +118,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             obstacle.transform.position = Instance.Grid.GetCellCenterWorld(cell);
             Instance.contentCell[cell].Obstacle = obstacle;
+        }
+        public static void AddUnderGem(Vector3Int cell, UnderGem underGem)
+        {
+            RegisterCell(cell);
+
+            underGem.transform.position = Instance.Grid.GetCellCenterWorld(cell);
+            Instance.contentCell[cell].UnderGem = underGem;
         }
         public static void ChangeLock(Vector3Int cellPosition, bool lockState)
         {
@@ -185,11 +188,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             {
                 foreach (var effect in gemPrefab.effectMatch)
                 {
-                    //PoolEffect.AddNewInstance(effect, 16);
+                    PoolEffect.Create(effect.type);
                 }
             }
 
-            //New Gem may be called after the board was init (as startup doesn't seem to be reliably called BEFORE init)
             if (Instance.contentCell[cell].ContainingGem != null)
             {
                 Destroy(Instance.contentCell[cell].ContainingGem.gameObject);

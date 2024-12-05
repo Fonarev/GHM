@@ -2,8 +2,6 @@
 using Assets.GameMains.Scripts.Expansion;
 using Assets.ParticleEffects.Scripts;
 
-using Match3;
-
 using UnityEngine;
 
 namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
@@ -11,16 +9,16 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
     public class EffectController : MonoBehaviour
     {
 
-        private HoldEffect EffectInstance;
+        private HoldEffect effect;
 
         public void Instatiate(Transform container = null)
         {
-            if (EffectInstance == null)
+            if (effect == null)
             {
                 CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<HoldEffect>("Bubble_Hold_P", container, op =>
                 {
-                    EffectInstance = op;
-                    EffectInstance.gameObject.SetActive(false);
+                    effect = op;
+                    effect.gameObject.SetActive(false);
                 }));
             }
 
@@ -28,31 +26,25 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         public void SetPos(Vector3 worldPos)
         {
-            if (EffectInstance != null)
+            if (effect != null)
             {
-                if (EffectInstance.gameObject.activeSelf)
-                    EffectInstance.ShowTrail(worldPos);
+                if (effect.gameObject.activeSelf)
+                    effect.ShowTrail(worldPos);
             }
         }
 
         public void HideVFX()
         {
-            if (EffectInstance != null) EffectInstance.gameObject.SetActive(false);
+            if (effect != null) effect.gameObject.SetActive(false);
         }
 
         public void ShowEffect(Vector3 pos, Vector3 worldPos)
         {
-            if (EffectInstance != null)
+            if (effect != null)
             {
-                EffectInstance.transform.position = pos;
-                EffectInstance.gameObject.SetActive(true);
+                effect.transform.position = pos;
+                effect.gameObject.SetActive(true);
             }
-
-            //if (holdTrailInstance != null)
-            //{
-            //    holdTrailInstance.transform.position = worldPos;
-            //    holdTrailInstance.gameObject.SetActive(true);
-            //}
         }
     }
 }

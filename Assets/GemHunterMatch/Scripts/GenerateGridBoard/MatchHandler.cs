@@ -95,12 +95,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         public void FindAllPossibleMatch()
         {
-            //TODO : instead of going over every gems just do it on moved gems for optimization
             possibleSwaps.Clear();
-
-            //we use a double loop instead of directly querying the cells, so we access them in increasing x then y coordinate
-            //this allow to just have to test swapping upward then right, as down and left will have been tested by previous
-            //BonusGem already
 
             for (int y = generateGem.Bounds.yMin; y <= generateGem.Bounds.yMax; ++y)
             {
@@ -123,11 +118,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         public bool DoCheck(Vector3Int startCell, bool createMatch = true)
         {
-            // in the case we call this with an empty cell. Shouldn't happen, but let's be safe
             if (!gridBoard.contentCell.TryGetValue(startCell, out var centerGem) || centerGem.ContainingGem == null)
                 return false;
 
-            //we ignore that BonusGem if it's already part of another match.
             if (centerGem.ContainingGem.CurrentMatch != null)
                 return false;
 
@@ -167,7 +160,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 }
             }
 
-            //we try to fit any bonus shapes in
             List<Vector3Int> temporaryShapeMatch = new();
             MatchShape matchedShape = null;
             List<BonusGem> matchedBonusGem = new();
@@ -181,13 +173,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         if (matchedShape == null || matchedShape.Cells.Count < shape.Cells.Count)
                         {
                             matchedShape = shape;
-                            //we have a new shape that have more BonusGem, so we clear our existing list of bonus
                             matchedBonusGem.Clear();
                             matchedBonusGem.Add(bonusGem);
                         }
                         else if (matchedShape.Cells.Count == shape.Cells.Count)
                         {
-                            //this new bonus have exactly the same number of the existing bonus, so become a new possible bonus
                             matchedBonusGem.Add(bonusGem);
                         }
                     }
@@ -469,6 +459,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private int ForseDeletion(Match match, int j, Vector3Int gemIdx, Gem gem)
         {
+            var underGem = gridBoard.contentCell[gemIdx].UnderGem;
+
             if (match.ForcedDeletion || match.DeletionTimer > 1.0f)
             {
                 Object.Destroy(gridBoard.contentCell[gemIdx].ContainingGem.gameObject);
@@ -478,7 +470,13 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 {
                     gridBoard.contentCell[gemIdx].Obstacle.Clear();
                 }
-                
+
+                if (underGem != null)
+                {
+                    gridBoard.contentCell[gemIdx].UnderGem.Clear();
+                    gamePlay.Matched(gridBoard.contentCell[gemIdx].UnderGem);
+                }
+              
                 //callback are only called when this was a match from swipe and not from bonus or other source 
                 if (!match.ForcedDeletion && gridBoard.cellsCallbacks.TryGetValue(gemIdx, out var clbk))
                 {
@@ -510,10 +508,17 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 {
                     gamePlay.Matched(gem);
 
+                    if (underGem != null)
+                    {
+                        gridBoard.contentCell[gemIdx].UnderGem.Clear();
+                        gamePlay.Matched(underGem);
+                    }
+
                     foreach (var matchEffect in gem.effectMatch)
                     {
-                        gridBoard.PoolEffect.PlayInstance(matchEffect.type,gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
+                        gridBoard.PoolEffect.PlayInstance(matchEffect.type, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
                     }
+
                     gem.gameObject.SetActive(false);
 
                     gem.Destroyed();
@@ -522,6 +527,12 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
             else if (gem.CurrentState != Gem.State.Disappearing)
             {
                 gamePlay.Matched(gem);
+
+                if (underGem != null)
+                {
+                    gridBoard.contentCell[gemIdx].UnderGem.Clear();
+                    gamePlay.Matched(underGem);
+                }
 
                 foreach (var matchEffect in gem.effectMatch)
                 {

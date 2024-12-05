@@ -39,7 +39,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMoveHappened -= MoveHappen;
             gamePlay.OnMoveTriger -= GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished -= Finished;
-            gamePlay.OnMachted -= MatchEffect;
+            gamePlay.OnMachtedGem -= MatchEffect;
+            gamePlay.OnMachted -= OnMachted;
             gamePlay.OnAddScore -= OnAddScore;
         }
         public void Update()
@@ -67,12 +68,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMoveHappened += MoveHappen;
             gamePlay.OnMoveTriger += GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished += Finished;
-            gamePlay.OnMachted += MatchEffect;
+            gamePlay.OnMachtedGem += MatchEffect;
+            gamePlay.OnMachted += OnMachted;
             gamePlay.OnAddScore += OnAddScore;
             score.text ="Score: "+ 0.ToString();
             bonusGroup.Init(gamePlay);
 
-            foreach (var goal in level.Goals)
+            foreach (var goal in gamePlay.Goals)
             {
                 CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIGoalEntry>("GoalEntry", rootGoals, op =>
                 {
@@ -81,9 +83,14 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 }));
             }
 
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(level)));
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(gamePlay)));
         }
-       
+
+        private void OnMachted(UnderGem underGem)
+        {
+            popupHandler.Show(underGem.UISprite, underGem.transform.position, goals[underGem.GemType].transform.position,false);
+        }
+
         private void GamePlay_OnMoveTriger(int moves)
         {
             StartCoroutine(LoaderAsset.InstantiateAsset("PopupWarning",containerPopup));
@@ -100,7 +107,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             if (isCondition)
                 StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init(isCondition)));
             else
-                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopup, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.gemGoals); })); 
+                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopup, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.Goals); })); 
         }
 
         private void MoveHappen(int move)
@@ -110,7 +117,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         public void MatchEffect(Gem gem)
         {
-            popupHandler.Show(gem.UISprite, gem.transform.position, goals[gem.GemType].transform.position);
+            if (gem != null)
+                popupHandler.Show(gem.UISprite, gem.transform.position, goals[gem.GemType].transform.position);
+
         }
 
         private void GoalChange(int type, int count, bool isExecut)

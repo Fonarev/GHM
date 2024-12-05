@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts
 {
@@ -11,7 +10,9 @@ namespace Assets.GemHunterMatch.Scripts
         [Header("Settings Conditions")]
         public int MaxMove;
         public int LowMoveTrigger = 5;
-        [field:SerializeField] public GemGoal[] Goals{ get; private set; }
+        [field:SerializeField] public GemGoal[] GemGoals{ get; private set; }
+        [field: SerializeField] public ObstacleGoal[] ObstaclesGoals { get; private set; }
+        [field: SerializeField] public UnderGemGoal[] UnderGemGoals { get; private set; }
 
         [Header("Visuals")]
         public float BorderMargin = 0.3f;

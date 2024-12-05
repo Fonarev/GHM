@@ -1,3 +1,5 @@
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -8,6 +10,7 @@ namespace Match3
     /// BonusGem and WoodenCrate).
     /// This class contains a bunch of cached data mainly used for visual effect on the gem (movement, bounce etc..)
     /// </summary>
+    [RequireComponent(typeof (SpriteRenderer))]
     public class Gem : MonoBehaviour
     {
         public enum State
@@ -17,14 +20,12 @@ namespace Match3
             Bouncing,
             Disappearing
         }
-
+       
         public int GemType;
-
+        public TargetType targetType;
         public ParticleEffect[] effectMatch;
         public Sprite UISprite;
         
-        //When a gem get added to a match, this match get stored here so we can now if this gem is currently in a match and 
-        //cannot be used for anything else.
         public Match CurrentMatch = null;
         //this is set to sqrt(2) when falling in diagonal so the time of a diagonal fall is the same as a direct one
         [HideInInspector]

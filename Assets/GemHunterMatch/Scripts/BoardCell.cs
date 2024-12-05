@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.GemHunterMatch.Scripts;
+
 using UnityEngine;
 
 namespace Match3
@@ -17,6 +17,7 @@ namespace Match3
         public Gem ContainingGem;
         public Gem IncomingGem;
         public Obstacle Obstacle;
+        public UnderGem UnderGem;
 
         public bool CanFall => (ContainingGem == null || (ContainingGem.CanMove && ContainingGem.CurrentMatch == null)) && !Locked;
         public bool BlockFall => Locked || (ContainingGem != null && !ContainingGem.CanMove);

@@ -17,9 +17,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public Animation anim => GetComponent<Animation>();
         private List<UIGoalEntry> goalEntries = new();
 
-        public void Init(LevelConfig level)
+        public void Init(GamePlay gamePlay)
         {
-            foreach (var goal in level.Goals)
+            foreach (var goal in gamePlay.Goals)
             {
                 StartCoroutine(LoaderAsset.InstantiateAsset<UIGoalEntry>("GoalEntry", container, op =>
                 {

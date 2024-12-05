@@ -71,7 +71,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             }
         }
         
-        public void Show(Sprite sprite, Vector3 position,Vector3 target)
+        public void Show(Sprite sprite, Vector3 position,Vector3 target ,bool isGem = true)
         {
             var pos = cameraMain.WorldToScreenPoint(position);
 
@@ -86,7 +86,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 StartPosition = pos,
                 StartToEnd = target - pos,
                 UIElement = elem,
-                Curve = MatchFlyCurve
+
+                Curve = isGem ? MatchFlyCurve : CoinFlyCurve
             }); 
         }
     }

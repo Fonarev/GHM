@@ -15,20 +15,11 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private int typeGoal;
 
-        public void Init(GemGoal goal)
-        {
-            icon.sprite = goal.Gem.UISprite;
-            countDown.text = goal.Count.ToString();
-            typeGoal = goal.Gem.GemType;
-
-            executed.gameObject.SetActive(false);
-        }
-
         public void Init(Goals goal)
         {
-            icon.sprite = goal.gem.UISprite;
+            icon.sprite = goal.GetSpriteGoal();
             countDown.text = goal.count.ToString();
-            typeGoal = goal.gem.GemType;
+            typeGoal = goal.GetCurrentType();
 
             if(goal.isExecut)
             {

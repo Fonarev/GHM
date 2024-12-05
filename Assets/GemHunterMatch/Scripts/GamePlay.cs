@@ -25,7 +25,8 @@ namespace Assets.GemHunterMatch.Scripts
         public event Action<int> OnMoveHappened;
         public event Action<int> OnMoveTriger;
         public event Action<int,int> OnUsedBonusItem;
-        public event Action<Gem> OnMachted;
+        public event Action<Gem> OnMachtedGem;
+        public event Action<UnderGem> OnMachted;
 
         public VisualSetting visualSettings;
         public BonusGemBonusItem[] bonusList;
@@ -34,7 +35,7 @@ namespace Assets.GemHunterMatch.Scripts
         public int GoalLeft { get; private set; }
         public int RemainingMove { get; private set; }
 
-        public List<Goals> gemGoals = new();
+        public List<Goals> Goals = new();
         private int Score;
         private LevelConfig level;
         private GridBoard gridBoard;
@@ -47,16 +48,29 @@ namespace Assets.GemHunterMatch.Scripts
         {
             this.wallet = wallet;
             CoroutineHandler.StartRoutine(Load());
-            foreach (var item in level.Goals)
+            foreach (var item in level.GemGoals)
             {
                 var goal = new Goals();
                 goal.gem = item.Gem;
                 goal.count = item.Count;
-                gemGoals.Add(goal);
+                Goals.Add(goal);
             }
-          
+            foreach (var item in level.ObstaclesGoals)
+            {
+                var goal = new Goals();
+                goal.obstacle = item.Obstacle;
+                goal.count = item.Count;
+                Goals.Add(goal);
+            }
+            foreach (var item in level.UnderGemGoals)
+            {
+                var goal = new Goals();
+                goal.underGem = item.UnderGem;
+                goal.count = item.Count;
+                Goals.Add(goal);
+            }
             RemainingMove = level.MaxMove;
-            GoalLeft = gemGoals.Count;
+            GoalLeft = Goals.Count;
            
         }
 
@@ -114,14 +128,14 @@ namespace Assets.GemHunterMatch.Scripts
 
         public bool Matched(Gem gem)
         {
-            foreach (var goal in gemGoals)
+            foreach (var goal in Goals)
             {
-                if (goal.gem.GemType == gem.GemType)
+                if (goal.GetCurrentType() == gem.GemType && gem != null)
                 {
                     if (goal.count == 0)
                         return false;
 
-                    OnMachted.Invoke(gem);
+                    OnMachtedGem.Invoke(gem);
 
                     goal.count -= 1;
                     OnGoalChanged?.Invoke(gem.GemType, goal.count, goal.isExecut);
@@ -142,11 +156,47 @@ namespace Assets.GemHunterMatch.Scripts
 
                     return true;
                 }
+                
             }
 
             return false;
         }
+        public bool Matched(UnderGem underGem)
+        {
+            foreach (var goal in Goals)
+            {
+                
+                if (goal.GetCurrentType() == underGem.GemType && underGem != null)
+                {
+                    if (goal.count == 0)
+                        return false;
 
+                    OnMachted.Invoke( underGem);
+
+                    goal.count -= 1;
+                    OnGoalChanged?.Invoke(underGem.GemType, goal.count, goal.isExecut);
+                    //Debug.Log($"{gem.GemType}, {goal.count}");
+
+                    if (goal.count == 0)
+                    {
+                        goal.isExecut = true;
+                        OnGoalChanged?.Invoke(underGem.GemType, goal.count, goal.isExecut);
+                        GoalLeft -= 1;
+
+                    }
+
+                    if (GoalLeft == 0)
+                    {
+                        isConditions = true;
+                        Finish(isConditions);
+                        Debug.Log($"Finished");
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
         public void Play()
         {
             IsPlaying = true;

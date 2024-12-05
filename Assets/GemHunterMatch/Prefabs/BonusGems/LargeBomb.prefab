@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1890678711
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 4000efab261551842933882182237a1a, type: 3}
   m_Color: {r: 0.9213836, g: 0.9430082, b: 1, a: 1}
   m_FlipX: 0
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GemType: -2
-  MatchEffectPrefabs:
-  - {fileID: 2140072152015084999, guid: 139556ecb17152c4ab373f6aba9c4fc2, type: 3}
+  targetType: 0
+  effectMatch: []
   UISprite: {fileID: 21300000, guid: 5f238c18c8bd9164da615c5e93a4b4de, type: 3}
   SpeedMultiplier: 1
   Shapes:
@@ -212,6 +212,6 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

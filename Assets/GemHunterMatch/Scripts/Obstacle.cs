@@ -20,8 +20,9 @@ namespace Match3
         protected SpriteRenderer m_SpriteRenderer;
         protected int m_CurrentState = 0;
         protected Vector3Int m_Cell;
-
+        public Sprite UISprite;
         private bool m_Done = false;
+        public int GemType;
 
         public virtual void Init(Vector3Int cell)
         {
@@ -61,7 +62,7 @@ namespace Match3
             m_CurrentState = newState;
             //play the undone effect of the state before this one
             if(m_CurrentState-1 >= 0)
-                //GameManager.Instance.PoolSystem.PlayInstanceAt(LockState[m_CurrentState - 1].UndoneVFX, transform.position);
+                //GameManager.Instance.PoolSystem.PlayInstanceAt(BlockState[m_CurrentState - 1].UndoneVFX, transform.position);
             
             if (m_CurrentState < LockState.Length)
             {

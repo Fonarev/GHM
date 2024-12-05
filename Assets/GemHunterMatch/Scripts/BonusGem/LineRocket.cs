@@ -1,3 +1,4 @@
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GemHunterMatch.Scripts;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 
@@ -31,24 +32,23 @@ namespace Match3
             m_Used = true;
             
             var dir = Vertical ? Vector3Int.up : Vector3Int.right;
+            AudioManager.instance.PlayEffect(TriggerSound);
 
-            //GameManager.Instance.PlaySFX(TriggerSound);
-            
             ////delete itself first.
-            //var newMatch = GameManager.Instance.Board.CreateCustomMatch(m_CurrentIndex);
-            //HandleContent(GameManager.Instance.Board.CellContent[m_CurrentIndex], newMatch);
+            var newMatch = GridBoard.Instance.MatchHandler.CreateCustomMatch(m_CurrentIndex);
 
-            ////if there is a cell on a side, we add a new board action that will go in that direction.
-            //if (GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentIndex + dir))
-            //{
-            //    GameManager.Instance.Board.AddNewBoardAction(new RocketAction(m_CurrentIndex, dir, VisualPrefab, 0));
-            //}
 
-            //if (GameManager.Instance.Board.CellContent.ContainsKey(m_CurrentIndex - dir))
-            //{
-            //    GameManager.Instance.Board.AddNewBoardAction(new RocketAction(m_CurrentIndex, -dir, VisualPrefab,
-            //        Vertical ? 2 : 1));
-            //}
+            //if there is a cell on a side, we add a new board action that will go in that direction.
+            if (GridBoard.Instance.contentCell.ContainsKey(m_CurrentIndex + dir))
+            {
+                GridBoard.Instance.AddNewBoardAction(new RocketAction(m_CurrentIndex, dir, VisualPrefab, 0));
+            }
+
+            if (GridBoard.Instance.contentCell.ContainsKey(m_CurrentIndex - dir))
+            {
+                GridBoard.Instance.AddNewBoardAction(new RocketAction(m_CurrentIndex, -dir, VisualPrefab,
+                    Vertical ? 2 : 1));
+            }
         }
     }
     
