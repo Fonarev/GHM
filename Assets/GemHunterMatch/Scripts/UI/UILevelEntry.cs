@@ -38,7 +38,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
                }
                 button.onClick.AddListener(OnClick);
             }
-
+            button.interactable = true;
+            Lock.gameObject.SetActive(false);
         }
        
         private void OnClick()

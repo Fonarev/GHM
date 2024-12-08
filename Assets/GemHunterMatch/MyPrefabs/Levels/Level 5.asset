@@ -13,13 +13,21 @@ MonoBehaviour:
   m_Name: Level 5
   m_EditorClassIdentifier: 
   level: 5
-  MaxMove: 20
+  MaxMove: 30
   LowMoveTrigger: 3
-  <Goals>k__BackingField:
+  <GemGoals>k__BackingField:
+  - Gem: {fileID: 7927807542344970777, guid: 04a81442ef4438841a0074ba8568d5d9, type: 3}
+    Count: 20
+  - Gem: {fileID: 7927807542344970777, guid: bb60bc505e820734584f3d8bd0a16f53, type: 3}
+    Count: 20
   - Gem: {fileID: 7927807542344970777, guid: 924c8da2c1342cd41a99abdae62388df, type: 3}
     Count: 20
-  - Gem: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
-    Count: 7
+  - Gem: {fileID: 7927807542344970777, guid: 8cc6bc4f5802b33419a96e85fb84e771, type: 3}
+    Count: 20
+  - Gem: {fileID: 7927807542344970777, guid: 3d45c7a5c1a18ce408b15ad7a814f987, type: 3}
+    Count: 20
+  <ObstaclesGoals>k__BackingField: []
+  <UnderGemGoals>k__BackingField: []
   BorderMargin: 0.3
   Background: {fileID: 0}
   gridBoardReference: Grid 5

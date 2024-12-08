@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 {
-    public class EffectController : MonoBehaviour
+    public class EffectController 
     {
 
         private HoldEffect effect;

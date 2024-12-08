@@ -471,11 +471,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     gridBoard.contentCell[gemIdx].Obstacle.Clear();
                 }
 
-                if (underGem != null)
-                {
-                    gridBoard.contentCell[gemIdx].UnderGem.Clear();
-                    gamePlay.Matched(gridBoard.contentCell[gemIdx].UnderGem);
-                }
+                //if (underGem != null)
+                //{
+                //    gridBoard.contentCell[gemIdx].UnderGem.Clear();
+                //    gamePlay.Matched(gridBoard.contentCell[gemIdx].UnderGem);
+                //}
               
                 //callback are only called when this was a match from swipe and not from bonus or other source 
                 if (!match.ForcedDeletion && gridBoard.cellsCallbacks.TryGetValue(gemIdx, out var clbk))
