@@ -21,7 +21,6 @@ namespace Match3
                 return false;
 #endif
 
-
             var newObstacle = Instantiate(ObstaclePrefab);
             newObstacle.Init(position);
 

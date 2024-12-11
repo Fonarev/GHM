@@ -328,5 +328,9 @@ namespace Assets.GemHunterMatch.Scripts
             }
         }
 
+        internal void Matched(Obstacle obstacle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

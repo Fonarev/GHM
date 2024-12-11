@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6b6c2111aa6be43b2d838d5a843425, type: 3}
+  m_Name: Level 36
+  m_EditorClassIdentifier: 
+  level: 36
+  MaxMove: 40
+  LowMoveTrigger: 3
+  <GemGoals>k__BackingField:
+  - Gem: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
+    Count: 5
+  - Gem: {fileID: 6911383413579268359, guid: 8f77ec4c0df856d48a96a85287ccb963, type: 3}
+    Count: 7
+  - Gem: {fileID: 3997245007397222790, guid: 97aab3c4d23edee47bbc70ca25eb7d79, type: 3}
+    Count: 9
+  - Gem: {fileID: 7927807542344970777, guid: 3d45c7a5c1a18ce408b15ad7a814f987, type: 3}
+    Count: 10
+  <ObstaclesGoals>k__BackingField: []
+  <UnderGemGoals>k__BackingField: []
+  BorderMargin: 0.3
+  Background: {fileID: 0}
+  tutorial: {fileID: 0}

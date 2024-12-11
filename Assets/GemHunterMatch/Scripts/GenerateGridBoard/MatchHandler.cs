@@ -513,7 +513,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         gridBoard.contentCell[gemIdx].UnderGem.Clear();
                         gamePlay.Matched(underGem);
                     }
-
+                    if (gridBoard.contentCell[gemIdx].Obstacle != null)
+                    {
+                        gridBoard.contentCell[gemIdx].Obstacle.Clear();
+                        gamePlay.Matched(gridBoard.contentCell[gemIdx].Obstacle);
+                    }
                     foreach (var matchEffect in gem.effectMatch)
                     {
                         gridBoard.PoolEffect.PlayInstance(matchEffect.type, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));

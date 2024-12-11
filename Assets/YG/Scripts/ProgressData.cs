@@ -22,25 +22,47 @@ namespace Assets.YG.Scripts
         {
             coins = 0;
             topScore = 0;
+            int count = 42;
 
-            levels.Add(1, new LevelData() { level = 1, isOpened = true });
+            for (int i = 0; i < count; i++)
+            {
+                levels.Add(i, new LevelData() { level = i, isOpened = true });
+            }
 
+            //levels.Add(1, new LevelData() { level = 1, isOpened = true });
 
             locations[1] = new Location()
             {
                 number = 1,
-                openLevels = 1,
+                openLevels = 20,
                 startLevel = 1,
                 maxLevels = 20,
                 isLock = true,
                 isSelected = true
             };
-
-            bonusGemItem[-1] = 5;
-            bonusGemItem[-2] = 5;
-            bonusGemItem[-3] = 5;
-            bonusGemItem[-4] = 5;
-            bonusGemItem[-5] = 5;
+            locations[2] = new Location()
+            {
+                number = 2,
+                openLevels = 20,
+                startLevel = 21,
+                maxLevels = 20,
+                isLock = true,
+                isSelected = true
+            };
+            locations[3] = new Location()
+            {
+                number = 3,
+                openLevels = 20,
+                startLevel = 41,
+                maxLevels = 20,
+                isLock = true,
+                isSelected = true
+            };
+            bonusGemItem[-1] = 10;
+            bonusGemItem[-2] = 10;
+            bonusGemItem[-3] = 10;
+            bonusGemItem[-4] = 10;
+            bonusGemItem[-5] = 10;
 
         }
 

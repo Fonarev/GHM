@@ -21,9 +21,8 @@ namespace Assets.GemHunterMatch.Scripts.Authoring
                 return false;
 #endif
 
-
-            var newObstacle = Instantiate(prefab);
-            newObstacle.Init(position);
+            var newUnderGem = Instantiate(prefab);
+            newUnderGem.Init(position);
 
             return true;
         }

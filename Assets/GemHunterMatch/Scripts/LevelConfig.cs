@@ -17,7 +17,7 @@ namespace Assets.GemHunterMatch.Scripts
         [Header("Visuals")]
         public float BorderMargin = 0.3f;
         public SpriteRenderer Background;
-        public string gridBoardReference;
+        public string gridBoardReference => "Grid " + level.ToString();
 
         public Tutorial tutorial;
 

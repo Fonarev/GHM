@@ -17,7 +17,7 @@ MonoBehaviour:
   LowMoveTrigger: 3
   <GemGoals>k__BackingField:
   - Gem: {fileID: 7927807542344970777, guid: 04a81442ef4438841a0074ba8568d5d9, type: 3}
-    Count: 25
+    Count: 20
   <ObstaclesGoals>k__BackingField: []
   <UnderGemGoals>k__BackingField: []
   BorderMargin: 0.3

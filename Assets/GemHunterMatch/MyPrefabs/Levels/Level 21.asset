@@ -15,9 +15,11 @@ MonoBehaviour:
   level: 21
   MaxMove: 20
   LowMoveTrigger: 3
-  <Goals>k__BackingField:
-  - Gem: {fileID: 3930743957587144661, guid: f3e47e37930ff8f48b693da87b4025c7, type: 3}
-    Count: 6
+  <GemGoals>k__BackingField:
+  - Gem: {fileID: 6911383413579268359, guid: 8f77ec4c0df856d48a96a85287ccb963, type: 3}
+    Count: 9
+  <ObstaclesGoals>k__BackingField: []
+  <UnderGemGoals>k__BackingField: []
   BorderMargin: 0.3
   Background: {fileID: 0}
   gridBoardReference: Grid 21

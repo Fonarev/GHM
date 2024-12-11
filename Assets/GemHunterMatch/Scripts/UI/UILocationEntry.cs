@@ -55,7 +55,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 StartCoroutine(LoaderAsset.InstantiateAsset<UISelectLevels>("SelectLevels", rootPrefabs, op =>
                 {
                     selectLevels = op;
-                    selectLevels.Init(startcountLevel, maxLevel);
+                    selectLevels.Init(location.startLevel,location.maxLevels);
                 }));
 
                 rootPrefabs.gameObject.SetActive(true);
