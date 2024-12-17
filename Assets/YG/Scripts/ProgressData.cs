@@ -17,6 +17,7 @@ namespace Assets.YG.Scripts
         public Dictionary<int, Location> locations = new();
         public Dictionary<int, int> bonusGemItem = new();
         public int Score;
+        internal DateTime? dataTime;
 
         public void CreateDefaultData()
         {
