@@ -8,7 +8,7 @@ namespace Match3
     /// <summary>
     /// A Gem is the base class of all thing that live inside cell on the board. It can be subclassed to specialize them (see
     /// BonusGem and WoodenCrate).
-    /// This class contains a bunch of cached data mainly used for visual effect on the gem (movement, bounce etc..)
+    /// This class contains a bunch of cached config mainly used for visual effect on the gem (movement, bounce etc..)
     /// </summary>
     [RequireComponent(typeof (SpriteRenderer))]
     public class Gem : MonoBehaviour

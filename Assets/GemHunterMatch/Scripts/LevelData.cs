@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Match3
 {
     /// <summary>
-    /// Contains all the data for the Level in which this is : GemGoals and max number of Moves. This will also  notify the
+    /// Contains all the config for the Level in which this is : GemGoals and max number of Moves. This will also  notify the
     /// GameManager that we loaded a level
     /// </summary>
     public class LevelData 

@@ -1,26 +1,34 @@
-﻿using Assets.DailyRewards.Scripts.UI;
+﻿using Assets.AssetLoaders;
+using Assets.DailyRewards.Scripts.UI;
+using Assets.GameMains.Scripts.Expansion;
 using Assets.YG.Scripts;
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using UnityEngine;
 
 namespace Assets.DailyRewards.Scripts
 {
-    public class DailyRewardsService : MonoBehaviour
+    public class DailyRewardsService 
     {
-        private readonly List<Reward> rewards;
-        private DailyRewardsPreview prefabWin;
-        public readonly bool claimReward;
-        private int claimDead = 48;
-        private int claimCounDown = 24;
-        private maxTarget = 7;
-        private int currentTarget
+        public event Action<Reward> OnReward;
+        public event Action OnClaimReward;
+        public event Action<TimeSpan> OnTimeSpan;
+
+        private RewardsConfig config;
+        private DailyRewardsPreview dailyRewardsPreview;
+
+        public bool ClaimReward;
+       
+        private float TimeReset => config.timeReset;
+        private float TimeCountDown => config.timeCountDown;
+        private int MaxTarget => config.rewards.Count;
+      
+        public int currentTarget
         {
             get => YandexGame.Instance.progressData.currentTarget;
-            set => YandexGame.Instance.progressData.currentTarget; = value;
+            set => YandexGame.Instance.progressData.currentTarget = value;
         }
        
         public DateTime? dateTime
@@ -28,58 +36,95 @@ namespace Assets.DailyRewards.Scripts
             get => YandexGame.Instance.progressData.dataTime;
             set => YandexGame.Instance.progressData.dataTime = value;
         }
-        public void Initialize()
+        public void LoadDate()
         {
-            StartCoroutine(State());
+            CoroutineHandler.StartRoutine(LoaderAsset.Load<RewardsConfig>("RewardsConfig", op => config = op));
         }
 
-        public void SetNextTarget()
+        public bool TryState()
         {
-            currentTarget = (currentTarget + 1) % maxTarget;
+            ClaimReward = UpdateClaimState();
+            if (ClaimReward) OpenWin();
+            return ClaimReward;
         }
 
-        public Reward GetRevard()
+        public void OpenWin()
         {
-             dateTime = DateTime.UtcNow;
-             return rewards[currentTarget];
+            if (dailyRewardsPreview != null && !dailyRewardsPreview.enabled)
+            {
+                dailyRewardsPreview.gameObject.SetActive(true);
+                UpdateTime();
+            }
+            else
+            {
+                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<DailyRewardsPreview>("DailyRewardsPreview", null, op =>
+                {
+                    dailyRewardsPreview = op; 
+                    dailyRewardsPreview.Init(this, config);
+                    UpdateTime();
+                }));
+               
+            }
+           
         }
 
-        public IEnumerator State()
+        private bool UpdateClaimState()
+        {
+            if (dateTime.HasValue)
+            {
+                TimeSpan timeSpan = DateTime.UtcNow - dateTime.Value;
+
+                if (timeSpan.TotalHours > TimeReset)
+                {
+                    dateTime = null;
+                    currentTarget = 0;
+                }
+                else
+                {
+                    if (timeSpan.TotalHours < TimeCountDown)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+        private IEnumerator Updater()
         {
             while (true)
             {
-                UpdateState();
+                ClaimReward = UpdateClaimState();
+                if (!ClaimReward)
+                {
+                    var nextClaim = dateTime.Value.AddHours(TimeCountDown);
+                    var timeSpan = nextClaim - DateTime.UtcNow;
+                    OnTimeSpan?.Invoke(timeSpan);
+                }
+                yield return null;
+                if (ClaimReward) OnClaimReward?.Invoke();
                 yield return new WaitForSeconds(1);
             }
         }
 
-        private void UpdateState()
+        public void UpdateTime()
         {
-            claimReward = true;
-            if (dateTime.HasValue)
-            {
-                var span = DateTime.UtcNow - dateTime.Value;
-                if (span.TotalHours > claimDead)
-                {
-                    dateTime = null;
-                    currentStraik = 0;
-                }
-                else
-                {
-                    if (span.TotalHours < claimCounDown)
-                    {
-                        claimReward = false;
-                    }
-                }
-            }
+            CoroutineHandler.StartRoutine(Updater());
         }
 
-        public TimeSpan GetCurrentCountDownTime()
+        public Reward GetReward()
         {
-           var nextClaim = dateTime.Value.AddHours(claimCounDown);
+            Reward reward = config.rewards[currentTarget];
+ 
+            dateTime = DateTime.UtcNow;
 
-           return nextClaim - DateTime.UtcNow;
+            OnReward?.Invoke(reward);
+
+            currentTarget = (currentTarget + 1) % MaxTarget;
+
+            TryState();
+            UpdateTime();
+            return reward;
         }
-       
     }
 }

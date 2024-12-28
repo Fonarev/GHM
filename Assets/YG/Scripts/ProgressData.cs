@@ -18,6 +18,7 @@ namespace Assets.YG.Scripts
         public Dictionary<int, int> bonusGemItem = new();
         public int Score;
         internal DateTime? dataTime;
+        internal int currentTarget;
 
         public void CreateDefaultData()
         {

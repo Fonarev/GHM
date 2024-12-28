@@ -1,4 +1,5 @@
 ﻿
+using Assets.DailyRewards.Scripts;
 using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.Bank;
 
@@ -9,6 +10,7 @@ namespace Assets.DI.Scripts
         public override void Installize()
         {
             container.Reg<Wallet>().Perform();
+            container.Reg<DailyRewardsService>().Perform();
             container.Reg<LoaderScenes>().Perform();
         }
     }
