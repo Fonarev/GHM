@@ -13,12 +13,14 @@ namespace Assets.YG.Scripts
         public int coins;
         public int topScore;
         public bool isSilence;
+
         public Dictionary<int,LevelData> levels = new();
         public Dictionary<int, Location> locations = new();
         public Dictionary<int, int> bonusGemItem = new();
+
         public int Score;
-        internal DateTime? dataTime;
-        internal int currentTarget;
+        public DateTime? dataTime;
+        public int currentTarget;
 
         public void CreateDefaultData()
         {
@@ -78,6 +80,20 @@ namespace Assets.YG.Scripts
 
             return amount;
         }
-     
+
+        public void AddBonusGem(int type,int value = 1)
+        {
+            if (bonusGemItem.TryGetValue(type, out var amount))
+            {
+                amount += value;
+                bonusGemItem[type] += 1;
+            }
+            else
+            {
+                bonusGemItem[type] = 1;
+            }
+            YandexGame.Instance.Save();
+        }
+
     }
 }

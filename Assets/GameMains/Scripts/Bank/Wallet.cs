@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.YG.Scripts;
+
+using System;
 
 namespace Assets.GameMains.Scripts.Bank
 {
@@ -8,14 +10,14 @@ namespace Assets.GameMains.Scripts.Bank
 
         public int Coins
         {
-            get => coins;
+            get => YandexGame.Instance.progressData.coins;
 
             private set
             {
-                int oldValue = Coins; 
+                int oldValue = Coins;
                 coins = value;
-
-                if(oldValue != Coins) OnValueChanged.Invoke(coins); 
+                YandexGame.Instance.progressData.coins = coins;
+                if (oldValue != coins) OnValueChanged.Invoke(coins); 
             }
         }
 

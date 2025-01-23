@@ -187,6 +187,13 @@ namespace Assets.YG.Scripts
         {
             if (isMessage) Debug.Log(message);
         }
-
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.D))
+            {
+                progressData.CreateDefaultData();
+                Save();
+            }
+        }
     }
 }

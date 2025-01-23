@@ -1,5 +1,6 @@
 ﻿using Assets.AssetLoaders;
 using Assets.DailyRewards.Scripts.UI;
+using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.YG.Scripts;
 
@@ -13,14 +14,20 @@ namespace Assets.DailyRewards.Scripts
     public class DailyRewardsService 
     {
         public event Action<Reward> OnReward;
-        public event Action OnClaimReward;
+        public event Action<bool> OnClaimReward;
         public event Action<TimeSpan> OnTimeSpan;
 
         private RewardsConfig config;
         private DailyRewardsPreview dailyRewardsPreview;
 
         public bool ClaimReward;
-       
+        private readonly Wallet wallet;
+
+        public DailyRewardsService(Wallet wallet)
+        {
+            this.wallet = wallet;
+        }
+
         private float TimeReset => config.timeReset;
         private float TimeCountDown => config.timeCountDown;
         private int MaxTarget => config.rewards.Count;
@@ -50,9 +57,9 @@ namespace Assets.DailyRewards.Scripts
 
         public void OpenWin()
         {
-            if (dailyRewardsPreview != null && !dailyRewardsPreview.enabled)
+            if (dailyRewardsPreview != null )
             {
-                dailyRewardsPreview.gameObject.SetActive(true);
+                dailyRewardsPreview.gameObject.SetActive(!dailyRewardsPreview.gameObject.activeSelf);
                 UpdateTime();
             }
             else
@@ -70,6 +77,7 @@ namespace Assets.DailyRewards.Scripts
 
         private bool UpdateClaimState()
         {
+           
             if (dateTime.HasValue)
             {
                 TimeSpan timeSpan = DateTime.UtcNow - dateTime.Value;
@@ -79,12 +87,10 @@ namespace Assets.DailyRewards.Scripts
                     dateTime = null;
                     currentTarget = 0;
                 }
-                else
+
+                if (timeSpan.TotalHours < TimeCountDown)
                 {
-                    if (timeSpan.TotalHours < TimeCountDown)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
@@ -95,6 +101,7 @@ namespace Assets.DailyRewards.Scripts
             while (true)
             {
                 ClaimReward = UpdateClaimState();
+
                 if (!ClaimReward)
                 {
                     var nextClaim = dateTime.Value.AddHours(TimeCountDown);
@@ -102,7 +109,7 @@ namespace Assets.DailyRewards.Scripts
                     OnTimeSpan?.Invoke(timeSpan);
                 }
                 yield return null;
-                if (ClaimReward) OnClaimReward?.Invoke();
+                if (ClaimReward) OnClaimReward?.Invoke(true);
                 yield return new WaitForSeconds(1);
             }
         }
@@ -115,15 +122,18 @@ namespace Assets.DailyRewards.Scripts
         public Reward GetReward()
         {
             Reward reward = config.rewards[currentTarget];
- 
-            dateTime = DateTime.UtcNow;
 
-            OnReward?.Invoke(reward);
+            if(reward != null)
+            {
+                wallet.Add(reward.amount);
+                dateTime = DateTime.UtcNow;
+                currentTarget = (currentTarget + 1) % MaxTarget;
+                UpdateTime();
 
-            currentTarget = (currentTarget + 1) % MaxTarget;
+                OnReward?.Invoke(reward);
+                OnClaimReward?.Invoke(false);
+            }
 
-            TryState();
-            UpdateTime();
             return reward;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Assets.AssetLoaders;
 using Assets.DailyRewards.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
+using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts.UI;
 using Assets.YG.Scripts;
@@ -15,6 +16,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
     public class MenuEntryPoint : MonoBehaviour
     {
         private LoaderScenes _loaderScenes;
+        private Wallet _wallet;
         private DailyRewardsService _dailyRewards;
         private AudioManager _audioManager;
 
@@ -23,11 +25,12 @@ namespace Assets.GameMains.Scripts.EntryPoints
             GlobalMediator.instance.OnSelectedLevel -= SelectedLevel;
         }
 
-        public void Initialize(AudioManager audioManager, LoaderScenes loaderScenes,DailyRewardsService dailyRewards)
+        public void Initialize(AudioManager audioManager, LoaderScenes loaderScenes,Wallet wallet,DailyRewardsService dailyRewards)
         {
             YandexGame.Instance.GameReady();
             _audioManager = audioManager;
             _loaderScenes = loaderScenes;
+            _wallet = wallet;
             _dailyRewards = dailyRewards;
             GlobalMediator.instance.OnSelectedLevel += SelectedLevel;
 
@@ -39,7 +42,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG"));
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Bubbles_P"));
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BegraundLogo"));
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIMenu>("UIMenu", null, op => { op.Initialize(); }));
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIMenu>("UIMenu", null, op => { op.Initialize(_wallet); }));
             _dailyRewards.TryState();
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Prefab_PortraitCamera"));
 

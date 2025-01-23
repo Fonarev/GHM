@@ -17,28 +17,28 @@ namespace Assets.DailyRewards.Scripts.UI
         [SerializeField] private PopupWinRewardPreview popupPrefab;
         [SerializeField] private List<RewardPreview> rewards;
         [SerializeField] private Transform gridRewards;
+
         private DailyRewardsService service;
+
         private void OnEnable()
         {
-            if (service != null)
-                ViewState();
+            //if (service != null)
+            //    ViewState();
         }
+
         private void OnDisable()
         {
             service.OnTimeSpan -= Service_OnTimeSpan;
-            service.OnClaimReward -= Service_OnClaimReward;
+            service.OnClaimReward -= ViewState;
         }
 
-        private void Service_OnClaimReward()
-        {
-            ViewState();
-        }
 
         public void Init(DailyRewardsService service, RewardsConfig data)
         {
             this.service = service;
             service.OnTimeSpan += Service_OnTimeSpan;
-            service.OnClaimReward += Service_OnClaimReward;
+            service.OnClaimReward += ViewState;
+
             for (int i = 0; i < data.rewards.Count; i++)
             {
                 RewardPreview prefab = Instantiate(rewardPrefab, gridRewards);
@@ -49,7 +49,7 @@ namespace Assets.DailyRewards.Scripts.UI
             }
 
             claimButton.interactable = service.ClaimReward;
-            closeButton.onClick.AddListener(() => { this.gameObject.SetActive(false); });
+            closeButton.onClick.AddListener(Close);
             claimButton.onClick.AddListener(OnClick);
         }
 
@@ -58,20 +58,26 @@ namespace Assets.DailyRewards.Scripts.UI
             state.text = $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
         }
 
-        private void ViewState()
+        private void ViewState(bool claimState)
         {
-            if (service.ClaimReward)
-                state.text = $"XXX";
+            if (claimState)
+                state.text = $"Claim Reward";
           
-            claimButton.interactable = service.ClaimReward;
+            claimButton.interactable = claimState;
         }
+
         private void OnClick()
         {
-           var reward = service.GetReward();
-            UnityEngine.Debug.Log(reward.amount);
-            //UpdatePreview();
-            //rewardPrefab.gameObject.SetActive(false);
-            popupPrefab.Open(reward,this);
+            var reward = service.GetReward();
+            Debug.Log(reward.amount);
+
+            UpdatePreview();
+
+            popupPrefab.Open(reward, () => 
+            {
+                popupPrefab.gameObject.SetActive(false);
+                Close();
+            });
 
         }
 
@@ -81,8 +87,12 @@ namespace Assets.DailyRewards.Scripts.UI
             {
                 rewards[i].UpdatePreview(service.currentTarget == i);
             }
-            ViewState();
+
         }
-       
+
+        public void Close()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

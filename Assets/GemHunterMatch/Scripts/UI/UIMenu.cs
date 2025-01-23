@@ -1,5 +1,7 @@
 ﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.ShopStore.Scripts;
 using Assets.YG.Scripts;
 
 using TMPro;
@@ -15,11 +17,17 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private UISelectLocation locationLevels;
         [SerializeField] private Image logo;
         [SerializeField] private TextMeshProUGUI score;
-        public void Initialize()
+
+        [SerializeField] private Shop shop;
+        [SerializeField] private OpenButtonShop openButtonShop;
+        public void Initialize(Wallet wallet)
         {
             score.text = "Score: " + YandexGame.Instance.progressData.Score.ToString();
             locationLevels.Init();
             CoroutineHandler.StartRoutine(LoaderAsset.Load<Sprite>("Logo", op => { logo.sprite = op; Addressables.Release(op); }));
+
+            shop.Init(wallet);
+            openButtonShop.Init(shop);
         }
 
     }
