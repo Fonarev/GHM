@@ -21,7 +21,25 @@ namespace Assets.YG.Scripts
         public int Score;
         public DateTime? dataTime;
         public int currentTarget;
+        public DateTime? dataTimeWheel;
 
+        public void Reset()
+        {
+            coins = 0;
+            topScore = 0;
+            levels.Clear();
+            levels.Add(1, new LevelData() { level = 1, isOpened = true });
+            locations.Clear();
+            locations[1] = new Location()
+            {
+                number = 1,
+                openLevels = 20,
+                startLevel = 1,
+                maxLevels = 20,
+                isLock = true,
+                isSelected = true
+            };
+        }
         public void CreateDefaultData()
         {
             coins = 0;

@@ -191,7 +191,7 @@ namespace Assets.YG.Scripts
         {
             if(Input.GetKeyDown(KeyCode.D))
             {
-                progressData.CreateDefaultData();
+                progressData.Reset();
                 Save();
             }
         }

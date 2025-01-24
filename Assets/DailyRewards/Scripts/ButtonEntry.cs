@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.DailyRewards.Scripts
@@ -7,20 +9,22 @@ namespace Assets.DailyRewards.Scripts
     public class ButtonEntry : MonoBehaviour
     {
         [SerializeField] private GameObject trigerClaimReward;
+        private Transform con;
         private DailyRewardsService rewardsService;
 
         private Button button => GetComponent<Button>();
 
         private void OnDisable()
         {
-            //rewardsService.OnClaimReward -= RewardsService_OnClaimReward;
+            rewardsService.OnClaimReward -= RewardsService_OnClaimReward;
         }
 
-        private void Init(DailyRewardsService rewardsService)
+        public void Init(DailyRewardsService rewardsService,Transform container)
         {
+            this.con = container;
             this.rewardsService = rewardsService;
             trigerClaimReward.SetActive(false);
-            //rewardsService.OnClaimReward += RewardsService_OnClaimReward;
+            rewardsService.OnClaimReward += RewardsService_OnClaimReward;
             button.onClick.AddListener(OnClick);
         }
 
@@ -31,7 +35,7 @@ namespace Assets.DailyRewards.Scripts
 
         private void OnClick()
         {
-            rewardsService.OpenWin();
+            rewardsService.OpenWin(con);
         }
     }
 }

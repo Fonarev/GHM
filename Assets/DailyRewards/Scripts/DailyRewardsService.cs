@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.DailyRewards.Scripts
 {
@@ -21,6 +22,7 @@ namespace Assets.DailyRewards.Scripts
         private DailyRewardsPreview dailyRewardsPreview;
 
         public bool ClaimReward;
+        private PopupWinRewardPreview popupWinRewardPreview;
         private readonly Wallet wallet;
 
         public DailyRewardsService(Wallet wallet)
@@ -51,11 +53,11 @@ namespace Assets.DailyRewards.Scripts
         public bool TryState()
         {
             ClaimReward = UpdateClaimState();
-            if (ClaimReward) OpenWin();
+            //if (ClaimReward) OpenWin();
             return ClaimReward;
         }
 
-        public void OpenWin()
+        public void OpenWin(Transform container)
         {
             if (dailyRewardsPreview != null )
             {
@@ -64,7 +66,7 @@ namespace Assets.DailyRewards.Scripts
             }
             else
             {
-                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<DailyRewardsPreview>("DailyRewardsPreview", null, op =>
+                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<DailyRewardsPreview>("DailyRewardsPreview", container, op =>
                 {
                     dailyRewardsPreview = op; 
                     dailyRewardsPreview.Init(this, config);
@@ -74,7 +76,17 @@ namespace Assets.DailyRewards.Scripts
             }
            
         }
-
+        public void OpenPopupWin(Transform container)
+        {
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<PopupWinRewardPreview>("RewardPopup", container, op =>
+            {
+                popupWinRewardPreview = op;
+                popupWinRewardPreview.Init(config.rewards[currentTarget], () => {
+                    GetReward(); popupWinRewardPreview.gameObject.SetActive(false);
+                    OpenWin(container); Addressables.ReleaseInstance(popupWinRewardPreview.gameObject);
+                });
+            }));
+        }
         private bool UpdateClaimState()
         {
            
@@ -129,7 +141,7 @@ namespace Assets.DailyRewards.Scripts
                 dateTime = DateTime.UtcNow;
                 currentTarget = (currentTarget + 1) % MaxTarget;
                 UpdateTime();
-
+                YandexGame.Instance.Save();
                 OnReward?.Invoke(reward);
                 OnClaimReward?.Invoke(false);
             }

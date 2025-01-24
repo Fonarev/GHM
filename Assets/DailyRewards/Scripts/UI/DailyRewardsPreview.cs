@@ -22,8 +22,11 @@ namespace Assets.DailyRewards.Scripts.UI
 
         private void OnEnable()
         {
-            //if (service != null)
-            //    ViewState();
+            if (service != null)
+            {
+                service.OnTimeSpan += Service_OnTimeSpan;
+                service.OnClaimReward += ViewState;
+            }
         }
 
         private void OnDisable()
@@ -73,7 +76,7 @@ namespace Assets.DailyRewards.Scripts.UI
 
             UpdatePreview();
 
-            popupPrefab.Open(reward, () => 
+            popupPrefab.Init(reward, () => 
             {
                 popupPrefab.gameObject.SetActive(false);
                 Close();

@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections;
 
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.DailyRewards.Scripts.UI
+namespace Assets.WheelOfLuck.Scripts
 {
-    public class PopupWinRewardPreview : MonoBehaviour
+    public class PopupReward : MonoBehaviour
     {
         [SerializeField] private Button onButton;
         [SerializeField] private Image icon;
@@ -26,7 +27,7 @@ namespace Assets.DailyRewards.Scripts.UI
             onButton.onClick.RemoveAllListeners();
         }
 
-        public void Init(Reward reward, Action close = null )
+        public void Init(Reward reward, Action close = null)
         {
             nameType.text = reward.type.ToString();
             amount.text = reward.amount.ToString();
@@ -35,6 +36,5 @@ namespace Assets.DailyRewards.Scripts.UI
         }
 
         private void OnReward() => close.Invoke();
-      
     }
 }
