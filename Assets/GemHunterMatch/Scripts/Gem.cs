@@ -25,7 +25,7 @@ namespace Match3
         public TargetType targetType;
         public ParticleEffect[] effectMatch;
         public Sprite UISprite;
-        
+        public int scoreReward=10;
         public Match CurrentMatch = null;
         //this is set to sqrt(2) when falling in diagonal so the time of a diagonal fall is the same as a direct one
         [HideInInspector]

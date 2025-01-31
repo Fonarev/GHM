@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level 6
   m_EditorClassIdentifier: 
   level: 6
-  MaxMove: 30
+  MaxMove: 15
   LowMoveTrigger: 3
   <GemGoals>k__BackingField: []
   <ObstaclesGoals>k__BackingField: []
@@ -22,5 +22,4 @@ MonoBehaviour:
     Count: 15
   BorderMargin: 0.3
   Background: {fileID: 0}
-  gridBoardReference: Grid 6
   tutorial: {fileID: 0}

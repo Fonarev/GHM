@@ -1,7 +1,5 @@
 ﻿using Assets.YG.Scripts;
 
-using System;
-
 using UnityEngine;
 
 namespace Assets.GameMains.Scripts.AudiosSources
@@ -14,6 +12,26 @@ namespace Assets.GameMains.Scripts.AudiosSources
         [SerializeField] private MusicSourceBackground sourceBackground;
         [SerializeField] private MusicSourceEffect sourceEffect;
 
+        public bool isBGMusic
+        {
+            get => YandexGame.Instance.progressData.music;
+
+            set
+            {
+                YandexGame.Instance.progressData.music = value;
+                Play();
+            }
+        }
+
+        public bool isEffectAudio
+        {
+            get => YandexGame.Instance.progressData.effectAudio;
+
+            set
+            {
+                YandexGame.Instance.progressData.effectAudio = value;
+            }
+        }
         private void Awake()
         {
             #region singleton
@@ -46,8 +64,17 @@ namespace Assets.GameMains.Scripts.AudiosSources
             YandexGame.Instance.OnNowAdsShow += Pause;
         }
 
-        public void Play() => sourceBackground.Play();
-        public void PlayEffect(string name) => sourceEffect.Play(name);
+        public void Play()
+        {
+            if (isBGMusic)
+                sourceBackground.Play();
+        }
+
+        public void PlayEffect(string name) 
+        {
+            if (isEffectAudio)
+                sourceEffect.Play(name);
+        }
 
         private void Pause(bool isSilence)
         {
@@ -70,9 +97,10 @@ namespace Assets.GameMains.Scripts.AudiosSources
 
         }
 
-        internal void PlayEffect(AudioClip triggerSound)
+        public void PlayEffect(AudioClip triggerSound)
         {
-            sourceEffect.Play(triggerSound);
+            if (isEffectAudio)
+                sourceEffect.Play(triggerSound);
         }
     }
 }

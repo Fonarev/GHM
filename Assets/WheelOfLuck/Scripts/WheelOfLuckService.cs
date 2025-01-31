@@ -38,7 +38,6 @@ namespace Assets.WheelOfLuck.Scripts
         private Wheel wheel;
         private PopupReward popupReward;
         private WheelConfig config;
-        private object reward;
         private Transform container;
         private Wallet wallet;
 

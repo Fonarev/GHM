@@ -22,6 +22,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private Transform popupContainer;
         [SerializeField] private ButtonEntry openButtonDaily;
         [SerializeField] private ButtonOpenWheel openWheel;
+        [SerializeField] private ButtonOpenWindow openWindow;
         [SerializeField] private Shop shop;
         [SerializeField] private OpenButtonShop openButtonShop;
         public void Initialize(Wallet wallet, DailyRewards.Scripts.DailyRewardsService _dailyRewards,WheelOfLuckService serviceWheel)
@@ -37,6 +38,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             shop.Init(wallet);
             openButtonShop.Init(shop);
             openWheel.Init(serviceWheel, popupContainer);
+            openWindow.Init(popupContainer);
         }
 
     }

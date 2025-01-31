@@ -20,7 +20,8 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
 
         private void OnDisable()
         {
-            wallet.OnValueChanged -= UpdateView;
+            if (wallet != null)
+                wallet.OnValueChanged -= UpdateView;
         }
 
         public void Init(ShopItem shopItem, Wallet wallet)
@@ -31,17 +32,18 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
             View();
 
             wallet.OnValueChanged += UpdateView;
-
-            buy.onClick.AddListener(() =>
-            {
-                wallet.Spend(shopItem.price);
-                YandexGame.Instance.progressData.AddBonusGem(shopItem.bonusGem.GemType);
-            });
+            if (buy != null)
+                buy.onClick.AddListener(() =>
+                {
+                    wallet.Spend(shopItem.price);
+                    YandexGame.Instance.progressData.AddBonusGem(shopItem.bonusGem.GemType);
+                });
         }
 
         private void UpdateView(int value)
         {
-            buy.interactable = wallet.Check(shopItem.price);
+            if (buy != null)
+                buy.interactable = wallet.Check(shopItem.price);
         }
 
         private void View()

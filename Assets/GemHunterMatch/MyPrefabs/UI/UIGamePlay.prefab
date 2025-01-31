@@ -1073,9 +1073,10 @@ RectTransform:
   - {fileID: 5781207342986717169}
   - {fileID: 3286522925172393733}
   - {fileID: 7505671444642592862}
-  - {fileID: 7684053113064932581}
   - {fileID: 1093217891095708878}
   - {fileID: 3100054184430603098}
+  - {fileID: 4675127999076967097}
+  - {fileID: 7684053113064932581}
   m_Father: {fileID: 963455017786969714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5225,7 +5226,7 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   levelNumber: {fileID: 6886171028928317113}
   rootGoals: {fileID: 338307560936648953}
-  containerPopup: {fileID: 4716275180219042358}
+  containerPopups: {fileID: 4675127999076967097}
   moveCounter: {fileID: 2221177688891414405}
   coins: {fileID: 8481094692205936065}
   score: {fileID: 5924076332853813843}
@@ -5741,6 +5742,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &8574875728182982736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4675127999076967097}
+  m_Layer: 5
+  m_Name: PopupContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4675127999076967097
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8574875728182982736}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4716275180219042358}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8621638358777592350
 GameObject:
   m_ObjectHideFlags: 0

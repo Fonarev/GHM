@@ -17,7 +17,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public Gem[] existingGems;
         public BonusSetting bonusSettings;
         public BonusGemBonusItem activatedBonus;
-
+        public BoundsInt Bounds =>placement.Bounds;
         public static GridBoard Instance => instance;
 
         public List<Vector3Int> spawnerPoints { get; private set; } = new();
@@ -227,6 +227,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             if (contentCell[cell].ContainingGem != null)
             {
+                match.Score = contentCell[cell].ContainingGem.scoreReward;
                 contentCell[cell].ContainingGem.CurrentMatch = match;
             }
 

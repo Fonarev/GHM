@@ -25,7 +25,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
         private Wallet wallet;
         private LevelConfig level;
         public RectTransform rootGoals;
-        public RectTransform containerPopup;
+        [SerializeField] private RectTransform containerPopups;
         private Dictionary<int,UIGoalEntry> goals = new();
         public TextMeshProUGUI moveCounter;
         public TextMeshProUGUI coins;
@@ -39,6 +39,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMoveHappened -= MoveHappen;
             gamePlay.OnMoveTriger -= GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished -= Finished;
+            gamePlay.OnShowMessages -= ShowMessages;
             gamePlay.OnMachtedGem -= MatchEffect;
             gamePlay.OnMachted -= OnMachted;
             gamePlay.OnAddScore -= OnAddScore;
@@ -49,9 +50,21 @@ namespace Assets.GemHunterMatch.Scripts.UI
         }
         private void OnAddScore(int oldScore, int newScore)
         {
-            score.text = "Score: " + newScore.ToString();
+            //score.text = "Score: " + newScore.ToString();
+            StartCoroutine(ScrollScore(oldScore, newScore));
         }
-       
+       private IEnumerator ScrollScore(int oldScore,int newScore)
+       {
+            var scroll = newScore - oldScore;
+
+            while (scroll > 0)
+            {
+                var amount = oldScore += 1;
+                score.text = "Score: " + amount.ToString();
+
+                yield return scroll--;
+            }
+       }
         public void Initialize(GamePlay gamePlay, Wallet wallet, LevelConfig level)
         {
             this.gamePlay = gamePlay;
@@ -68,6 +81,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMoveHappened += MoveHappen;
             gamePlay.OnMoveTriger += GamePlay_OnMoveTriger;
             gamePlay.OnAllGoalFinished += Finished;
+            gamePlay.OnShowMessages += ShowMessages;
             gamePlay.OnMachtedGem += MatchEffect;
             gamePlay.OnMachted += OnMachted;
             gamePlay.OnAddScore += OnAddScore;
@@ -83,7 +97,15 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 }));
             }
 
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopup, op => op.Init(gamePlay)));
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopups, op => op.Init(gamePlay)));
+        }
+
+        private void ShowMessages(string message)
+        {
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<MessagesPopup>("MessagesPopup", containerPopups, op =>
+            {
+                op.Init(message);
+            }));
         }
 
         private void OnMachted(UnderGem underGem)
@@ -93,7 +115,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private void GamePlay_OnMoveTriger(int moves)
         {
-            StartCoroutine(LoaderAsset.InstantiateAsset("PopupWarning",containerPopup));
+            StartCoroutine(LoaderAsset.InstantiateAsset("PopupWarning",containerPopups));
         }
 
         private void ValueChange(int value)
@@ -105,9 +127,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
         private void Finished(bool isCondition)
         {
             if (isCondition)
-                StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopup, op => op.Init(isCondition)));
+                StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopups, op => op.Init(isCondition)));
             else
-                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopup, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.Goals); })); 
+                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopups, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.Goals); })); 
         }
 
         private void MoveHappen(int move)

@@ -13,13 +13,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.GemHunterMatch.Scripts
 {
     public class GamePlay : MonoBehaviour
     {
         public event Action<int, int,bool> OnGoalChanged;
+        public event Action<string> OnShowMessages;
         public event Action<bool> OnAllGoalFinished;
         public event Action<int,int> OnAddScore;
         public event Action<int> OnMoveHappened;
@@ -30,10 +30,25 @@ namespace Assets.GemHunterMatch.Scripts
 
         public VisualSetting visualSettings;
         public BonusGemBonusItem[] bonusList;
+        public BonusGem[] bonusFiniches;
         public Dictionary<int, BonusGemBonusItem> bonusItems = new();
         public bool IsPlaying { get; private set; }
         public int GoalLeft { get; private set; }
-        public int RemainingMove { get; private set; }
+        public int RemainingMove
+        {
+            get => remainingMove;
+
+            private set
+            {
+                int oldMove = remainingMove;
+
+                if (remainingMove > 0)
+                    remainingMove = value;
+
+                if (oldMove != remainingMove)
+                    OnMoveHappened?.Invoke(RemainingMove);
+            }
+        }
 
         public List<Goals> Goals = new();
         private int Score;
@@ -41,9 +56,10 @@ namespace Assets.GemHunterMatch.Scripts
         private GridBoard gridBoard;
       
         private Wallet wallet;
-        private bool isPlaying;
-        bool isConditions;
-        private GameObject objectSVX;
+        private bool isConditions;
+        private LevelFinishHandler levelFinishHandler;
+        private int remainingMove;
+
         public void Initialize(Wallet wallet)
         {
             this.wallet = wallet;
@@ -69,9 +85,9 @@ namespace Assets.GemHunterMatch.Scripts
                 goal.count = item.Count;
                 Goals.Add(goal);
             }
-            RemainingMove = level.MaxMove;
+            remainingMove = level.MaxMove;
             GoalLeft = Goals.Count;
-           
+          
         }
 
         private IEnumerator Load()
@@ -84,8 +100,8 @@ namespace Assets.GemHunterMatch.Scripts
                 gridBoard.Initialize(this); 
             }));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.LoadList<BonusGemBonusItem>("bonusItem", op => { bonusItems[op.UsedBonusGem.GemType] = op; }));
-          
-           
+            ComputeCamera();
+            levelFinishHandler = new(gridBoard, this);
             IsPlaying = true;
         }
 
@@ -101,13 +117,17 @@ namespace Assets.GemHunterMatch.Scripts
             RemainingMove = moves;
             Play();
         }
+        public int SubtractMove()
+        {
+            RemainingMove = Mathf.Max(0, RemainingMove - 1);
 
+            return RemainingMove;
+        }
         public void Moved()
         {
             var prev = RemainingMove;
 
-            RemainingMove = Mathf.Max(0, RemainingMove - 1);
-            OnMoveHappened?.Invoke(RemainingMove);
+            SubtractMove();
 
             if (prev > level.LowMoveTrigger && RemainingMove <= level.LowMoveTrigger)
             {
@@ -116,14 +136,8 @@ namespace Assets.GemHunterMatch.Scripts
 
             if (RemainingMove <= 0)
             {
-                OnNoMoveLeft();
+                Finish(isConditions);
             }
-        }
-
-        private void OnNoMoveLeft()
-        {
-             
-            Finish(isConditions);
         }
 
         public bool Matched(Gem gem)
@@ -139,13 +153,13 @@ namespace Assets.GemHunterMatch.Scripts
 
                     goal.count -= 1;
                     OnGoalChanged?.Invoke(gem.GemType, goal.count, goal.isExecut);
-                    //Debug.Log($"{gem.GemType}, {goal.count}");
 
                     if (goal.count == 0)
                     {
                         goal.isExecut = true;
                         OnGoalChanged?.Invoke(gem.GemType, goal.count, goal.isExecut);
                         GoalLeft -= 1;
+
                         if (GoalLeft == 0)
                         {
                             isConditions = true;
@@ -161,6 +175,7 @@ namespace Assets.GemHunterMatch.Scripts
 
             return false;
         }
+
         public bool Matched(UnderGem underGem)
         {
             foreach (var goal in Goals)
@@ -175,14 +190,12 @@ namespace Assets.GemHunterMatch.Scripts
 
                     goal.count -= 1;
                     OnGoalChanged?.Invoke(underGem.GemType, goal.count, goal.isExecut);
-                    //Debug.Log($"{gem.GemType}, {goal.count}");
 
                     if (goal.count == 0)
                     {
                         goal.isExecut = true;
                         OnGoalChanged?.Invoke(underGem.GemType, goal.count, goal.isExecut);
                         GoalLeft -= 1;
-
                     }
 
                     if (GoalLeft == 0)
@@ -197,6 +210,7 @@ namespace Assets.GemHunterMatch.Scripts
 
             return false;
         }
+
         public void Play()
         {
             IsPlaying = true;
@@ -209,56 +223,38 @@ namespace Assets.GemHunterMatch.Scripts
 
         public void Finish(bool isConditions)
         {
+            this.isConditions = isConditions;
             IsPlaying = false;
-          
-            StartCoroutine(ShowVisualFinish(isConditions));
+            StartCoroutine(ShowVisualFinish());
         }
-
-        private IEnumerator ShowVisualFinish(bool isConditions)
+      
+        private IEnumerator ShowVisualFinish()
         {
-            yield return new WaitForSeconds(1);
+            yield return HandlerCoroutine.StartRoutine(levelFinishHandler.WaitForBoardChanged());
 
             if (isConditions)
             {
-                //yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.LoseEffect, transform,op=>
-                //{
-                //    AudioManager.instance.PlayEffect("chime");
-                //    objectSVX = op;
-                //}));
-
+                OnShowMessages.Invoke("victory");
                 AudioManager.instance.PlayEffect("chime");
-
-                while (gridBoard.BoardChanged)
-                {
-                    yield return new WaitForSeconds(2);
-                    yield return gridBoard.BoardChanged;
-                }
+ 
+                yield return HandlerCoroutine.StartRoutine(levelFinishHandler.ToFinish());
+                yield return HandlerCoroutine.StartRoutine(SetCompletedLevel());
+                yield return new WaitForSeconds(0.1f);
 
                 OnAllGoalFinished.Invoke(isConditions);
-                //objectSVX.SetActive(false);
-                //Addressables.ReleaseInstance(objectSVX);
-                SetCompletedLevel();
-               
             }
             else
             {
-                while (gridBoard.BoardChanged)
-                {
-                    yield return new WaitForSeconds(1);
-                    yield return gridBoard.BoardChanged;
-                }
+                OnShowMessages.Invoke("fail");
+                AudioManager.instance.PlayEffect("jingle_chime");
 
-                if (!this.isConditions)
-                {
-                    AudioManager.instance.PlayEffect("jingle_chime");
-                    OnAllGoalFinished.Invoke(isConditions);
-                }
-                
+                yield return new WaitForSeconds(0.1f);
+
+                OnAllGoalFinished.Invoke(isConditions);
             }
-            //yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset(visualSettings.WinEffect, transform));
         }
 
-        private void SetCompletedLevel()
+        private IEnumerator SetCompletedLevel()
         {
             YandexGame.Instance.progressData.levels[level.level].isCompleted = true;
             int oldScore = YandexGame.Instance.progressData.Score;
@@ -293,9 +289,10 @@ namespace Assets.GemHunterMatch.Scripts
             }
 
             YandexGame.Instance.Save();
+            yield return null;
         }
 
-        public void ChangeCoins(int amount)
+        public void AddCoins(int amount)
         {
             wallet.Add(amount);
             AudioManager.instance.PlayEffect("coin");
@@ -314,7 +311,6 @@ namespace Assets.GemHunterMatch.Scripts
             {
                 gridBoard.activatedBonus = item;
             }
-            
         }
 
         public void UseBonusItem(BonusGemBonusItem activatedBonus, Vector3Int clickedCell)
@@ -332,5 +328,44 @@ namespace Assets.GemHunterMatch.Scripts
         {
             throw new NotImplementedException();
         }
+
+        public void ComputeCamera()
+        {
+            //setup the camera so it look at the center of the play area, and change its ortho setting so it perfectly frame
+            var bounds = gridBoard.Bounds;
+            Vector3 center = gridBoard.Grid.CellToLocalInterpolated(bounds.center) + new Vector3(0.5f, 0.5f, 0.0f);
+            center = gridBoard.transform.TransformPoint(center);
+
+            //we offset of 1 up as the top bar is thicker, so this center it better between the top & bottom bar
+            Camera.main.transform.position = center + Vector3.back * 10.0f + Vector3.up * 0.75f;
+
+            float halfSize = 0.0f;
+
+            if (Screen.height > Screen.width)
+            {
+                float screenRatio = Screen.height / (float)Screen.width;
+                halfSize = ((bounds.size.x + 1) * 0.5f + visualSettings.BorderMargin) * screenRatio;
+            }
+            else
+            {
+                //On Wide screen, we fit vertically
+                halfSize = (bounds.size.y + 3) * 0.5f + visualSettings.BorderMargin;
+            }
+
+            halfSize += visualSettings.BorderMargin;
+
+            Camera.main.orthographicSize = halfSize;
+        }
+        //public void UpdateVolumes()
+        //{
+        //    if (MusicSourceActive.volume < 1.0f)
+        //    {
+        //        MusicSourceActive.volume = Mathf.MoveTowards(MusicSourceActive.volume, 1.0f, Time.deltaTime * 0.5f);
+        //        MusicSourceBackground.volume = Mathf.MoveTowards(MusicSourceBackground.volume, 0.0f, Time.deltaTime * 0.5f);
+        //    }
+        //    Settings.SoundSettings.Mixer.SetFloat("MainVolume", Mathf.Log10(Mathf.Max(0.0001f, m_SoundData.MainVolume)) * 30.0f);
+        //    Settings.SoundSettings.Mixer.SetFloat("SFXVolume", Mathf.Log10(Mathf.Max(0.0001f, m_SoundData.SFXVolume)) * 30.0f);
+        //    Settings.SoundSettings.Mixer.SetFloat("MusicVolume", Mathf.Log10(Mathf.Max(0.0001f, m_SoundData.MusicVolume)) * 30.0f);
+        //}
     }
 }

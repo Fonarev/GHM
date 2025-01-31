@@ -13,6 +13,8 @@ namespace Assets.YG.Scripts
         public int coins;
         public int topScore;
         public bool isSilence;
+        public bool music;
+        public bool effectAudio;
 
         public Dictionary<int,LevelData> levels = new();
         public Dictionary<int, Location> locations = new();
@@ -44,6 +46,7 @@ namespace Assets.YG.Scripts
         {
             coins = 0;
             topScore = 0;
+            music = true;
             int count = 42;
 
             for (int i = 0; i < count; i++)

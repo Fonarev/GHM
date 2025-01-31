@@ -25,6 +25,7 @@ namespace Assets.WheelOfLuck.Scripts
             openButton.interactable = false;
             service.OnClaimReward += Service_OnClaimReward;
             service.OnTimeSpan += Service_OnTimeSpan;
+            timeState.text = "00:00:00";
         }
 
         private void Service_OnTimeSpan(System.TimeSpan time)

@@ -111,7 +111,6 @@ namespace Match3
                     else if (!content.ContainingGem.Damage(1))
                     {
                         GridBoard.Instance.DestroyGem(m_CurrentCell, true);
-                        
                     }
                 }
 

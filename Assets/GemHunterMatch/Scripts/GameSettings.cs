@@ -27,6 +27,7 @@ namespace Match3
     public class VisualSetting
     {
         public float FallSpeed = 10.0f;
+        public float BorderMargin = 0.3f;
         public AnimationCurve FallAccelerationCurve;
         public AnimationCurve BounceCurve;
         public AnimationCurve SquishCurve;
@@ -57,7 +58,11 @@ namespace Match3
     {
         public BonusGem[] Bonuses;
     }
-
+    [System.Serializable]
+    public class BonusFinichSetting
+    {
+        public BonusGem[] BonusesFinich;
+    }
     /// <summary>
     /// Settings related to the Shop, list all ShopItems.
     /// </summary>

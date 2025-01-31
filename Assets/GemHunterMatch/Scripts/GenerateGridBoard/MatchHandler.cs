@@ -1,5 +1,6 @@
 ﻿using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
+using Assets.GameMains.Scripts.Expansion;
 
 using Match3;
 
@@ -22,7 +23,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public List<PossibleSwap> possibleSwaps { get; set; } = new();
 
         private int pickedSwap;
-        private int comboCount;
         private readonly GamePlay gamePlay;
         private readonly GridBoard gridBoard;
         private readonly Placements generateGem;
@@ -62,10 +62,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 tickingCells.AddRange(newTickingCells);
                 newTickingCells.Clear();
                 gridBoard.IncrementHintTimer = false;
-            }
-            if(!gridBoard.BoardChanged)
-            {
-                comboCount = 0;
             }
         }
 
@@ -360,10 +356,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void TryMatch(Vector3Int startCell, bool createMatch, List<Vector3Int> temporaryShapeMatch, List<BonusGem> matchedBonusGem, List<Vector3Int> lineList)
         {
-          
             if (createMatch)
             {
-                comboCount++;
                 var finalMatch = CreateCustomMatch(startCell);
 
                 finalMatch.SpawnedBonus = matchedBonusGem.Count == 0 ? null : matchedBonusGem[Random.Range(0, matchedBonusGem.Count)];
@@ -375,7 +369,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                     if (gridBoard.contentCell[cell].CanDelete())
                         finalMatch.AddGem(gridBoard.contentCell[cell].ContainingGem);
-                  
                 }
 
                 foreach (var cell in temporaryShapeMatch)
@@ -385,16 +378,10 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                     if (gridBoard.contentCell[cell].CanDelete())
                         finalMatch.AddGem(gridBoard.contentCell[cell].ContainingGem);
-                      
                 }
 
-                if (comboCount > 5) comboCount = 5;
-
-                finalMatch.Score = lineList.Count * 10 * comboCount;
-
-                AudioManager.instance.PlayEffect("math_"+ 1.ToString());
-                gridBoard.AddScore(finalMatch.Score);
-                Debug.Log(finalMatch.Score);
+                AudioManager.instance.PlayEffect("math_" + 1.ToString());
+           
                 //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.Match);
             }
         }
@@ -403,7 +390,6 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             var newMatch = new Match()
             {
-                Score = 0,
                 DeletionTimer = 0.0f,
                 MatchingGem = new(),
                 OriginPoint = newCell,
@@ -417,94 +403,119 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void MatchTicking()
         {
+            int countmath;
             for (int i = 0; i < tickingMatch.Count; ++i)
             {
                 var match = tickingMatch[i];
-               
+
                 Debug.Assert(match.MatchingGem.Count == match.MatchingGem.Distinct().Count(),
                     "There is duplicate gems in the matching lists");
 
                 const float deletionSpeed = 1.0f / 0.3f;
                 match.DeletionTimer += Time.deltaTime * deletionSpeed;
 
-                for (int j = 0; j < match.MatchingGem.Count; j++)
-                {
-                    var gemIdx = match.MatchingGem[j];
-                    var gem = gridBoard.contentCell[gemIdx].ContainingGem;
+                TickMathHandlerGem(match);
 
-                    if (gem == null)
-                    {
-                        match.MatchingGem.RemoveAt(j);
-                        j--;
-                       
-                        continue;
-                    }
-                  
-                    StopBouncing(gemIdx, gem);
-
-                    //forced deletion doesn't wait for end of timer
-                    j = ForseDeletion(match, j, gemIdx, gem);
-                  
-                }
-               
                 if (match.MatchingGem.Count == 0)
                 {
+                    if (gridBoard.BoardChanged)
+                        countmath  = +1;
+                    else
+                        countmath = 0;
+                    gridBoard.AddScore(match.Score);
+                    Debug.Log($"match{countmath}");
+                    Debug.Log($"scoreMatch{match.Score}");
                     tickingMatch.RemoveAt(i);
                     i--;
                 }
 
             }
-            
         }
-
-        private int ForseDeletion(Match match, int j, Vector3Int gemIdx, Gem gem)
+        //creait new class tickMath
+        private void TickMathHandlerGem(Match match)
         {
-            var underGem = gridBoard.contentCell[gemIdx].UnderGem;
-
-            if (match.ForcedDeletion || match.DeletionTimer > 1.0f)
+            for (int j = 0; j < match.MatchingGem.Count; j++)
             {
-                Object.Destroy(gridBoard.contentCell[gemIdx].ContainingGem.gameObject);
-                gridBoard.contentCell[gemIdx].ContainingGem = null;
+                var gemIdx = match.MatchingGem[j];
+                var gem = gridBoard.contentCell[gemIdx].ContainingGem;
 
-                if (match.ForcedDeletion && gridBoard.contentCell[gemIdx].Obstacle != null)
+                if (gem == null)
                 {
-                    gridBoard.contentCell[gemIdx].Obstacle.Clear();
+                    match.MatchingGem.RemoveAt(j);
+                    j--;
+                    continue;
                 }
 
-                //if (underGem != null)
-                //{
-                //    gridBoard.contentCell[gemIdx].UnderGem.Clear();
-                //    gamePlay.Matched(gridBoard.contentCell[gemIdx].UnderGem);
-                //}
-              
-                //callback are only called when this was a match from swipe and not from bonus or other source 
-                if (!match.ForcedDeletion && gridBoard.cellsCallbacks.TryGetValue(gemIdx, out var clbk))
+                StopBouncing(gemIdx, gem);
+
+                //forced deletion doesn't wait for end of timer
+                var underGem = gridBoard.contentCell[gemIdx].UnderGem;
+
+                if (match.ForcedDeletion || match.DeletionTimer > 1.0f)
                 {
-                    clbk.Invoke();
+                    Object.Destroy(gridBoard.contentCell[gemIdx].ContainingGem.gameObject);
+                    gridBoard.contentCell[gemIdx].ContainingGem = null;
+
+                    if (match.ForcedDeletion && gridBoard.contentCell[gemIdx].Obstacle != null)
+                    {
+                        gridBoard.contentCell[gemIdx].Obstacle.Clear();
+                    }
+
+                    //if (underGem != null)
+                    //{
+                    //    gridBoard.contentCell[gemIdx].UnderGem.Clear();
+                    //    gamePlay.Matched(gridBoard.contentCell[gemIdx].UnderGem);
+                    //}
+
+                    //callback are only called when this was a match from swipe and not from bonus or other source 
+                    if (!match.ForcedDeletion && gridBoard.cellsCallbacks.TryGetValue(gemIdx, out var clbk))
+                    {
+                        clbk.Invoke();
+                    }
+
+                    match.MatchingGem.RemoveAt(j);
+                    j--;
+
+                    match.DeletedCount += 1;
+                    //we only spawn coins for non bonus match
+                    TryConditionsCoins(match, gem);
+
+                    if (match.SpawnedBonus != null && match.OriginPoint == gemIdx)
+                    {
+                        gridBoard.NewGemAt(match.OriginPoint, match.SpawnedBonus);
+                    }
+                    else
+                    {
+                        emptyCells.Add(gemIdx);
+                    }
+
+                    if (gem.CurrentState != Gem.State.Disappearing)
+                    {
+                        gamePlay.Matched(gem);
+
+                        if (underGem != null)
+                        {
+                            gridBoard.contentCell[gemIdx].UnderGem.Clear();
+                            gamePlay.Matched(underGem);
+                        }
+
+                        if (gridBoard.contentCell[gemIdx].Obstacle != null)
+                        {
+                            gridBoard.contentCell[gemIdx].Obstacle.Clear();
+                            gamePlay.Matched(gridBoard.contentCell[gemIdx].Obstacle);
+                        }
+
+                        foreach (var matchEffect in gem.effectMatch)
+                        {
+                            gridBoard.PoolEffect.PlayInstance(matchEffect.type, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
+                        }
+
+                        gem.gameObject.SetActive(false);
+
+                        gem.Destroyed();
+                    }
                 }
-
-                match.MatchingGem.RemoveAt(j);
-                j--;
-
-                match.DeletedCount += 1;
-                //we only spawn coins for non bonus match
-                if (match.DeletedCount >= 4 && !match.ForcedDeletion)
-                {
-                    gamePlay.ChangeCoins(1);
-                    gridBoard.PoolEffect.PlayInstance(EffectType.CoinUp, gem.transform.position);
-
-                }
-
-                if (match.SpawnedBonus != null && match.OriginPoint == gemIdx)
-                {
-                    gridBoard.NewGemAt(match.OriginPoint, match.SpawnedBonus);
-                }
-                else
-                {
-                    emptyCells.Add(gemIdx);
-                }
-
-                if (gem.CurrentState != Gem.State.Disappearing)
+                else if (gem.CurrentState != Gem.State.Disappearing)
                 {
                     gamePlay.Matched(gem);
 
@@ -513,11 +524,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         gridBoard.contentCell[gemIdx].UnderGem.Clear();
                         gamePlay.Matched(underGem);
                     }
-                    if (gridBoard.contentCell[gemIdx].Obstacle != null)
-                    {
-                        gridBoard.contentCell[gemIdx].Obstacle.Clear();
-                        gamePlay.Matched(gridBoard.contentCell[gemIdx].Obstacle);
-                    }
+
                     foreach (var matchEffect in gem.effectMatch)
                     {
                         gridBoard.PoolEffect.PlayInstance(matchEffect.type, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
@@ -528,27 +535,15 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     gem.Destroyed();
                 }
             }
-            else if (gem.CurrentState != Gem.State.Disappearing)
+        }
+
+        private void TryConditionsCoins(Match match, Gem gem)
+        {
+            if (match.DeletedCount >= 4 && !match.ForcedDeletion)
             {
-                gamePlay.Matched(gem);
-
-                if (underGem != null)
-                {
-                    gridBoard.contentCell[gemIdx].UnderGem.Clear();
-                    gamePlay.Matched(underGem);
-                }
-
-                foreach (var matchEffect in gem.effectMatch)
-                {
-                    gridBoard.PoolEffect.PlayInstance(matchEffect.type, gridBoard.Grid.GetCellCenterWorld(gem.CurrentIndex));
-                }
-
-                gem.gameObject.SetActive(false);
-
-                gem.Destroyed();
+                gamePlay.AddCoins(1);
+                gridBoard.PoolEffect.PlayInstance(EffectType.CoinUp, gem.transform.position);
             }
-
-            return j;
         }
 
         private void StopBouncing(Vector3Int gemIdx, Gem gem)

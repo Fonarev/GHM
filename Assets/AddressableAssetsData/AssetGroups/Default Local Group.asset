@@ -77,7 +77,7 @@ MonoBehaviour:
     - bonusItem
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 28a108bc40db70e41868b1f293d26756
-    m_Address: PopupLevelGoals
+    m_Address: PopupGoalsLevel
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -544,6 +544,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 06f4a6ecbecfacc4d991ab0429b76834
     m_Address: WheelView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c022e698c347d14b812246db903c31f
+    m_Address: PopupRewardWheel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 219d93146afd9744a82c46af887c513d
+    m_Address: MessagesPopup
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

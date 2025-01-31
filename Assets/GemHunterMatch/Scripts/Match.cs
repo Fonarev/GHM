@@ -19,13 +19,13 @@ namespace Match3
 
         //will be incremented with each gem deleted in that match, will allow to spawn coins when reaching 4+
         public int DeletedCount = 0;
-        internal int Score;
+        public int Score = 0;
 
         public void AddGem(Gem gem)
         {
             if(gem.CurrentMatch != null)
                 return;
-        
+            Score += gem.scoreReward;
             MatchingGem.Add(gem.CurrentIndex);
             gem.CurrentMatch = this;
         }
