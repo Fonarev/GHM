@@ -30,15 +30,16 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     {
                         if (win != null)
                         {
-                            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GameSetitngsUI>("GameSetitngsUI", container, op =>
+                            win.SetActive(!win.activeSelf);
+                           
+                        }
+                        else
+                        {
+                            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GameSetitngsUI>("GameSettingsUI", container, op =>
                             {
                                 win = op.gameObject;
                                 op.Init();
                             }));
-                        }
-                        else
-                        {
-                            win.SetActive(!win.activeSelf);
                         }
 
                         break;

@@ -68,6 +68,8 @@ namespace Assets.GameMains.Scripts.AudiosSources
         {
             if (isBGMusic)
                 sourceBackground.Play();
+            else
+                sourceBackground.Pause();
         }
 
         public void PlayEffect(string name) 

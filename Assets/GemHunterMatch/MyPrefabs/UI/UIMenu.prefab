@@ -1049,6 +1049,7 @@ MonoBehaviour:
   popupContainer: {fileID: 4845583638071174213}
   openButtonDaily: {fileID: 5303609445464455841}
   openWheel: {fileID: 7439249920315248716}
+  openWindow: {fileID: 257415496765130476}
   shop: {fileID: 1682616049368779243}
   openButtonShop: {fileID: 754390071473902746}
 --- !u!1 &4784273069585635416

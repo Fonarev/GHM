@@ -1,8 +1,4 @@
-﻿using System.Collections;
-
-using UnityEngine;
-
-namespace Assets.GemHunterMatch.Scripts.UI
+﻿namespace Assets.GemHunterMatch.Scripts.UI
 {
     public enum OpenButtonType 
     {
