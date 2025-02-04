@@ -1,6 +1,4 @@
-﻿using Assets.GameMains.Scripts;
-using Assets.GameMains.Scripts.AudiosSources;
-using Assets.GameMains.Scripts.Expansion;
+﻿using Assets.GameMains.Scripts.AudiosSources;
 
 using Match3;
 
@@ -23,6 +21,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         public List<PossibleSwap> possibleSwaps { get; set; } = new();
 
         private int pickedSwap;
+     
         private readonly GamePlay gamePlay;
         private readonly GridBoard gridBoard;
         private readonly Placements generateGem;
@@ -41,14 +40,14 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                 DoMatchCheck();
 
                 gridBoard.IncrementHintTimer = false;
-                gridBoard.BoardChanged = true;
+                //gridBoard.BoardChanged = true;
             }
             if (tickingMatch.Count > 0)
             {
                 MatchTicking();
                
                 gridBoard.IncrementHintTimer = false;
-                gridBoard.BoardChanged = true;
+                //gridBoard.BoardChanged = true;
             }
             if (emptyCells.Count > 0)
             {
@@ -56,6 +55,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
                 gridBoard.IncrementHintTimer = false;
                 gridBoard.BoardChanged = true;
+               
             }
             if (newTickingCells.Count > 0)
             {
@@ -358,8 +358,8 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
             if (createMatch)
             {
-                var finalMatch = CreateCustomMatch(startCell);
-
+                Match finalMatch = CreateCustomMatch(startCell);
+               
                 finalMatch.SpawnedBonus = matchedBonusGem.Count == 0 ? null : matchedBonusGem[Random.Range(0, matchedBonusGem.Count)];
 
                 foreach (var cell in lineList)
@@ -379,9 +379,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                     if (gridBoard.contentCell[cell].CanDelete())
                         finalMatch.AddGem(gridBoard.contentCell[cell].ContainingGem);
                 }
+              
+                AudioManager.instance.PlayEffect("math_" + 1.ToString(),0.5f);
 
-                AudioManager.instance.PlayEffect("math_" + 1.ToString());
-           
                 //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.Match);
             }
         }
@@ -403,32 +403,24 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         private void MatchTicking()
         {
-            int countmath;
             for (int i = 0; i < tickingMatch.Count; ++i)
             {
-                var match = tickingMatch[i];
+                Match match = tickingMatch[i];
 
                 Debug.Assert(match.MatchingGem.Count == match.MatchingGem.Distinct().Count(),
                     "There is duplicate gems in the matching lists");
 
                 const float deletionSpeed = 1.0f / 0.3f;
                 match.DeletionTimer += Time.deltaTime * deletionSpeed;
-
+               
                 TickMathHandlerGem(match);
 
                 if (match.MatchingGem.Count == 0)
                 {
-                    if (gridBoard.BoardChanged)
-                        countmath  = +1;
-                    else
-                        countmath = 0;
-                    gridBoard.AddScore(match.Score);
-                    Debug.Log($"match{countmath}");
-                    Debug.Log($"scoreMatch{match.Score}");
+                    gamePlay.AddScore(match.Score);
                     tickingMatch.RemoveAt(i);
                     i--;
                 }
-
             }
         }
         //creait new class tickMath

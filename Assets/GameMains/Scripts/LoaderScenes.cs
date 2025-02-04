@@ -16,9 +16,7 @@ namespace Assets.GameMains.Scripts
 
         private IEnumerator LoadLevelAsync(string name)
         {
-            yield return SceneManager.LoadSceneAsync("Boot");
-            //yield return new WaitForSeconds(0.5f);
-
+          
             AsyncOperation operation = SceneManager.LoadSceneAsync(name);
 
             while (!operation.isDone)

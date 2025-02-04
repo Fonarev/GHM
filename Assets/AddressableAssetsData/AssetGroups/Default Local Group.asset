@@ -527,8 +527,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a9137cea7d1b0eb41b202616b2cdeb3d
-    m_Address: DailyRewardsPreview
+  - m_GUID: 641ae0deb3808804b9acb42d60aa35bb
+    m_Address: DailyRewards
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -558,7 +558,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3394799de56ece04f967e648f9d5b92d
-    m_Address: GameSettingsUI
+    m_Address: GameSettings
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

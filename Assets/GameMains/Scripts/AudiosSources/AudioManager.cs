@@ -72,31 +72,24 @@ namespace Assets.GameMains.Scripts.AudiosSources
                 sourceBackground.Pause();
         }
 
-        public void PlayEffect(string name) 
+        public void PlayEffect(string name, float volume = 1, float pitch = 1) 
         {
             if (isEffectAudio)
-                sourceEffect.Play(name);
+            {
+                sourceEffect.Play(name, volume, pitch);
+            }
         }
 
         private void Pause(bool isSilence)
         {
             if (!isSilence)
             {
-                if (YandexGame.Instance.nowAdsShow)
-                {
-                    //this.isSilence = isSilence;
-                    //audioSourse.Play();
-                  
-                }
-
+                AudioListener.pause = YandexGame.Instance.nowAdsShow ? true : false;
             }
             else
             {
-                //this.isSilence = isSilence;
-                //audioSourse.Pause();
-                AudioListener.pause = isSilence;
+                AudioListener.pause = true;
             }
-
         }
 
         public void PlayEffect(AudioClip triggerSound)

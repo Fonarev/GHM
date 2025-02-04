@@ -20,8 +20,15 @@ namespace Assets.GameMains.Scripts.AudiosSources
             audioSourse.clip = effectClip;
             effects = effectClips.ToDictionary(i => i.name, i => i);
         }
-        
-        public void Play(string name) => audioSourse.PlayOneShot(effects[name]);
+
+        public void Play(string name,float volume = 1,float pitch = 1)
+        {
+            audioSourse.volume = volume;
+            audioSourse.pitch = pitch;
+           
+            audioSourse.PlayOneShot(effects[name]);
+
+        }
         public void Play(AudioClip name) => audioSourse.PlayOneShot(name);
         public void Pause() => audioSourse.Pause();
 

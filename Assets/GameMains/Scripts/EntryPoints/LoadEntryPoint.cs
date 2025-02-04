@@ -29,7 +29,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
             YandexGame.Instance.Load();
             yield return YandexGame.Instance.isLoading = true;
             _dailyRewards.LoadDate();
-            _wallet.Initialize(YandexGame.Instance.progressData.coins);
+            _wallet.Initialize();
             _loaderScenes.LoadLevel(Scenes.menu);
             yield return null;
        }

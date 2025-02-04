@@ -476,7 +476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
       propertyPath: effectClips.Array.size
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
       propertyPath: effectClips.Array.data[0]
@@ -502,6 +502,22 @@ PrefabInstance:
       propertyPath: effectClips.Array.data[5]
       value: 
       objectReference: {fileID: 8300000, guid: b41054444fd4ec142846bdbffc74f004, type: 3}
+    - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
+      propertyPath: effectClips.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: b4155eec43d62d4479cfbfa55cf4fd2d, type: 3}
+    - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
+      propertyPath: effectClips.Array.data[7]
+      value: 
+      objectReference: {fileID: 8300000, guid: b454ef313544a6e47b04a664b5d452af, type: 3}
+    - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
+      propertyPath: effectClips.Array.data[8]
+      value: 
+      objectReference: {fileID: 8300000, guid: 918d44eb8e7da9a45aae515e8582f400, type: 3}
+    - target: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}
+      propertyPath: effectClips.Array.data[9]
+      value: 
+      objectReference: {fileID: 8300000, guid: fbbb6350e66c662439e5175c3aadc8c4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -621,6 +637,34 @@ PrefabInstance:
       propertyPath: MusicSourceEffect
       value: 
       objectReference: {fileID: 1626772589}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.data[0].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.data[1].volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.data[2].volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.data[3].volume
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.data[4].volume
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941302356212112228, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
+      propertyPath: pinchs.Array.data[5].volume
+      value: 0.9
+      objectReference: {fileID: 0}
     - target: {fileID: 8094492516517131261, guid: 73c4453adb31a504e9709a8d6aeff9a3, type: 3}
       propertyPath: m_Name
       value: AudioManager

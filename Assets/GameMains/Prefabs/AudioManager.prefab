@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   singleton: 1
+  sourceBackground: {fileID: 1441933865176213694, guid: 7b14b95dcc0567c49b914b084982bf94, type: 3}
+  sourceEffect: {fileID: 5620487599191605311, guid: 5f419aa4a0cc78848a5f11e349a303a3, type: 3}

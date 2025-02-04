@@ -7,23 +7,23 @@ using UnityEngine.UI;
 
 namespace Assets.DailyRewards.Scripts.UI
 {
-    public class PopupWinRewardPreview : MonoBehaviour
+    public class RewardPopupUI : MonoBehaviour
     {
         [SerializeField] private Button onButton;
         [SerializeField] private Image icon;
         [SerializeField] private TextMeshProUGUI nameType;
         [SerializeField] private TextMeshProUGUI amount;
 
-        private Action close;
+        //private Action close;
 
         private void OnEnable()
         {
-            onButton.onClick?.AddListener(OnReward);
+            //onButton.onClick.AddListener(OnReward);
         }
 
         private void OnDisable()
         {
-            onButton.onClick.RemoveAllListeners();
+            //onButton.onClick.RemoveAllListeners();
         }
 
         public void Init(Reward reward, Action close = null )
@@ -31,10 +31,10 @@ namespace Assets.DailyRewards.Scripts.UI
             nameType.text = reward.type.ToString();
             amount.text = reward.amount.ToString();
             icon.sprite = reward.sprite;
-            this.close = close;
+            onButton.onClick.AddListener(()=> close.Invoke());
         }
-
-        private void OnReward() => close.Invoke();
+        
+        //private void OnReward() => close.Invoke();
       
     }
 }

@@ -1,7 +1,6 @@
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Bank;
-using Assets.YG.Scripts;
-
-using System.Collections.Generic;
+using Assets.GameMains.Scripts.Expansion;
 
 using TMPro;
 
@@ -9,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace Assets.GemHunterMatch.ShopStore.Scripts
 {
-    public class Shop : MonoBehaviour
+    public class ShopUI : MonoBehaviour
     {
         [SerializeField] private Button closeButton;
         [SerializeField] private Transform GridRootItem;
@@ -35,7 +34,7 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
 
             walletAmount.text = wallet.Coins.ToString();
             wallet.OnValueChanged += Wallet_OnValueChanged;
-            closeButton.onClick.AddListener(() => { gameObject.SetActive(false); });
+            closeButton.onClick.AddListener(() => { AudioManager.instance.PlayEffect(EffectClip.click); gameObject.SetActive(false); });
         }
 
         private void Wallet_OnValueChanged(int amount)

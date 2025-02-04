@@ -47,6 +47,7 @@ namespace Assets.YG.Scripts
             coins = 0;
             topScore = 0;
             music = true;
+            effectAudio = true;
             int count = 42;
 
             for (int i = 0; i < count; i++)

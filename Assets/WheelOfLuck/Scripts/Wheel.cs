@@ -22,7 +22,7 @@ namespace Assets.WheelOfLuck.Scripts
 
         private void OnEnable()
         {
-            //clickWhedel.onClick?.AddListener(OnClick);
+            //clickWhedel.onClick?.AddListener(Open);
         }
         private void OnDisable()
         {

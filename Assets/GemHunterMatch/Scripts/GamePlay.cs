@@ -51,7 +51,7 @@ namespace Assets.GemHunterMatch.Scripts
         }
 
         public List<Goals> Goals = new();
-        private int Score;
+        public int Score{ get; private set; }
         private LevelConfig level;
         private GridBoard gridBoard;
       
@@ -114,7 +114,8 @@ namespace Assets.GemHunterMatch.Scripts
 
         public void AddMoves(int moves)
         {
-            RemainingMove = moves;
+            remainingMove = moves;
+            OnMoveHappened?.Invoke(RemainingMove);
             Play();
         }
         public int SubtractMove()
@@ -248,7 +249,7 @@ namespace Assets.GemHunterMatch.Scripts
                 OnShowMessages.Invoke("fail");
                 AudioManager.instance.PlayEffect("jingle_chime");
 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.5f);
 
                 OnAllGoalFinished.Invoke(isConditions);
             }
@@ -295,7 +296,6 @@ namespace Assets.GemHunterMatch.Scripts
         public void AddCoins(int amount)
         {
             wallet.Add(amount);
-            AudioManager.instance.PlayEffect("coin");
         }
 
         public void ActivateBonusItem(BonusGemBonusItem item)

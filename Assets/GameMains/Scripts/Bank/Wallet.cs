@@ -1,4 +1,5 @@
-﻿using Assets.YG.Scripts;
+﻿using Assets.GameMains.Scripts.AudiosSources;
+using Assets.YG.Scripts;
 
 using System;
 
@@ -14,27 +15,29 @@ namespace Assets.GameMains.Scripts.Bank
 
             private set
             {
-                int oldValue = Coins;
+                int oldValue = coins;
                 coins = value;
                 YandexGame.Instance.progressData.coins = coins;
-                if (oldValue != coins) OnValueChanged.Invoke(coins); 
+                if (oldValue != coins) OnValueChanged ?.Invoke(coins); 
             }
         }
 
         private int coins;
 
-        public void Initialize(int amount)
+        public void Initialize()
         {
-            Coins = amount;
+            //Coins = amount;
         }
 
         public void Add(int amount)
         {
+            AudioManager.instance.PlayEffect("coin");
             Coins += amount;
         }
 
         public void Spend(int amount)
         {
+            AudioManager.instance.PlayEffect("coin");
             Coins -= amount;
         }
 

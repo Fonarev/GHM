@@ -10,7 +10,6 @@ using Assets.YG.Scripts;
 using System.Collections;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.GameMains.Scripts.EntryPoints
 {
@@ -29,7 +28,8 @@ namespace Assets.GameMains.Scripts.EntryPoints
         public void Initialize(AudioManager audioManager, LoaderScenes loaderScenes,Wallet wallet,DailyRewardsService dailyRewards)
         {
             YandexGame.Instance.GameReady();
-            _audioManager = audioManager;
+            YandexGame.Instance.FullAdShow();
+           _audioManager = audioManager;
             _loaderScenes = loaderScenes;
             _wallet = wallet;
             _dailyRewards = dailyRewards;

@@ -1,6 +1,8 @@
 ﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.ShopStore.Scripts;
 using Assets.GemHunterMatch.UI;
 
 using Match3;
@@ -21,6 +23,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private AssetReference popupLevelGoals;
         [SerializeField] private AssetReference popupWin;
         [SerializeField] private TextMeshProUGUI levelNumber;
+        [SerializeField] private OpenWindowButton settingsButton;
+
         private GamePlay gamePlay;
         private Wallet wallet;
         private LevelConfig level;
@@ -31,6 +35,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public TextMeshProUGUI coins;
         public TextMeshProUGUI score;
         public UIBonusGroup bonusGroup;
+        private GameSetitngsUI settihgs;
+        private ShopUI shop;
 
         private void OnDisable()
         {
@@ -44,10 +50,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMachted -= OnMachted;
             gamePlay.OnAddScore -= OnAddScore;
         }
-        public void Update()
-        {
-            
-        }
+
         private void OnAddScore(int oldScore, int newScore)
         {
             //score.text = "Score: " + newScore.ToString();
@@ -74,9 +77,10 @@ namespace Assets.GemHunterMatch.Scripts.UI
             levelNumber.text = "level " + level.level.ToString();
             moveCounter.text = level.MaxMove.ToString();
             coins.text = wallet.Coins.ToString();
+            InitSettingsButton(wallet);
 
             wallet.OnValueChanged += ValueChange;
-            
+
             gamePlay.OnGoalChanged += GoalChange;
             gamePlay.OnMoveHappened += MoveHappen;
             gamePlay.OnMoveTriger += GamePlay_OnMoveTriger;
@@ -85,9 +89,16 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMachtedGem += MatchEffect;
             gamePlay.OnMachted += OnMachted;
             gamePlay.OnAddScore += OnAddScore;
-            score.text ="Score: "+ 0.ToString();
+            score.text = "Score: " + 0.ToString();
             bonusGroup.Init(gamePlay);
 
+            InitGoals(gamePlay);
+
+            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopups, op => op.Init(gamePlay)));
+        }
+
+        private void InitGoals(GamePlay gamePlay)
+        {
             foreach (var goal in gamePlay.Goals)
             {
                 CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIGoalEntry>("GoalEntry", rootGoals, op =>
@@ -96,8 +107,43 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     goals[op.GetTypeGoal()] = op;
                 }));
             }
+        }
 
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopups, op => op.Init(gamePlay)));
+        private void InitSettingsButton(Wallet wallet)
+        {
+            settingsButton.Init((type) =>
+            {
+                if (settihgs != null)
+                {
+                    settihgs.gameObject.SetActive(!settihgs.gameObject.activeSelf);
+                }
+                else
+                {
+                    CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GameSetitngsUI>("GameSettings", containerPopups, op =>
+                    {
+                        settihgs = op;
+                        op.Init(true, (type) =>
+                        {
+                            AudioManager.instance.PlayEffect(EffectClip.click);
+                            if (shop != null)
+                            {
+                                shop.gameObject.SetActive(!shop.gameObject.activeSelf);
+                                settihgs.gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<ShopUI>("Shop", containerPopups, op =>
+                                {
+                                    shop = op;
+                                    settihgs.gameObject.SetActive(false);
+                                    op.Init(wallet);
+                                }));
+                            }
+                        });
+                    }));
+
+                }
+            });
         }
 
         private void ShowMessages(string message)
@@ -122,12 +168,17 @@ namespace Assets.GemHunterMatch.Scripts.UI
         {
             coins.text = value.ToString();
         }
-       
+
 
         private void Finished(bool isCondition)
         {
             if (isCondition)
-                StartCoroutine(LoaderAsset.InstantiateAsset<UIPopupWin>(popupWin, containerPopups, op => op.Init(isCondition)));
+            {
+                StartCoroutine(LoaderAsset.InstantiateAsset<VictoryPopup>(popupWin, containerPopups, op =>
+                {
+                    op.Init(level.level,gamePlay.Score);
+                }));
+            }
             else
                 StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopups, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.Goals); })); 
         }

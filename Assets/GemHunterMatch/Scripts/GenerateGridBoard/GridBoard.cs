@@ -63,8 +63,11 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
             swapHandler.UpData();
 
-            if (MatchHandler.tickingCells.Count > 0) moveController.MoveGems();
-
+            if (MatchHandler.tickingCells.Count > 0)
+            {
+                moveController.MoveGems();
+            }
+            
             MatchHandler.UpData();
 
             hint.Show(IncrementHintTimer);

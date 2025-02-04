@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Assets.DailyRewards.Scripts.UI
 {
-    public class RewardPreview : MonoBehaviour
+    public class RewardEntryUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI amountRevard;
         [SerializeField] private TextMeshProUGUI numberDaily;

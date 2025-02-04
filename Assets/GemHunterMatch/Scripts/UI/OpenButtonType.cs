@@ -4,6 +4,8 @@
     {
          Settings,
          Shop,
-         RewardsDaily,
+         Reward,
+         DailyRewards,
+         Wheel
     }
 }

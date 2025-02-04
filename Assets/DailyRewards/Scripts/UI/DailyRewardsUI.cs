@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Assets.GameMains.Scripts.AudiosSources;
+using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.Scripts.UI;
+
+using System;
 using System.Collections.Generic;
 
 using TMPro;
@@ -8,15 +12,15 @@ using UnityEngine.UI;
 
 namespace Assets.DailyRewards.Scripts.UI
 {
-    public class DailyRewardsPreview : MonoBehaviour
+    public class DailyRewardsUI : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI state;
         [SerializeField] private Button claimButton;
         [SerializeField] private Button closeButton;
-        [SerializeField] private RewardPreview rewardPrefab;
-        [SerializeField] private PopupWinRewardPreview popupPrefab;
-        [SerializeField] private List<RewardPreview> rewards;
+        [SerializeField] private TextMeshProUGUI state;
+        [SerializeField] private RewardEntryUI rewardPrefab;
+  
         [SerializeField] private Transform gridRewards;
+        [SerializeField] private List<RewardEntryUI> rewards;
 
         private DailyRewardsService service;
 
@@ -24,36 +28,40 @@ namespace Assets.DailyRewards.Scripts.UI
         {
             if (service != null)
             {
+                service.UpdateTime();
+                UpdatePreview();
                 service.OnTimeSpan += Service_OnTimeSpan;
                 service.OnClaimReward += ViewState;
             }
+            closeButton.onClick.AddListener(Close);
+            claimButton.onClick.AddListener(OnClick);
         }
 
         private void OnDisable()
         {
+            closeButton.onClick.RemoveAllListeners();
+            claimButton.onClick.RemoveAllListeners();
             service.OnTimeSpan -= Service_OnTimeSpan;
             service.OnClaimReward -= ViewState;
         }
 
 
-        public void Init(DailyRewardsService service, RewardsConfig data)
+        public void Init(DailyRewardsService service)
         {
             this.service = service;
             service.OnTimeSpan += Service_OnTimeSpan;
             service.OnClaimReward += ViewState;
 
-            for (int i = 0; i < data.rewards.Count; i++)
+            for (int i = 0; i < service.data.rewards.Count; i++)
             {
-                RewardPreview prefab = Instantiate(rewardPrefab, gridRewards);
+                RewardEntryUI prefab = Instantiate(rewardPrefab, gridRewards);
 
-                prefab.Init(data.rewards[i], i + 1, service.currentTarget == i);
+                prefab.Init(service.data.rewards[i], i + 1, service.CurrentTarget == i);
 
                 rewards.Add(prefab);
             }
-
-            claimButton.interactable = service.ClaimReward;
-            closeButton.onClick.AddListener(Close);
-            claimButton.onClick.AddListener(OnClick);
+            service.UpdateTime();
+            UpdatePreview();
         }
 
         private void Service_OnTimeSpan(TimeSpan time)
@@ -61,7 +69,7 @@ namespace Assets.DailyRewards.Scripts.UI
             state.text = $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
         }
 
-        private void ViewState(bool claimState)
+        private void ViewState(OpenButtonType type, bool claimState)
         {
             if (claimState)
                 state.text = $"Claim Reward";
@@ -76,25 +84,20 @@ namespace Assets.DailyRewards.Scripts.UI
 
             UpdatePreview();
 
-            popupPrefab.Init(reward, () => 
-            {
-                popupPrefab.gameObject.SetActive(false);
-                Close();
-            });
-
         }
 
         public void UpdatePreview()
         {
             for (int i = 0; i < rewards.Count; i++)
             {
-                rewards[i].UpdatePreview(service.currentTarget == i);
+                rewards[i].UpdatePreview(service.CurrentTarget == i);
             }
-
+            ViewState(OpenButtonType.DailyRewards, service.ClaimReward);
         }
 
         public void Close()
         {
+            AudioManager.instance.PlayEffect(EffectClip.click);
             gameObject.SetActive(false);
         }
     }

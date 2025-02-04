@@ -20,25 +20,23 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private Image logo;
         [SerializeField] private TextMeshProUGUI score;
         [SerializeField] private Transform popupContainer;
-        [SerializeField] private ButtonEntry openButtonDaily;
         [SerializeField] private ButtonOpenWheel openWheel;
-        [SerializeField] private ButtonOpenWindow openWindow;
-        [SerializeField] private Shop shop;
-        [SerializeField] private OpenButtonShop openButtonShop;
-        public void Initialize(Wallet wallet, DailyRewards.Scripts.DailyRewardsService _dailyRewards,WheelOfLuckService serviceWheel)
+        [SerializeField] private OpenWindowButtonGroup openWindowButtonGroup;
+        public void Initialize(Wallet wallet, DailyRewards.Scripts.DailyRewardsService dailyRewards,WheelOfLuckService serviceWheel)
         {
             score.text = "Score: " + YandexGame.Instance.progressData.Score.ToString();
             locationLevels.Init();
             CoroutineHandler.StartRoutine(LoaderAsset.Load<Sprite>("Logo", op => { logo.sprite = op; Addressables.Release(op); }));
-            if (_dailyRewards.TryState())
-            {
-                _dailyRewards.OpenPopupWin(popupContainer);
-            }
-            openButtonDaily.Init(_dailyRewards, popupContainer);
-            shop.Init(wallet);
-            openButtonShop.Init(shop);
+            openWindowButtonGroup.Init(dailyRewards, wallet, popupContainer);
+
+           if(dailyRewards.TryState())
+           {
+                openWindowButtonGroup.Open(OpenButtonType.Reward);
+           }
+          
+  
             openWheel.Init(serviceWheel, popupContainer);
-            openWindow.Init(popupContainer);
+           
         }
 
     }

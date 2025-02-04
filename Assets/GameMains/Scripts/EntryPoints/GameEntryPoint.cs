@@ -3,6 +3,7 @@ using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts;
 using Assets.GemHunterMatch.Scripts.UI;
+using Assets.YG.Scripts;
 
 using System.Collections;
 
@@ -54,6 +55,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
 
         private void SelecteLevel(int level)
         {
+            YandexGame.Instance.FullAdShow();
             loaderScenes.LoadLevel(Scenes.game);
         }
     }

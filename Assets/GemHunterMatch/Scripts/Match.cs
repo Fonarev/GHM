@@ -20,6 +20,7 @@ namespace Match3
         //will be incremented with each gem deleted in that match, will allow to spawn coins when reaching 4+
         public int DeletedCount = 0;
         public int Score = 0;
+        internal int Number;
 
         public void AddGem(Gem gem)
         {

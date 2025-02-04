@@ -7,7 +7,7 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
     {
         private Button button => GetComponent<Button>();
 
-        public void Init(Shop shop)
+        public void Init(ShopUI shop)
         {
 
             button.onClick.AddListener(() => { shop.gameObject.SetActive(true); });

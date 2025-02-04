@@ -20,7 +20,7 @@ namespace Assets.GemHunterMatch.UI
         public void Init(GamePlay gamePlay, Wallet wallet)
         {
             exit.Init(ButtonType.Menu);
-            bayMoves.Init(BayType.Moves, gamePlay, wallet);
+            bayMoves.Init(BayType.Moves, gamePlay, wallet,gameObject);
         }
 
         public void Show(List<Goals> goals)

@@ -1,28 +1,40 @@
 ﻿using Assets.AssetLoaders;
-using Assets.DailyRewards.Scripts.UI;
 using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
+using Assets.GemHunterMatch.Scripts.UI;
 using Assets.YG.Scripts;
 
 using System;
 using System.Collections;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.DailyRewards.Scripts
 {
     public class DailyRewardsService 
     {
         public event Action<Reward> OnReward;
-        public event Action<bool> OnClaimReward;
+        public event Action<OpenButtonType,bool> OnClaimReward;
         public event Action<TimeSpan> OnTimeSpan;
 
-        private RewardsConfig config;
-        private DailyRewardsPreview dailyRewardsPreview;
+        public RewardsConfig data;
+        private bool claimReward;
 
-        public bool ClaimReward;
-        private PopupWinRewardPreview popupWinRewardPreview;
+        public bool ClaimReward
+        {
+            get => claimReward;
+            private set
+            {
+                bool oldValue = claimReward;
+                claimReward = value;
+
+                if (oldValue != claimReward)
+                {
+                    OnClaimReward?.Invoke(OpenButtonType.DailyRewards, ClaimReward);
+                }
+            }
+        }
+
         private readonly Wallet wallet;
 
         public DailyRewardsService(Wallet wallet)
@@ -30,11 +42,11 @@ namespace Assets.DailyRewards.Scripts
             this.wallet = wallet;
         }
 
-        private float TimeReset => config.timeReset;
-        private float TimeCountDown => config.timeCountDown;
-        private int MaxTarget => config.rewards.Count;
-      
-        public int currentTarget
+        private float TimeReset => data.timeReset;
+        private float TimeCountDown => data.timeCountDown;
+        private int MaxTarget => data.rewards.Count;
+
+        public int CurrentTarget
         {
             get => YandexGame.Instance.progressData.currentTarget;
             set => YandexGame.Instance.progressData.currentTarget = value;
@@ -45,59 +57,54 @@ namespace Assets.DailyRewards.Scripts
             get => YandexGame.Instance.progressData.dataTime;
             set => YandexGame.Instance.progressData.dataTime = value;
         }
+
         public void LoadDate()
         {
-            CoroutineHandler.StartRoutine(LoaderAsset.Load<RewardsConfig>("RewardsConfig", op => config = op));
+            CoroutineHandler.StartRoutine(LoaderAsset.Load<RewardsConfig>("RewardsConfig", op => data = op));
         }
 
         public bool TryState()
         {
             ClaimReward = UpdateClaimState();
-            //if (ClaimReward) OpenWin();
             return ClaimReward;
         }
 
-        public void OpenWin(Transform container)
+        public void UpdateTime()
         {
-            if (dailyRewardsPreview != null )
+            CoroutineHandler.StartRoutine(Updater());
+        }
+
+        public Reward GetReward(bool isAddRewardds = true)
+        {
+            Reward reward = data.rewards[CurrentTarget];
+
+            if(reward != null)
             {
-                dailyRewardsPreview.gameObject.SetActive(!dailyRewardsPreview.gameObject.activeSelf);
+                dateTime = System.DateTime.UtcNow;
+                CurrentTarget = (CurrentTarget + 1) % MaxTarget;
                 UpdateTime();
+                YandexGame.Instance.Save();
+                OnReward?.Invoke(reward);
+                ClaimReward = false;
+
+                if (isAddRewardds)
+                    wallet.Add(reward.amount);
             }
-            else
-            {
-                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<DailyRewardsPreview>("DailyRewardsPreview", container, op =>
-                {
-                    dailyRewardsPreview = op; 
-                    dailyRewardsPreview.Init(this, config);
-                    UpdateTime();
-                }));
-               
-            }
-           
+
+            return reward;
         }
-        public void OpenPopupWin(Transform container)
-        {
-            CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<PopupWinRewardPreview>("RewardPopup", container, op =>
-            {
-                popupWinRewardPreview = op;
-                popupWinRewardPreview.Init(config.rewards[currentTarget], () => {
-                    GetReward(); popupWinRewardPreview.gameObject.SetActive(false);
-                    OpenWin(container); Addressables.ReleaseInstance(popupWinRewardPreview.gameObject);
-                });
-            }));
-        }
+
         private bool UpdateClaimState()
         {
-           
+
             if (dateTime.HasValue)
             {
-                TimeSpan timeSpan = DateTime.UtcNow - dateTime.Value;
+                TimeSpan timeSpan = System.DateTime.UtcNow - dateTime.Value;
 
                 if (timeSpan.TotalHours > TimeReset)
                 {
                     dateTime = null;
-                    currentTarget = 0;
+                    CurrentTarget = 0;
                 }
 
                 if (timeSpan.TotalHours < TimeCountDown)
@@ -108,6 +115,7 @@ namespace Assets.DailyRewards.Scripts
 
             return true;
         }
+
         private IEnumerator Updater()
         {
             while (true)
@@ -116,37 +124,15 @@ namespace Assets.DailyRewards.Scripts
 
                 if (!ClaimReward)
                 {
-                    var nextClaim = dateTime.Value.AddHours(TimeCountDown);
+                    var dateTimeMax = DateTime.Today.AddHours(TimeCountDown);
+                    var time = dateTimeMax - dateTime.Value;
+                    var nextClaim = dateTime.Value.AddHours(time.TotalHours);
                     var timeSpan = nextClaim - DateTime.UtcNow;
                     OnTimeSpan?.Invoke(timeSpan);
-                }
-                yield return null;
-                if (ClaimReward) OnClaimReward?.Invoke(true);
+                    }
+            
                 yield return new WaitForSeconds(1);
             }
-        }
-
-        public void UpdateTime()
-        {
-            CoroutineHandler.StartRoutine(Updater());
-        }
-
-        public Reward GetReward()
-        {
-            Reward reward = config.rewards[currentTarget];
-
-            if(reward != null)
-            {
-                wallet.Add(reward.amount);
-                dateTime = DateTime.UtcNow;
-                currentTarget = (currentTarget + 1) % MaxTarget;
-                UpdateTime();
-                YandexGame.Instance.Save();
-                OnReward?.Invoke(reward);
-                OnClaimReward?.Invoke(false);
-            }
-
-            return reward;
         }
     }
 }

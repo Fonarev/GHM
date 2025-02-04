@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5142360615778438749}
   - component: {fileID: 6110863034541148671}
   - component: {fileID: 7842972380671041978}
-  - component: {fileID: 5729723918049139299}
+  - component: {fileID: 5406143354130383162}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5729723918049139299
+--- !u!114 &5406143354130383162
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,10 +132,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2311117477220902102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 157cf5cccec338744aa659cfd4af72ba, type: 3}
+  m_Script: {fileID: 11500000, guid: fecf8452a3fe96d48b2425b5c26a3fc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trigerClaimReward: {fileID: 8990438710223151933}
+  type: 3
 --- !u!1 &3151550327292267501
 GameObject:
   m_ObjectHideFlags: 0
