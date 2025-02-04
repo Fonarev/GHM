@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level 12
   m_EditorClassIdentifier: 
   level: 12
-  MaxMove: 35
+  MaxMove: 14
   LowMoveTrigger: 3
   <GemGoals>k__BackingField:
   - Gem: {fileID: 3997245007397222790, guid: 97aab3c4d23edee47bbc70ca25eb7d79, type: 3}
@@ -24,5 +24,4 @@ MonoBehaviour:
   <UnderGemGoals>k__BackingField: []
   BorderMargin: 0.3
   Background: {fileID: 0}
-  gridBoardReference: Grid 12
   tutorial: {fileID: 0}

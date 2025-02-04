@@ -17,11 +17,11 @@ MonoBehaviour:
   LowMoveTrigger: 3
   <GemGoals>k__BackingField:
   - Gem: {fileID: 7927807542344970777, guid: 04a81442ef4438841a0074ba8568d5d9, type: 3}
-    Count: 15
+    Count: 18
   <ObstaclesGoals>k__BackingField: []
   <UnderGemGoals>k__BackingField:
   - UnderGem: {fileID: 4384593386256702642, guid: a6ef71296f68c07428ff5d2e14d0abbf, type: 3}
-    Count: 15
+    Count: 18
   BorderMargin: 0.3
   Background: {fileID: 0}
   tutorial: {fileID: 0}
