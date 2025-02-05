@@ -169,8 +169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f303ff7b7fc57484594a1d090bb5108c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rootLevelEntry: {fileID: 8953181012983125942}
-  levels:
+  container: {fileID: 0}
+  levelButtons:
   - {fileID: 2385706374428292527}
   - {fileID: 151004490376090460}
   - {fileID: 6651351899255969263}

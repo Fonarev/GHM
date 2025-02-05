@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.GameMains.Scripts.Bank;
+using Assets.YG.Scripts;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
@@ -29,8 +30,25 @@ namespace Assets.GemHunterMatch.Scripts.UI
            switch(type) 
            {
                 case ButtonType.Next:
-                    var nextLevel = GlobalMediator.instance.SelectLevel + 1;
-                    GlobalMediator.instance.SelectedLevel(nextLevel);
+                    int nextLevel = GlobalMediator.instance.SelectLevel + 1;
+                    Location currentLocation = YandexGame.Instance.progressData.locations[GlobalMediator.instance.SelectLocation];
+
+                    if (nextLevel > currentLocation.endNumberLevel)
+                    {
+                        currentLocation.completed = true;
+                        currentLocation.isSelected = false;
+                        int nextLoc = currentLocation.number + 1;
+                        Location location = YandexGame.Instance.progressData.locations[currentLocation.number + 1];
+                        location.isSelected = true;
+                        location.isLock = true;
+                        GlobalMediator.instance.SelectedLevel(nextLoc, nextLevel);
+                        YandexGame.Instance.Save();
+                    }
+                    else
+                    {
+                        GlobalMediator.instance.SelectedLevel(GlobalMediator.instance.SelectLocation, nextLevel);
+                    }
+                   
                     AudioManager.instance.PlayEffect(EffectClip.click);
                     break;
 

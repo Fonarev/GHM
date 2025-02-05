@@ -52,7 +52,7 @@ namespace Assets.GemHunterMatch.Scripts
 
         public List<Goals> Goals = new();
         public int Score{ get; private set; }
-        private LevelConfig level;
+        private LevelConfig levelConfig;
         private GridBoard gridBoard;
       
         private Wallet wallet;
@@ -64,37 +64,37 @@ namespace Assets.GemHunterMatch.Scripts
         {
             this.wallet = wallet;
             CoroutineHandler.StartRoutine(Load());
-            foreach (var item in level.GemGoals)
+            foreach (var item in levelConfig.GemGoals)
             {
                 var goal = new Goals();
                 goal.gem = item.Gem;
                 goal.count = item.Count;
                 Goals.Add(goal);
             }
-            foreach (var item in level.ObstaclesGoals)
+            foreach (var item in levelConfig.ObstaclesGoals)
             {
                 var goal = new Goals();
                 goal.obstacle = item.Obstacle;
                 goal.count = item.Count;
                 Goals.Add(goal);
             }
-            foreach (var item in level.UnderGemGoals)
+            foreach (var item in levelConfig.UnderGemGoals)
             {
                 var goal = new Goals();
                 goal.underGem = item.UnderGem;
                 goal.count = item.Count;
                 Goals.Add(goal);
             }
-            remainingMove = level.MaxMove;
+            remainingMove = levelConfig.MaxMove;
             GoalLeft = Goals.Count;
           
         }
 
         private IEnumerator Load()
         {
-            level = LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel);
+            levelConfig = LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel);
            
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(level.gridBoardReference, null, op =>
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(levelConfig.gridBoardReference, null, op =>
             {
                 gridBoard = op;
                 gridBoard.Initialize(this); 
@@ -130,7 +130,7 @@ namespace Assets.GemHunterMatch.Scripts
 
             SubtractMove();
 
-            if (prev > level.LowMoveTrigger && RemainingMove <= level.LowMoveTrigger)
+            if (prev > levelConfig.LowMoveTrigger && RemainingMove <= levelConfig.LowMoveTrigger)
             {
                 OnMoveTriger.Invoke(RemainingMove);
             }
@@ -257,40 +257,29 @@ namespace Assets.GemHunterMatch.Scripts
 
         private IEnumerator SetCompletedLevel()
         {
-            YandexGame.Instance.progressData.levels[level.level].isCompleted = true;
+            AddScoreInProgress();
+          
+            Location currentLocation = YandexGame.Instance.progressData.locations[GlobalMediator.instance.SelectLocation];
+            currentLocation.completedLevels ++;
+
+            //int nextLevel = levelConfig.level + 1;
+            //if (nextLevel > currentLocation.endNumberLevel)
+
+
+            //    currentLocation.completedLevels++;
+            YandexGame.Instance.Save();
+            yield return null;
+        }
+
+        private void AddScoreInProgress()
+        {
             int oldScore = YandexGame.Instance.progressData.Score;
             YandexGame.Instance.progressData.Score += Score;
-            if (oldScore< YandexGame.Instance.progressData.Score)
+
+            if (oldScore < YandexGame.Instance.progressData.Score)
             {
                 YandexGame.Instance.NewLeaderboardScores("Score", YandexGame.Instance.progressData.Score);
             }
-           
-            int nextLevel = level.level;
-            nextLevel++;
-            var currentLocotion = YandexGame.Instance.progressData.locations[1];
-
-            if (currentLocotion.endindexLevel < nextLevel)
-            {
-                currentLocotion.completed = true;
-                currentLocotion.isSelected = false;
-                YandexGame.Instance.progressData.locations[2] = new Location()
-                {
-                    number = 2,
-                    openLevels = 21,
-                    startLevel = 21,
-                    maxLevels = 20,
-                    isLock = true,
-                    isSelected = true
-                };
-            }
-
-            if (!YandexGame.Instance.progressData.levels.ContainsKey(nextLevel))
-            {
-                YandexGame.Instance.progressData.levels[nextLevel] = new LevelData(){ level = nextLevel, isOpened = true};
-            }
-
-            YandexGame.Instance.Save();
-            yield return null;
         }
 
         public void AddCoins(int amount)

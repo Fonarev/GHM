@@ -30,7 +30,7 @@ namespace Match3
             if (!Application.isPlaying)
                 return false;
 #endif
-            //This tile is only used in editor to help design the level. At runtime, we notify the board that this tile is
+            //This tile is only used in editor to help design the levelConfig. At runtime, we notify the board that this tile is
             //a place for a gem, then delete the GameObject that was just visual aid at design time. The Board will take care
             //of creating a gem there.
             GridBoard.RegisterCell(position, PlacedGem);

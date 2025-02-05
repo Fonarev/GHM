@@ -12,12 +12,15 @@ namespace Assets.YG.Scripts
     {
         public int coins;
         public int topScore;
+        public int order;
+
         public bool isSilence;
         public bool music;
         public bool effectAudio;
 
-        public Dictionary<int,LevelData> levels = new();
+        //public Dictionary<int,LevelData> levels = new();
         public Dictionary<int, Location> locations = new();
+        public int lastSelectedLevel;
         public Dictionary<int, int> bonusGemItem = new();
 
         public int Score;
@@ -29,15 +32,14 @@ namespace Assets.YG.Scripts
         {
             coins = 0;
             topScore = 0;
-            levels.Clear();
-            levels.Add(1, new LevelData() { level = 1, isOpened = true });
+            //levels.Clear();
+            lastSelectedLevel = 1;
+            //levels.Add(1, new LevelData() { levelConfig = 1, isOpened = true });
             locations.Clear();
             locations[1] = new Location()
             {
                 number = 1,
-                openLevels = 20,
                 startLevel = 1,
-                maxLevels = 20,
                 isLock = true,
                 isSelected = true
             };
@@ -46,43 +48,36 @@ namespace Assets.YG.Scripts
         {
             coins = 0;
             topScore = 0;
+
             music = true;
             effectAudio = true;
-            int count = 42;
 
-            for (int i = 0; i < count; i++)
-            {
-                levels.Add(i, new LevelData() { level = i, isOpened = true });
-            }
+            lastSelectedLevel = 1;
+            //int count = 42;
 
-            //levels.Add(1, new LevelData() { level = 1, isOpened = true });
+            //for (int i = 0; i < count; i++)
+            //{
+            //    levels.Add(i, new LevelData() { levelConfig = i, isOpened = true });
+            //}
+
+            //levelButtons.Add(1, new LevelData() { levelConfig = 1, isOpened = true });
 
             locations[1] = new Location()
             {
                 number = 1,
-                openLevels = 20,
                 startLevel = 1,
-                maxLevels = 20,
                 isLock = true,
                 isSelected = true
             };
             locations[2] = new Location()
             {
                 number = 2,
-                openLevels = 20,
                 startLevel = 21,
-                maxLevels = 20,
-                isLock = true,
-                isSelected = true
             };
             locations[3] = new Location()
             {
                 number = 3,
-                openLevels = 20,
                 startLevel = 41,
-                maxLevels = 20,
-                isLock = true,
-                isSelected = true
             };
             bonusGemItem[-1] = 10;
             bonusGemItem[-2] = 10;

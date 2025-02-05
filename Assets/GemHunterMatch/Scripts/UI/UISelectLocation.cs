@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.YG.Scripts;
+
+using UnityEngine;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
@@ -13,7 +15,10 @@ namespace Assets.GemHunterMatch.Scripts.UI
         {
            for (int i = 0; i < locations.Length; i++) 
            {
-                locations[i].Init(i + offset);
+                if (YandexGame.Instance.progressData.locations.TryGetValue(i + offset, out var location))
+                {
+                    locations[i].Init(location);
+                }
            }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 
 using UnityEngine;
 
@@ -9,9 +8,30 @@ namespace Assets.GameMains.Scripts
     {
         public event Action<int> OnSelectedLevel;
         public event Action OnExitMenu;
-        public int SelectLevel { get => selectLevel; private set { selectLevel = value;Debug.Log(selectLevel); OnSelectedLevel.Invoke(selectLevel); } }
+
+        public int SelectLevel
+        {
+            get => selectLevel;
+            private set
+            {
+                selectLevel = value;
+                OnSelectedLevel.Invoke(selectLevel);
+                Debug.Log($"Level {selectLevel}");
+            }
+        }
+        public int SelectLocation
+        {
+            get => selectLocation;
+            private set
+            {
+                selectLocation = value;
+                Debug.Log($"Location {selectLocation}");
+            }
+        }
+
         public static GlobalMediator instance;
         private int selectLevel;
+        private int selectLocation;
 
         private void Awake()
         {
@@ -25,9 +45,14 @@ namespace Assets.GameMains.Scripts
                 DontDestroyOnLoad(gameObject);
             }
         }
-        public void SelectedLevel(int level) => SelectLevel = level;
 
-        internal void ExitMenu() => OnExitMenu.Invoke();
+        public void SelectedLevel(int location, int level)
+        {
+            SelectLevel = level;
+            SelectLocation = location;
+        }
+
+        public void ExitMenu() => OnExitMenu.Invoke();
        
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Assets.AssetLoaders;
 using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
-using Assets.GemHunterMatch.Scripts.Loaders;
 using Assets.YG.Scripts;
 
 using TMPro;
@@ -13,60 +12,48 @@ namespace Assets.GemHunterMatch.Scripts.UI
 {
     public class UILocationEntry : MonoBehaviour
     {
-        private int number;
-        [SerializeField] private int maxLevel=20;
-        [SerializeField] private int startcountLevel;
-        [SerializeField] private bool completed;
-        [SerializeField] private TextMeshProUGUI textLevel;
+        [SerializeField] private TextMeshProUGUI numberLocation;
         [SerializeField] private TextMeshProUGUI barLevels;
-        [SerializeField] private Image icon;
-        [SerializeField] private Button button;
+        [SerializeField] private Button openselectLevels;
         [SerializeField] private RectTransform rootPrefabs;
-        public int endLevel { get => startcountLevel + maxLevel - 1; }
-        private UISelectLevels selectLevels;
+
+        private SelectLevelsUI selectLevels;
         private Location location;
 
-        public void Init(int numberLoc)
+        public void Init(Location location)
         {
-            number = numberLoc;
-            button.interactable = false;
-            int count = startcountLevel + maxLevel - 1;
-            textLevel.text = "Location " + number.ToString();
-            barLevels.text = "Levels " + startcountLevel + "/" + count.ToString();
+            this.location = location;
+            //openselectLevels.interactable = location.isLock;
+           
+            numberLocation.text = "Location " + location.number.ToString();
+            barLevels.text = "Levels " + location.startLevel + "/" + location.endNumberLevel.ToString();
 
-            if (YandexGame.Instance.progressData.locations.TryGetValue(number, out var location))
-            {
-                this.location = location;
-                button.interactable = true;
-                button.onClick.AddListener(OpenPanel);
-               
-                if (location.isSelected)
-                {
-                    OpenPanel();
-                }
-            }
- 
+            if (location.isSelected)
+                OpenPanel();
+
+            openselectLevels.onClick.AddListener(OpenPanel);
         }
 
         private void OpenPanel()
         {
-            if (selectLevels == null)
-            {
-                StartCoroutine(LoaderAsset.InstantiateAsset<UISelectLevels>("SelectLevels", rootPrefabs, op =>
-                {
-                    selectLevels = op;
-                    selectLevels.Init(location.startLevel,location.maxLevels);
-                }));
+            AudioManager.instance.PlayEffect(EffectClip.click);
 
-                rootPrefabs.gameObject.SetActive(true);
-            }
-            else
+            if (selectLevels != null)
             {
                 selectLevels.gameObject.SetActive(!selectLevels.gameObject.activeSelf);
                 rootPrefabs.gameObject.SetActive(!rootPrefabs.gameObject.activeSelf);
-                YandexGame.Instance.progressData.locations[number].isSelected = selectLevels.gameObject.activeSelf;
 
-                AudioManager.instance.PlayEffect(EffectClip.click);
+                YandexGame.Instance.progressData.locations[location.number].isSelected = selectLevels.gameObject.activeSelf;
+            }
+            else
+            {
+                StartCoroutine(LoaderAsset.InstantiateAsset<SelectLevelsUI>("SelectLevels", rootPrefabs, op =>
+                {
+                    selectLevels = op;
+                    selectLevels.Init(location);
+                }));
+
+                rootPrefabs.gameObject.SetActive(true);
             }
         }
     }

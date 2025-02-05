@@ -6,14 +6,14 @@ namespace Assets.GemHunterMatch.Scripts.Loaders
 {
     public class LoaderLevelEntryProvider : LocalAssetLoader
     {
-        public Task<UILevelEntry> Load()
+        public Task<LevelButtonSelectUI> Load()
         {
-            return Load<UILevelEntry>("LevelEntry");
+            return Load<LevelButtonSelectUI>("LevelEntry");
         }
 
         public void Reset()
         {
-            UnLoad(typeof(UILevelEntry));
+            UnLoad(typeof(LevelButtonSelectUI));
         }
         public void ResetAll()
         {

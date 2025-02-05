@@ -41,10 +41,10 @@ namespace Assets.GameMains.Scripts.EntryPoints
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("BG", rootBackground));
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Bubbles_P", rootBackground));
 
-            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIGamePlay>("UIGamePlay", null,op=>
+            yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIGamePlay>("UIGamePlay", null,(System.Action<UIGamePlay>)(op=>
             { 
-                op.Initialize(gamePlay, wallet, LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel)); 
-            }));
+                op.Initialize(gamePlay, wallet, LevelDatabase.GetLevel((int)GlobalMediator.instance.SelectLevel)); 
+            })));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Prefab_PortraitCamera"));
         }
 

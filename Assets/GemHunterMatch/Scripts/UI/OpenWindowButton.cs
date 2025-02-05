@@ -18,7 +18,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         public virtual void State(bool isState)
         {
-            Debug.Log(isState);
+            
         }
     }
 }

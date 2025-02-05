@@ -27,7 +27,7 @@ namespace Match3
                 return false;
 #endif
         
-            //This tile is only used in editor to help design the level. At runtime, we notify the board that this tile is
+            //This tile is only used in editor to help design the levelConfig. At runtime, we notify the board that this tile is
             //a place for a gem. The Board will take care of creating a gem there.
             GridBoard.RegisterSpawnerPoint(position);
 

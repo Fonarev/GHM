@@ -5,7 +5,7 @@ namespace Match3
 {
     /// <summary>
     /// Contains all the data for the Level in which this is : GemGoals and max number of Moves. This will also  notify the
-    /// GameManager that we loaded a level
+    /// GameManager that we loaded a levelConfig
     /// </summary>
     public class LevelData 
     {
