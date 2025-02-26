@@ -8,6 +8,7 @@ using Assets.YG.Scripts;
 using System.Collections;
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Assets.GameMains.Scripts.EntryPoints
 {
@@ -32,7 +33,7 @@ namespace Assets.GameMains.Scripts.EntryPoints
 
             GlobalMediator.instance.OnExitMenu += Exit;
             GlobalMediator.instance.OnSelectedLevel += SelecteLevel;
-
+            YandexGame.Instance.OnRewardedVideo += Reward;
             StartCoroutine(Load());
         }
 
@@ -52,7 +53,11 @@ namespace Assets.GameMains.Scripts.EntryPoints
         {
             loaderScenes.LoadLevel(Scenes.menu);
         }
-
+        private void Reward(int id)
+        {
+            if (id == 0) gamePlay.AddMoves(5);
+            if (id == 1) wallet.Add(100);
+        }
         private void SelecteLevel(int level)
         {
             YandexGame.Instance.FullAdShow();

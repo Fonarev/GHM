@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8984863421919125177}
   - component: {fileID: 4313957067591046872}
   - component: {fileID: 4945398931193377068}
+  - component: {fileID: 7603901416153042395}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -66,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3 moves lefs
+  m_text: 3 moves
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -151,6 +152,18 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &7603901416153042395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4485666841461385988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a01b9a75011e264e9b28003e8f0d819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7186003163504349358
 GameObject:
   m_ObjectHideFlags: 0

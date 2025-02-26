@@ -32,7 +32,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 case ButtonType.Next:
                     int nextLevel = GlobalMediator.instance.SelectLevel + 1;
                     Location currentLocation = YandexGame.Instance.progressData.locations[GlobalMediator.instance.SelectLocation];
-
+                    
                     if (nextLevel > currentLocation.endNumberLevel)
                     {
                         currentLocation.completed = true;

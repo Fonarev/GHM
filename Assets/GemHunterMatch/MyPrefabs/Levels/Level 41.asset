@@ -15,10 +15,10 @@ MonoBehaviour:
   level: 41
   MaxMove: 40
   LowMoveTrigger: 3
-  <GemGoals>k__BackingField: []
-  <ObstaclesGoals>k__BackingField:
-  - Obstacle: {fileID: 3307473539026403437, guid: ace1ff97c2fafdc4d843c2af94c57f0b, type: 3}
-    Count: 8
+  <GemGoals>k__BackingField:
+  - Gem: {fileID: 7927807542344970777, guid: bb60bc505e820734584f3d8bd0a16f53, type: 3}
+    Count: 40
+  <ObstaclesGoals>k__BackingField: []
   <UnderGemGoals>k__BackingField: []
   BorderMargin: 0.3
   Background: {fileID: 0}

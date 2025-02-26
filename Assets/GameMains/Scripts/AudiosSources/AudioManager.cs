@@ -84,7 +84,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
         {
             if (!isSilence)
             {
-                AudioListener.pause = YandexGame.Instance.nowAdsShow ? true : false;
+                AudioListener.pause = YandexGame.Instance.nowAdsShow ? false : true;
             }
             else
             {

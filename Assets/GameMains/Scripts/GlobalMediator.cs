@@ -8,7 +8,7 @@ namespace Assets.GameMains.Scripts
     {
         public event Action<int> OnSelectedLevel;
         public event Action OnExitMenu;
-
+        public event Action<int, int> OnAddBonus;
         public int SelectLevel
         {
             get => selectLevel;
@@ -32,6 +32,7 @@ namespace Assets.GameMains.Scripts
         public static GlobalMediator instance;
         private int selectLevel;
         private int selectLocation;
+      
 
         private void Awake()
         {
@@ -52,7 +53,9 @@ namespace Assets.GameMains.Scripts
             SelectLocation = location;
         }
 
-        public void ExitMenu() => OnExitMenu.Invoke();
-       
+        public void ExitMenu() => OnExitMenu?.Invoke();
+
+        public void AddBonus(int gemType, int amount)=> OnAddBonus?.Invoke(gemType,amount);
+
     }
 }

@@ -14,6 +14,7 @@ namespace Assets.GemHunterMatch.UI
     public class PopupDefeat : MonoBehaviour
     {
         [SerializeField] private UIButtonBayEntry bayMoves;
+        [SerializeField] private UIButtonBayEntry RewardAdsMoves;
         [SerializeField] private UIButtonEntry exit;
         [SerializeField] private RectTransform container;
 
@@ -21,6 +22,7 @@ namespace Assets.GemHunterMatch.UI
         {
             exit.Init(ButtonType.Menu);
             bayMoves.Init(BayType.Moves, gamePlay, wallet,gameObject);
+            RewardAdsMoves.Init(BayType.RewardAds, gamePlay, wallet, gameObject);
         }
 
         public void Show(List<Goals> goals)

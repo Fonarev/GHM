@@ -1,7 +1,5 @@
 ﻿using Assets.GemHunterMatch.Scripts;
 
-using Match3;
-
 using System;
 using System.Collections.Generic;
 
@@ -11,19 +9,16 @@ namespace Assets.YG.Scripts
     public class ProgressData
     {
         public int coins;
+        public int Score;
         public int topScore;
         public int order;
 
-        public bool isSilence;
         public bool music;
         public bool effectAudio;
 
-        //public Dictionary<int,LevelData> levels = new();
         public Dictionary<int, Location> locations = new();
-        public int lastSelectedLevel;
         public Dictionary<int, int> bonusGemItem = new();
 
-        public int Score;
         public DateTime? dataTime;
         public int currentTarget;
         public DateTime? dataTimeWheel;
@@ -32,58 +27,25 @@ namespace Assets.YG.Scripts
         {
             coins = 0;
             topScore = 0;
-            //levels.Clear();
-            lastSelectedLevel = 1;
-            //levels.Add(1, new LevelData() { levelConfig = 1, isOpened = true });
+            Score = 0;
             locations.Clear();
-            locations[1] = new Location()
-            {
-                number = 1,
-                startLevel = 1,
-                isLock = true,
-                isSelected = true
-            };
+            CreateDefaultData();
         }
+
         public void CreateDefaultData()
         {
-            coins = 0;
-            topScore = 0;
-
             music = true;
             effectAudio = true;
 
-            lastSelectedLevel = 1;
-            //int count = 42;
+            locations[1] = new Location(1, 1, true, true);
 
-            //for (int i = 0; i < count; i++)
-            //{
-            //    levels.Add(i, new LevelData() { levelConfig = i, isOpened = true });
-            //}
+            //locations[2] = new Location(2, 21,true) { completedLevels = 20};
 
-            //levelButtons.Add(1, new LevelData() { levelConfig = 1, isOpened = true });
+            //locations[3] = new Location(3, 41,true) { completedLevels = 20 };
 
-            locations[1] = new Location()
-            {
-                number = 1,
-                startLevel = 1,
-                isLock = true,
-                isSelected = true
-            };
-            locations[2] = new Location()
-            {
-                number = 2,
-                startLevel = 21,
-            };
-            locations[3] = new Location()
-            {
-                number = 3,
-                startLevel = 41,
-            };
-            bonusGemItem[-1] = 10;
-            bonusGemItem[-2] = 10;
-            bonusGemItem[-3] = 10;
-            bonusGemItem[-4] = 10;
-            bonusGemItem[-5] = 10;
+            //locations[4] = new Location(4, 61);
+            //locations[5] = new Location(5, 81);
+            //locations[6] = new Location(6, 101);
 
         }
 
@@ -94,8 +56,8 @@ namespace Assets.YG.Scripts
             {
                 return amount;
             }
-
-            return amount;
+            
+            return bonusGemItem[type] = 0;
         }
 
         public void AddBonusGem(int type,int value = 1)

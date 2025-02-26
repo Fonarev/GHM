@@ -11,7 +11,7 @@ namespace Match3
 
         public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
         {
-            tileData.sprite = !Application.isPlaying ? PreviewEditorSprite : null;
+            //tileData.sprite = !Application.isPlaying ? PreviewEditorSprite : null;
         }
 
         public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)

@@ -4,6 +4,7 @@ using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.ShopStore.Scripts;
 using Assets.GemHunterMatch.UI;
+using Assets.YG.Scripts;
 
 using Match3;
 
@@ -14,6 +15,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
@@ -58,12 +60,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
         }
        private IEnumerator ScrollScore(int oldScore,int newScore)
        {
+            var content = Languages.GetContent("Score: ");
             var scroll = newScore - oldScore;
 
             while (scroll > 0)
             {
                 var amount = oldScore += 1;
-                score.text = "Score: " + amount.ToString();
+                score.text = content + amount.ToString();
 
                 yield return scroll--;
             }
@@ -74,7 +77,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             this.wallet = wallet;
             this.level = level;
 
-            levelNumber.text = "level " + level.level.ToString();
+            levelNumber.text = Languages.GetContent("Level ") + level.level.ToString();
             moveCounter.text = level.MaxMove.ToString();
             coins.text = wallet.Coins.ToString();
             InitSettingsButton(wallet);
@@ -89,7 +92,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMachtedGem += MatchEffect;
             gamePlay.OnMachted += OnMachted;
             gamePlay.OnAddScore += OnAddScore;
-            score.text = "Score: " + 0.ToString();
+            score.text = Languages.GetContent("Score: ") + 0.ToString();
             bonusGroup.Init(gamePlay);
 
             InitGoals(gamePlay);
@@ -113,6 +116,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         {
             settingsButton.Init((type) =>
             {
+                AudioManager.instance.PlayEffect(EffectClip.click);
+
                 if (settihgs != null)
                 {
                     settihgs.gameObject.SetActive(!settihgs.gameObject.activeSelf);

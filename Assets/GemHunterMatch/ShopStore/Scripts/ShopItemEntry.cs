@@ -1,10 +1,12 @@
-﻿using Assets.GameMains.Scripts.Bank;
+﻿using Assets.GameMains.Scripts;
+using Assets.GameMains.Scripts.Bank;
 using Assets.YG.Scripts;
 
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+
 
 namespace Assets.GemHunterMatch.ShopStore.Scripts
 {
@@ -32,12 +34,15 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
             View();
 
             wallet.OnValueChanged += UpdateView;
-            if (buy != null)
-                buy.onClick.AddListener(() =>
+
+            buy?.onClick.AddListener(() =>
                 {
                     wallet.Spend(shopItem.price);
                     YandexGame.Instance.progressData.AddBonusGem(shopItem.bonusGem.GemType);
+                    GlobalMediator.instance.AddBonus(shopItem.bonusGem.GemType, 1);
+                    UpdateView(shopItem.price);
                 });
+               
         }
 
         private void UpdateView(int value)
@@ -51,7 +56,7 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
             icon.sprite = shopItem.itemIcon;
 
             price.text = shopItem.price.ToString();
-            itemName.text = shopItem.itemName;
+            itemName.text = Languages.GetContent(shopItem.itemName);
 
             buy.interactable = wallet.Check(shopItem.price);
         }

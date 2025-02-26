@@ -21,7 +21,7 @@ namespace Match3
         {
             //When no playing (so in editor outside of play mode) return the given preview Sprite, otherwise return null 
             //wo that tile is "invisible" during play (the gem are gameobject handled by our system, not the tilemap)
-            tileData.sprite = !Application.isPlaying ? PreviewEditorSprite : null;
+            //tileData.sprite = !Application.isPlaying ? PreviewEditorSprite : null;
         }
 
         public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)

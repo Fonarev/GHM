@@ -1,4 +1,8 @@
-﻿using TMPro;
+﻿using Assets.GameMains.Scripts;
+
+using Match3;
+
+using TMPro;
 
 using Unity.VisualScripting;
 
@@ -18,9 +22,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private Vector3 selectedView = new Vector3(1.3f, 1.3f, 0.0f);
 
-        public void Init(Sprite displaySprite, int amount)
+        public void Init(BonusGemBonusItem bonus, int amount)
         {
-            icon.sprite = displaySprite;
+            icon.sprite = bonus.DisplaySprite;
             amountView.text = amount.ToString();
         }
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level 38
   m_EditorClassIdentifier: 
   level: 38
-  MaxMove: 40
+  MaxMove: 24
   LowMoveTrigger: 3
   <GemGoals>k__BackingField:
   - Gem: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}

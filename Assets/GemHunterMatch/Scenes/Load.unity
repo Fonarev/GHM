@@ -568,6 +568,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1883667761900363766, guid: 51b50da3162e38b4bab8e0a8e4dc6b7d, type: 3}
+      propertyPath: switchInLangRu
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5211440851732688448, guid: 51b50da3162e38b4bab8e0a8e4dc6b7d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

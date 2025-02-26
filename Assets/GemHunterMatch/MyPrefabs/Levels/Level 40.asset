@@ -13,15 +13,13 @@ MonoBehaviour:
   m_Name: Level 40
   m_EditorClassIdentifier: 
   level: 40
-  MaxMove: 40
+  MaxMove: 30
   LowMoveTrigger: 3
   <GemGoals>k__BackingField:
   - Gem: {fileID: 2206938031270595392, guid: 0a54b5a0014ab394c8acc998e5cec84b, type: 3}
     Count: 8
   - Gem: {fileID: 6911383413579268359, guid: 8f77ec4c0df856d48a96a85287ccb963, type: 3}
     Count: 24
-  - Gem: {fileID: 3997245007397222790, guid: 97aab3c4d23edee47bbc70ca25eb7d79, type: 3}
-    Count: 27
   <ObstaclesGoals>k__BackingField: []
   <UnderGemGoals>k__BackingField:
   - UnderGem: {fileID: 4384593386256702642, guid: a6ef71296f68c07428ff5d2e14d0abbf, type: 3}

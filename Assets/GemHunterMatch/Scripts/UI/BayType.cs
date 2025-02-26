@@ -2,6 +2,7 @@
 {
     public enum BayType 
     {
-      Moves
+      Moves,
+      RewardAds
     }
 }

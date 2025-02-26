@@ -64,6 +64,7 @@ namespace Assets.GemHunterMatch.Scripts
         {
             this.wallet = wallet;
             CoroutineHandler.StartRoutine(Load());
+          
             foreach (var item in levelConfig.GemGoals)
             {
                 var goal = new Goals();
@@ -89,6 +90,8 @@ namespace Assets.GemHunterMatch.Scripts
             GoalLeft = Goals.Count;
           
         }
+
+      
 
         private IEnumerator Load()
         {
@@ -235,7 +238,9 @@ namespace Assets.GemHunterMatch.Scripts
 
             if (isConditions)
             {
-                OnShowMessages.Invoke("victory");
+
+                OnShowMessages.Invoke("Victory!!!");
+                yield return new WaitForSeconds(0.5f);
                 AudioManager.instance.PlayEffect("chime");
  
                 yield return HandlerCoroutine.StartRoutine(levelFinishHandler.ToFinish());
@@ -246,10 +251,11 @@ namespace Assets.GemHunterMatch.Scripts
             }
             else
             {
-                OnShowMessages.Invoke("fail");
+                yield return new WaitForSeconds(1.0f);
+                OnShowMessages.Invoke("Fail");
                 AudioManager.instance.PlayEffect("jingle_chime");
 
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1.0f);
 
                 OnAllGoalFinished.Invoke(isConditions);
             }
@@ -260,7 +266,11 @@ namespace Assets.GemHunterMatch.Scripts
             AddScoreInProgress();
           
             Location currentLocation = YandexGame.Instance.progressData.locations[GlobalMediator.instance.SelectLocation];
-            currentLocation.completedLevels ++;
+            int number = (GlobalMediator.instance.SelectLevel - currentLocation.startLevel) - currentLocation.completedLevels;
+
+            if (number == 0)
+                currentLocation.completedLevels++;
+
 
             //int nextLevel = levelConfig.level + 1;
             //if (nextLevel > currentLocation.endNumberLevel)
@@ -313,9 +323,9 @@ namespace Assets.GemHunterMatch.Scripts
             }
         }
 
-        internal void Matched(Obstacle obstacle)
+        public void Matched(Obstacle obstacle)
         {
-            throw new NotImplementedException();
+            Debug.Log($"Create Match Obstacles{ obstacle}");
         }
 
         public void ComputeCamera()

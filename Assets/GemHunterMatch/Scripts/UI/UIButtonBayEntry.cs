@@ -1,4 +1,5 @@
 ﻿using Assets.GameMains.Scripts.Bank;
+using Assets.YG.Scripts;
 
 using TMPro;
 
@@ -24,11 +25,22 @@ namespace Assets.GemHunterMatch.Scripts.UI
             this.type = type;
             this.gamePlay = gamePlay;
             this.wallet = wallet;
-
-            priceT.text ="x " + price.ToString();
-            button.onClick.AddListener(OnClick);
-            button.interactable = wallet.Check(price);
             this.window = window;
+
+            switch (type)
+            {
+                case BayType.Moves:
+                    priceT.text = "x " + price.ToString();
+                    button.interactable = wallet.Check(price);
+                    break;
+
+                case BayType.RewardAds:
+                   
+                    break;
+            }
+         
+            button.onClick.AddListener(OnClick);
+            
         }
 
         private void OnClick()
@@ -48,7 +60,11 @@ namespace Assets.GemHunterMatch.Scripts.UI
                         Debug.Log("No coins and plise add coins prise");
                     }
                     break;
-            
+
+                case BayType.RewardAds:
+                    YandexGame.Instance.RewardShow(0);
+                    Addressables.ReleaseInstance(window);
+                    break;
             }
         }
     }

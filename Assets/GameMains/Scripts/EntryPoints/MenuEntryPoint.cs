@@ -33,10 +33,10 @@ namespace Assets.GameMains.Scripts.EntryPoints
             _loaderScenes = loaderScenes;
             _wallet = wallet;
             _dailyRewards = dailyRewards;
-            wheelOfLuckService = new(wallet);
+            //wheelOfLuckService = new(wallet);
          
             GlobalMediator.instance.OnSelectedLevel += SelectedLevel;
-
+            YandexGame.Instance.OnRewardedVideo += Reward;
             StartCoroutine(Load());
         }
 
@@ -50,12 +50,16 @@ namespace Assets.GameMains.Scripts.EntryPoints
                  op.Initialize(_wallet, _dailyRewards,wheelOfLuckService); 
 
             }));
-            wheelOfLuckService.LoadData();
-            wheelOfLuckService.TryState();
+            //wheelOfLuckService.LoadData();
+            //wheelOfLuckService.TryState();
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset("Prefab_PortraitCamera"));
 
             _audioManager.Play();
 
+        }
+        private void Reward(int id)
+        {
+            if (id == 1) _wallet.Add(100);
         }
 
         private void SelectedLevel(int level)

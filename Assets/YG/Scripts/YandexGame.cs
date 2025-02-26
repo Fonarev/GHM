@@ -25,7 +25,7 @@ namespace Assets.YG.Scripts
         public LBData lbData{ get; private set; }
         public bool isAllowed { get; private set; }
         public bool isLoading { get; set; }
-        public string Language { get => language;  set => language = value; }
+        public string Language { get => language; private set => language = value; }
 
         public bool Auth { get => auth; }
         public bool nowAdsShow
@@ -88,6 +88,7 @@ namespace Assets.YG.Scripts
         public void Initialize()
         {
             Message("Initialize YG");
+          
         }
 
         #region FullAd
@@ -134,8 +135,10 @@ namespace Assets.YG.Scripts
         {
 #if !UNITY_EDITOR
             language = langs.GetLangs();
+              if (Language == "ru") langs.CreateLangs();
 #else
             Language = switchInLangRu == true ? "ru" : "en";
+            if (Language == "ru") langs.CreateLangs();
 #endif
         }
         #endregion
@@ -187,9 +190,10 @@ namespace Assets.YG.Scripts
         {
             if (isMessage) Debug.Log(message);
         }
+
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 progressData.Reset();
                 Save();

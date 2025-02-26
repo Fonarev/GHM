@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using Assets.YG.Scripts;
+
+using TMPro;
 
 using UnityEngine;
 
@@ -12,8 +14,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         public void Init(int level, int score)
         {
-            title.text = "level " + level.ToString();
-            scoreText.text = "Score:" + score.ToString();
+            title.text = Languages.GetContent("Level ") + level.ToString();
+            scoreText.text = Languages.GetContent("Score: ") + score.ToString();
 
             nextButton.Init(ButtonType.Next);
         }

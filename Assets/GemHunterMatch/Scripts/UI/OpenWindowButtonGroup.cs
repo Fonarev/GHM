@@ -64,7 +64,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                         CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GameSetitngsUI>("GameSettings", container, op =>
                         {
                             openedWindows[type] = op.gameObject;
-                            op.Init();
+                            op.Init(false,(type) => { Open(type); }); 
                         }));
 
                         break;

@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using Assets.YG.Scripts;
+
+using TMPro;
 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,7 +14,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         public void Init(string message)
         {
-            messages.text = message;
+            messages.text = Languages.GetContent(message);
         }
 
         public void ActionDestroy()

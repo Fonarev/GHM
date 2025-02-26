@@ -19,6 +19,10 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 {
                     locations[i].Init(location);
                 }
+                else
+                {
+                    locations[i].CloseMask(true);
+                }
            }
         }
     }

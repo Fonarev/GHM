@@ -25,14 +25,16 @@ namespace Assets.GameMains.Scripts.EntryPoints
             StartCoroutine(Load());
         }
         private IEnumerator Load()
-       {
+        {
             yield return CoroutineHandler.StartRoutine(LevelDatabase.Load());
             YandexGame.Instance.Load();
+            YandexGame.Instance.SetLanguage();
             yield return YandexGame.Instance.isLoading = true;
+          
             _dailyRewards.LoadDate();
             _wallet.Initialize();
             _loaderScenes.LoadLevel(Scenes.menu);
             yield return null;
-       }
+        }
     }
 }

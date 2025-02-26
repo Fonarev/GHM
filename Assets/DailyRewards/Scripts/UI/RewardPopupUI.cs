@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.YG.Scripts;
+
+using System;
 
 using TMPro;
 
@@ -28,7 +30,7 @@ namespace Assets.DailyRewards.Scripts.UI
 
         public void Init(Reward reward, Action close = null )
         {
-            nameType.text = reward.type.ToString();
+            nameType.text = Languages.GetContent("Coin");
             amount.text = reward.amount.ToString();
             icon.sprite = reward.sprite;
             onButton.onClick.AddListener(()=> close.Invoke());

@@ -1,4 +1,5 @@
-﻿using Assets.GameMains.Scripts.AudiosSources;
+﻿using Assets.GameMains.Scripts;
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.YG.Scripts;
 
@@ -30,7 +31,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public void Init(GamePlay gamePlay)
         {
             this.gamePlay = gamePlay;
-
+           
             foreach (var bonus in gamePlay.bonusList)
             {
                 if (bonus.UsedBonusGem.GemType != -2)
@@ -38,15 +39,15 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     CreateEntry(bonus);
                 }
             }
-
+            GlobalMediator.instance.OnAddBonus += UsedBonusItem;
             gamePlay.OnUsedBonusItem += UsedBonusItem;
         }
 
         private void CreateEntry(BonusGemBonusItem bonus)
         {
-            int amountData = YandexGame.Instance.progressData.bonusGemItem[bonus.UsedBonusGem.GemType];
+            int amountData = YandexGame.Instance.progressData.GetBonusGemAmount(bonus.UsedBonusGem.GemType);
             UIItemEntry entry = Instantiate(item, transform);
-            entry.Init(bonus.DisplaySprite, amountData);
+            entry.Init(bonus, amountData);
             bonusItems[bonus.UsedBonusGem.GemType] = entry;
 
             entry.Button.onClick.AddListener(() =>
