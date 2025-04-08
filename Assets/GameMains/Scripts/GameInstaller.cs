@@ -4,6 +4,9 @@ namespace Assets.GameMains.Scripts
 {
     public class GameInstaller : Installer
     {
-
+        public override void Installize()
+        {
+        
+        }
     }
 }

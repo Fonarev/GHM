@@ -6,6 +6,8 @@ using Match3;
 using System;
 using System.Collections.Generic;
 
+using UnityEditor;
+
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -39,6 +41,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         private HintShowMatches hint;
         private Placements placement;
         private EffectController effectController;
+        private GlobalMediator mediator;
         private GamePlay gamePlay;
 
         private bool isInit;
@@ -74,8 +77,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
 
         }
 
-        public void Initialize(GamePlay gamePlay)
+        public void Initialize(GlobalMediator mediator, GamePlay gamePlay)
         {
+            this.mediator = mediator;
             this.gamePlay = gamePlay;
 
             PoolEffect = new(transform);
@@ -170,7 +174,7 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
         {
 
             if (Instance == null)
-                instance = GameObject.Find(LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel).gridBoardReference + "(Clone)").GetComponent<GridBoard>();
+                instance = GameObject.Find(LevelDatabase.GetLevel(GlobalMediator.SelectLevel).gridBoardReference + "(Clone)").GetComponent<GridBoard>();
         }
 
         public void UnregisterDeletedCallback(Vector3Int cellPosition, Action callback)

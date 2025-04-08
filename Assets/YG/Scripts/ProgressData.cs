@@ -39,13 +39,13 @@ namespace Assets.YG.Scripts
 
             locations[1] = new Location(1, 1, true, true);
 
-            //locations[2] = new Location(2, 21,true) { completedLevels = 20};
+            locations[2] = new Location(2, 21, false);
 
-            //locations[3] = new Location(3, 41,true) { completedLevels = 20 };
+            locations[3] = new Location(3, 41, false);
 
-            //locations[4] = new Location(4, 61);
-            //locations[5] = new Location(5, 81);
-            //locations[6] = new Location(6, 101);
+            locations[4] = new Location(4, 61);
+            locations[5] = new Location(5, 81);
+            locations[6] = new Location(6, 101);
 
         }
 
@@ -64,12 +64,11 @@ namespace Assets.YG.Scripts
         {
             if (bonusGemItem.TryGetValue(type, out var amount))
             {
-                amount += value;
-                bonusGemItem[type] += 1;
+                bonusGemItem[type] += value;
             }
             else
             {
-                bonusGemItem[type] = 1;
+                bonusGemItem[type] = value;
             }
             YandexGame.Instance.Save();
         }

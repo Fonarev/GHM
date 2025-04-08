@@ -102,6 +102,7 @@ MonoBehaviour:
   effectMatch:
   - {fileID: 2758479736788193342, guid: 2a90820f70051bc40b73a34d8d77cec7, type: 3}
   UISprite: {fileID: 21300000, guid: c0227704aa781d5449b9eed7d70b2655, type: 3}
+  scoreReward: 10
   SpeedMultiplier: 1
   Shapes:
   - CanMirror: 0
@@ -116,4 +117,4 @@ MonoBehaviour:
       y: -1
       width: 1
       height: 1
-  TriggerSound: {fileID: 8300000, guid: e53c50cdd14c0004f8f381d4a956ab7b, type: 3}
+  TriggerSound: explosion_large_01

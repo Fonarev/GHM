@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Assets.GameMains.Scripts;
+
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -9,13 +11,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private RectTransform container;
         [SerializeField] private List<LevelButtonSelectUI> levelButtons;
 
-        public void Init(Location location)
+        public void Init(GlobalMediator mediator, Location location)
         {
             for (int i = 0; i < levelButtons.Count; i++)
             {
                 LevelButtonSelectUI level = levelButtons[i];
                 int numberLevel = location.startLevel + i;
-                level.Init(location.number, numberLevel);
+                level.Init(mediator,location.number, numberLevel);
             }
 
             for (int i = 0; i < location.completedLevels; i++)

@@ -39,7 +39,7 @@ namespace Assets.GemHunterMatch.Scripts
 
             foreach (var state in BlockState)
             {
-                //GridBoard.Instance.PoolEffect.Create.AddNewInstance(state.UndoneVFX, 4);
+                //GridBoard.instance.PoolEffect.Create.AddNewInstance(state.UndoneVFX, 4);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Assets.GemHunterMatch.Scripts
             m_CurrentState = newState;
             //play the undone effect of the state before this one
             if (m_CurrentState - 1 >= 0)
-                //GameManager.Instance.PoolSystem.PlayInstanceAt(BlockState[m_CurrentState - 1].UndoneVFX, transform.position);
+                //GameManager.instance.PoolSystem.PlayInstanceAt(BlockState[m_CurrentState - 1].UndoneVFX, transform.position);
 
                 if (m_CurrentState < BlockState.Length)
                 {

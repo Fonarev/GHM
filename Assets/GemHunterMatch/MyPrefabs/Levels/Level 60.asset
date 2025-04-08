@@ -21,7 +21,7 @@ MonoBehaviour:
   <ObstaclesGoals>k__BackingField: []
   <UnderGemGoals>k__BackingField:
   - UnderGem: {fileID: 4384593386256702642, guid: a6ef71296f68c07428ff5d2e14d0abbf, type: 3}
-    Count: 30
+    Count: 28
   BorderMargin: 0.3
   Background: {fileID: 0}
   tutorial: {fileID: 0}

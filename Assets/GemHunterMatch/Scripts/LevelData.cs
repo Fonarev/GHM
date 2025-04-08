@@ -9,7 +9,7 @@ namespace Match3
     /// </summary>
     public class LevelData 
     {
-        //public static LevelData Instance { get; private set; }
+        //public static LevelData instance { get; private set; }
     
         //[Serializable]
         //public class GemGoal
@@ -50,10 +50,10 @@ namespace Match3
 
         //private void Awake()
         //{
-        //    Instance = this;
+        //    instance = this;
         //    RemainingMove = MaxMove;
         //    GoalLeft = GemGoals.Length;
-        //    //GameManager.Instance.StartLevel();
+        //    //GameManager.instance.StartLevel();
         //}
 
         //void Start()
@@ -71,7 +71,7 @@ namespace Match3
         //    //and recompute camera zoom
         //    if (Screen.width != m_StartingWidth || Screen.height != m_StartingHeight)
         //    {
-        //        //GameManager.Instance.ComputeCamera();
+        //        //GameManager.instance.ComputeCamera();
         //    }
         //}
 
@@ -84,7 +84,7 @@ namespace Match3
         //            if (goal.Count == 0)
         //                return false;
                 
-        //            //UIHandler.Instance.AddMatchEffect(gem);
+        //            //UIHandler.instance.AddMatchEffect(gem);
                 
         //            goal.Count -= 1;
         //            OnGoalChanged?.Invoke(gem.GemType, goal.Count);
@@ -94,8 +94,8 @@ namespace Match3
         //                GoalLeft -= 1;
         //                if (GoalLeft == 0)
         //                {
-        //                    //GameManager.Instance.WinStar();
-        //                    //GameManager.Instance.Board.ToggleInput(false);
+        //                    //GameManager.instance.WinStar();
+        //                    //GameManager.instance.Board.ToggleInput(false);
         //                    OnAllGoalFinished?.Invoke();
         //                }
         //            }
@@ -125,7 +125,7 @@ namespace Match3
 
         //    if (prev > LowMoveTrigger && RemainingMove <= LowMoveTrigger)
         //    {
-        //        //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.LowMove);
+        //        //UIHandler.instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.LowMove);
         //    }
 
         //    if (RemainingMove <= 0)

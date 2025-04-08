@@ -62,7 +62,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     i--;
 
                     //if (anim.EndClip != null)
-                    //GameManager.Instance.PlaySFX(anim.EndClip);
+                    //GameManager.instance.PlaySFX(anim.EndClip);
                 }
                 else
                 {

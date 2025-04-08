@@ -39,27 +39,22 @@ namespace Assets.AssetLoaders
 
         public static IEnumerator Load<T>(string name , Action<T> callback = null)
         {
-            if (!loadingAssets.ContainsKey(typeof(T)))
+            AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(name);
+
+            yield return handle;
+
+            var result = handle.Result;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(name);
-
-                yield return handle;
-
-                var result = handle.Result;
-              
-                if (handle.Status == AsyncOperationStatus.Succeeded)
-                {
-                    if (callback != null)
-                        callback.Invoke(result);
-
-                    loadingAssets[result] = handle;
-                }
-                else
-                {
-                    Debug.LogError($"Failed to load asset: {name}");
-                }
+                if (callback != null)
+                    callback.Invoke(result);
             }
-          
+            else
+            {
+                Debug.LogError($"Failed to load asset: {name}");
+            }
+
         }
 
         public static IEnumerator LoadList<T>(string assetName, Action<T> callback = null)

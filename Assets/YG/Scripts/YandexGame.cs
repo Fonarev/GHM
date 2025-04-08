@@ -1,8 +1,10 @@
+using Assets.GameMains.Scripts;
 using Assets.YG.Scripts.LB;
 
 using Newtonsoft.Json;
 
 using System;
+using System.Collections;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
@@ -39,8 +41,8 @@ namespace Assets.YG.Scripts
             }
         }
 
-        public bool NowFullAd { get => nowFullAd; set { nowFullAd = value; OnNowAdsShow?.Invoke(NowFullAd); Message($"{NowFullAd}"); } }
-        public bool NowVideoAd { get => nowVideoAd; set { nowVideoAd = value; OnNowAdsShow?.Invoke(NowVideoAd); Message($"{NowVideoAd}"); } }
+        public bool NowFullAd { get => nowFullAd; set { nowFullAd = value; mediator.StateNowAdsShow = value; OnNowAdsShow?.Invoke(nowFullAd); Message($"{NowFullAd}"); } }
+        public bool NowVideoAd { get => nowVideoAd; set { nowVideoAd = value; mediator.StateNowAdsShow = value; OnNowAdsShow?.Invoke(nowVideoAd); Message($"{NowVideoAd}"); } }
 
         private CloudStorage storage;
         private FullAd fullAd;
@@ -53,6 +55,7 @@ namespace Assets.YG.Scripts
         private bool nowFullAd;
         private bool nowVideoAd;
         private string language = "en";
+        private GlobalMediator mediator;
 
         private void Awake()
         {
@@ -85,12 +88,25 @@ namespace Assets.YG.Scripts
             Message($"Created:{gameObject.name},singleton:{singleton},isDebug:{isMessage}");
         }
 
-        public void Initialize()
+        public void Initialize(GlobalMediator mediator)
         {
+            this.mediator = mediator;
             Message("Initialize YG");
-          
         }
+        public IEnumerator LoadDatas()
+        {
+            Load();
+            InitPlayer();
+            InitLB();
+            SetLanguage();
+            //GetPayments();
 
+            while (!isLoading)
+                yield return new WaitForSeconds(0.1f);
+
+            FullAdShow();
+            GameReady();
+        }
         #region FullAd
         public void FullAdShow() => fullAd.Show();
         public void OpenFullAd() => fullAd.Open();
@@ -155,11 +171,15 @@ namespace Assets.YG.Scripts
         [DllImport("__Internal")] private static extern string InitPlayer_js();
         public void InitPlayer()
         {
+#if !UNITY_EDITOR
             string playerData = InitPlayer_js();
             player = JsonConvert.DeserializeObject<PlayerAuth>(playerData);
 
             TryAuth();
             Message(playerData);
+#else
+            player = new PlayerAuth() { playerAuth = "true", playerId = "1", };
+#endif
         }
 
         public void SetInitializationSDK(string playerData)
@@ -172,7 +192,7 @@ namespace Assets.YG.Scripts
 
         private void TryAuth() => auth = player.playerAuth == "rejected" ? false : true;
 
-        #endregion
+#endregion
 
         [DllImport("__Internal")] private static extern void GameReadyAPI();
         public void GameReady()
@@ -193,11 +213,12 @@ namespace Assets.YG.Scripts
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                progressData.Reset();
-                Save();
-            }
+            //if (Input.GetKeyDown(KeyCode.D))
+            //{
+            //    NewLeaderboardScores("Score", 0);
+            //    progressData.Reset();
+            //    Save();
+            //}
         }
     }
 }

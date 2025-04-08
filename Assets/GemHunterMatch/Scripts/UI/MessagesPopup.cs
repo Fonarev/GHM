@@ -1,9 +1,9 @@
-﻿using Assets.YG.Scripts;
-
+﻿using Assets.AssetLoaders;
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 
 namespace Assets.GemHunterMatch.Scripts.UI
 {
@@ -11,10 +11,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
     {
 
         [SerializeField] private TextMeshProUGUI messages;
-
-        public void Init(string message)
+        [SerializeField] private Image message;
+        [SerializeField] private Sprite sprite_Ru;
+        public void Init()
         {
-            messages.text = Languages.GetContent(message);
+            //messages.text = Languages.GetContent(message);
+            message.sprite = sprite_Ru;
+
         }
 
         public void ActionDestroy()

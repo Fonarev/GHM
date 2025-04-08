@@ -1,8 +1,8 @@
 ﻿using Assets.AssetLoaders;
 using Assets.DailyRewards.Scripts;
 using Assets.DailyRewards.Scripts.UI;
+using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
-using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.ShopStore.Scripts;
 
@@ -20,9 +20,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         public Action<bool> OnChangedState;
 
         [SerializeField] private OpenWindowButton[] openWindow;
-
+        private GlobalMediator mediator;
         private DailyRewardsService dailyService;
-        private Wallet wallet;
         private Transform container;
         private Dictionary<OpenButtonType, GameObject> openedWindows = new();
         private Dictionary<OpenButtonType, OpenWindowButton> openWindowButtons = new();
@@ -31,10 +30,10 @@ namespace Assets.GemHunterMatch.Scripts.UI
         //    dailyService.OnClaimReward -= ChangeState;
         //    OnOpenWindow -= Open;
         //}
-        public void Init(DailyRewardsService dailyService, Wallet wallet,Transform container)
+        public void Init(GlobalMediator mediator, DailyRewardsService dailyService,Transform container)
         {
+            this.mediator = mediator;
             this.dailyService = dailyService;
-            this.wallet = wallet;
             this.container = container;
 
             foreach (var button in openWindow)
@@ -64,7 +63,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                         CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GameSetitngsUI>("GameSettings", container, op =>
                         {
                             openedWindows[type] = op.gameObject;
-                            op.Init(false,(type) => { Open(type); }); 
+                            op.Init(mediator, false,(type) => { Open(type); }); 
                         }));
 
                         break;
@@ -73,7 +72,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                         CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<ShopUI>("Shop", container, op =>
                         {
                             openedWindows[type] = op.gameObject;
-                            op.Init(wallet);
+                            op.Init(mediator);
                         }));
                         break;
 
@@ -84,7 +83,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                             op.Init(reward, () => 
                             {
                                 op.gameObject.SetActive(false);
-                                wallet.Add(reward.amount);
+                                mediator.Add(reward.amount);
                                 Addressables.ReleaseInstance(op.gameObject);
                                 Open(OpenButtonType.DailyRewards);
                             });

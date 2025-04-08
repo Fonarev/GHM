@@ -1,7 +1,6 @@
 ﻿using Assets.AssetLoaders;
 using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
-using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts.GenerateGridBoard;
 using Assets.YG.Scripts;
@@ -11,6 +10,8 @@ using Match3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using UnityEditor;
 
 using UnityEngine;
 
@@ -54,15 +55,14 @@ namespace Assets.GemHunterMatch.Scripts
         public int Score{ get; private set; }
         private LevelConfig levelConfig;
         private GridBoard gridBoard;
-      
-        private Wallet wallet;
+        private GlobalMediator mediator;
         private bool isConditions;
         private LevelFinishHandler levelFinishHandler;
         private int remainingMove;
 
-        public void Initialize(Wallet wallet)
+        public void Initialize(GlobalMediator mediator)
         {
-            this.wallet = wallet;
+            this.mediator = mediator;
             CoroutineHandler.StartRoutine(Load());
           
             foreach (var item in levelConfig.GemGoals)
@@ -95,12 +95,12 @@ namespace Assets.GemHunterMatch.Scripts
 
         private IEnumerator Load()
         {
-            levelConfig = LevelDatabase.GetLevel(GlobalMediator.instance.SelectLevel);
+            levelConfig = LevelDatabase.GetLevel(GlobalMediator.SelectLevel);
            
             yield return CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GridBoard>(levelConfig.gridBoardReference, null, op =>
             {
                 gridBoard = op;
-                gridBoard.Initialize(this); 
+                gridBoard.Initialize(mediator,this); 
             }));
             yield return CoroutineHandler.StartRoutine(LoaderAsset.LoadList<BonusGemBonusItem>("bonusItem", op => { bonusItems[op.UsedBonusGem.GemType] = op; }));
             ComputeCamera();
@@ -265,18 +265,12 @@ namespace Assets.GemHunterMatch.Scripts
         {
             AddScoreInProgress();
           
-            Location currentLocation = YandexGame.Instance.progressData.locations[GlobalMediator.instance.SelectLocation];
-            int number = (GlobalMediator.instance.SelectLevel - currentLocation.startLevel) - currentLocation.completedLevels;
+            Location currentLocation = YandexGame.Instance.progressData.locations[mediator.SelectLocation];
+            int number = (GlobalMediator.SelectLevel - currentLocation.startLevel) - currentLocation.completedLevels;
 
             if (number == 0)
                 currentLocation.completedLevels++;
 
-
-            //int nextLevel = levelConfig.level + 1;
-            //if (nextLevel > currentLocation.endNumberLevel)
-
-
-            //    currentLocation.completedLevels++;
             YandexGame.Instance.Save();
             yield return null;
         }
@@ -294,7 +288,7 @@ namespace Assets.GemHunterMatch.Scripts
 
         public void AddCoins(int amount)
         {
-            wallet.Add(amount);
+            mediator.Add(amount);
         }
 
         public void ActivateBonusItem(BonusGemBonusItem item)

@@ -17,6 +17,7 @@ namespace Assets.YG.Scripts
             Message("FullAdShow");
 #else
             Message("FullAdShow");
+            //yandex.NowFullAd = true;
 #endif
         }
 

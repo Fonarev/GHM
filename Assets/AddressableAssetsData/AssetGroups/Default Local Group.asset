@@ -567,6 +567,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1a428dde9c57c8439d136e79d538bc3
+    m_Address: Assets/GemHunterMatch/Audio/EffectAudio
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - audioEffect
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19756ff830c3bc14980c0da32ba4351d
+    m_Address: Assets/GemHunterMatch/Audio/BgMusic
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bgMusic
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b69c6416afae54b488f8a02e685c4477
+    m_Address: label_Ru
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e1261942c0e7c0c47ba4270a26f5bf42, type: 2}
   m_SchemaSet:

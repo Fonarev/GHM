@@ -8,13 +8,14 @@ namespace Assets.GameMains.Scripts
 {
     public class PauseController : MonoBehaviour
     {
-        public event Action<bool> OnPause;
-        public event Action<bool> OnPauseButton;
+        public event Action<bool> OnApplicationFocused;
 
         [SerializeField] private bool singleton;
         [SerializeField] private bool isMessage;
 
-        public static PauseController instance;
+        public static PauseController Instance => instance;
+        private static PauseController instance;
+        private GlobalMediator mediator;
 
         private void Awake()
         {
@@ -39,13 +40,10 @@ namespace Assets.GameMains.Scripts
             #endregion
         }
 
-        public void Initialize()
+        public void Initialize(GlobalMediator mediator)
         {
-            YandexGame.Instance.OnNowAdsShow += Pause;
+            this.mediator = mediator;
         }
-
-        public void PauseButton(bool isPause) => OnPauseButton?.Invoke(isPause);
-        public void Pause(bool isPause) => OnPause?.Invoke(isPause);
 
         private void OnApplicationFocus(bool hasFocus)
         {
@@ -58,6 +56,13 @@ namespace Assets.GameMains.Scripts
             Pause(isPaused);
             Message($"ApplicationPause {isPaused}");
         }
+
+        private void Pause(bool isPause)
+        {
+            mediator?.ApplicationFocus(isPause);
+            OnApplicationFocused?.Invoke(isPause);
+        }
+
         private void Message(string message)
         {
             if (isMessage) Debug.Log(message);

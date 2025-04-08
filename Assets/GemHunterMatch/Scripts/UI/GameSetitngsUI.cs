@@ -1,4 +1,5 @@
-﻿using Assets.GameMains.Scripts.AudiosSources;
+﻿using Assets.GameMains.Scripts;
+using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
 
 using System;
@@ -12,59 +13,36 @@ namespace Assets.GemHunterMatch.Scripts.UI
     {
         [SerializeField] private UIButtonEntry closeButton;
         [SerializeField] private UIButtonEntry menuButton;
-        [SerializeField] private OpenWindowButton shopButton;
-        [SerializeField] private OpenWindowButton dailyRewardButton;
         [SerializeField] private Toggle[] settingAudio;
+        private GlobalMediator mediator;
 
-        public void Init(bool isGamePlay = false, Action<OpenButtonType> onClick = null)
+        public void Init(GlobalMediator mediator,  bool isGamePlay = false, Action<OpenButtonType> onClick = null)
         {
-            settingAudio[0].isOn = AudioManager.instance.isBGMusic;
+            this.mediator = mediator;
+            settingAudio[0].isOn = mediator.IsEnableBackgroundMusic;
             settingAudio[0].onValueChanged.AddListener(OnClick);
 
-            settingAudio[1].isOn = AudioManager.instance.isEffectAudio;
-            settingAudio[1].onValueChanged.AddListener((value)=> { AudioManager.instance.isEffectAudio = value; });
+            settingAudio[1].isOn = mediator.IsEnableAudioEffect;
+            settingAudio[1].onValueChanged.AddListener((value)=> { mediator.IsEnableAudioEffect = value; });
 
-            closeButton.Init(ButtonType.Close, gameObject);
+            closeButton.Init(mediator,ButtonType.Close, gameObject);
 
             if (isGamePlay)
             {
-                menuButton.Init(ButtonType.Menu);
-                dailyRewardButton.gameObject.SetActive(false);
-                InitButton(onClick);
+                menuButton.Init(mediator,ButtonType.Menu);
             }
             else
             {
                 menuButton.gameObject.SetActive(false);
-                InitButton(onClick);
-                dailyRewardButton.Init((type) =>
-                {
-                    if (onClick != null)
-                    {
-                        AudioManager.instance.PlayEffect(EffectClip.click);
-                        gameObject.SetActive(false);
-                        onClick.Invoke(type);
-                    }
-                });
             }
            
         }
 
-        private void InitButton(Action<OpenButtonType> onClick)
-        {
-            shopButton.Init((type) =>
-            {
-                if (onClick != null)
-                {
-                    AudioManager.instance.PlayEffect(EffectClip.click);
-                    gameObject.SetActive(false);
-                    onClick.Invoke(type);
-                }
-            });
-        }
 
         private void OnClick(bool isEnable)
         {
-            AudioManager.instance.isBGMusic = isEnable;
+            mediator.IsEnableBackgroundMusic = isEnable;
+            AudioManager.instance.PlayBackgroundMusic("harp", false);
         }
     }
 }

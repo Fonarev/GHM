@@ -1,4 +1,5 @@
-﻿using Assets.YG.Scripts;
+﻿using Assets.GameMains.Scripts;
+using Assets.YG.Scripts;
 
 using TMPro;
 
@@ -12,12 +13,12 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private UIButtonEntry nextButton;
 
-        public void Init(int level, int score)
+        public void Init(GlobalMediator mediator, int level, int score)
         {
             title.text = Languages.GetContent("Level ") + level.ToString();
             scoreText.text = Languages.GetContent("Score: ") + score.ToString();
 
-            nextButton.Init(ButtonType.Next);
+            nextButton.Init(mediator,ButtonType.Next);
         }
     }
 }

@@ -38,9 +38,9 @@ namespace Assets.YG.Scripts
                { "Coin","Монета" },
                { "Daily ","День" },
 
-               { "Setting","Настройки" },
+               { "Settings","Настройки" },
                { "Music","Музыка" },
-               { "Effects","Эфекты" },
+               { "Effects","Эффекты" },
                { "Tutorials","Руководство" },
                { "Menu","Меню" },
                { "Back","Назад" },

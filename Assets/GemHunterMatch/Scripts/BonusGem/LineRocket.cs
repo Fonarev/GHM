@@ -15,7 +15,7 @@ namespace Match3
         public GameObject VisualPrefab;
         public bool Vertical;
 
-        public AudioClip TriggerSound;
+        public string TriggerSound;
         
         public override void Awake()
         {

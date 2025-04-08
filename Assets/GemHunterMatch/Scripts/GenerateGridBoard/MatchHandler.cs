@@ -380,9 +380,9 @@ namespace Assets.GemHunterMatch.Scripts.GenerateGridBoard
                         finalMatch.AddGem(gridBoard.contentCell[cell].ContainingGem);
                 }
               
-                AudioManager.instance.PlayEffect("math_" + 1.ToString(),0.5f);
+                AudioManager.instance.PlayEffect("math_" + 1.ToString());
 
-                //UIHandler.Instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.Match);
+                //UIHandler.instance.TriggerCharacterAnimation(UIHandler.CharacterAnimation.Match);
             }
         }
 

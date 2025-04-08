@@ -18,7 +18,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
         private Button Button => GetComponent<Button>();
         private TextMeshProUGUI NumberLevel => GetComponentInChildren<TextMeshProUGUI>();
 
-        public void Init(int location, int level, bool isLock = true, bool isComleted = false)
+        public void Init(GlobalMediator mediator, int location, int level, bool isLock = true, bool isComleted = false)
         {
             Lock.gameObject.SetActive(isLock);
             Button.interactable = !isLock;
@@ -30,7 +30,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
             Button.onClick.AddListener(()=>
             {
-                GlobalMediator.instance.SelectedLevel(location, level);
+                mediator.SelectedLevel(location, level);
                 AudioManager.instance.PlayEffect(EffectClip.click);
             });
         }

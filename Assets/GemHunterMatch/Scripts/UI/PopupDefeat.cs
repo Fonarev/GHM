@@ -1,5 +1,5 @@
 ﻿using Assets.AssetLoaders;
-using Assets.GameMains.Scripts.Bank;
+using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts;
 using Assets.GemHunterMatch.Scripts.UI;
@@ -18,11 +18,11 @@ namespace Assets.GemHunterMatch.UI
         [SerializeField] private UIButtonEntry exit;
         [SerializeField] private RectTransform container;
 
-        public void Init(GamePlay gamePlay, Wallet wallet)
+        public void Init(GlobalMediator mediator, GamePlay gamePlay)
         {
-            exit.Init(ButtonType.Menu);
-            bayMoves.Init(BayType.Moves, gamePlay, wallet,gameObject);
-            RewardAdsMoves.Init(BayType.RewardAds, gamePlay, wallet, gameObject);
+            exit.Init(mediator, ButtonType.Menu);
+            bayMoves.Init(BayType.Moves, gamePlay, mediator, gameObject);
+            RewardAdsMoves.Init(BayType.RewardAds, gamePlay, mediator, gameObject);
         }
 
         public void Show(List<Goals> goals)

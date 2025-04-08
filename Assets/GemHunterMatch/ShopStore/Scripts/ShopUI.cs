@@ -1,7 +1,6 @@
+using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
-using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
-using Assets.GemHunterMatch.Scripts.UI;
 using Assets.YG.Scripts;
 
 using TMPro;
@@ -18,26 +17,33 @@ namespace Assets.GemHunterMatch.ShopStore.Scripts
         [SerializeField] private ShopItemData ShopItemData;
         [SerializeField] private ShopItemEntry previwItemPrefab;
         [SerializeField] private TextMeshProUGUI walletAmount;
-
-        private Wallet wallet;
-
+        private GlobalMediator mediator;
+        private void OnEnable()
+        {
+            if(mediator!= null)
+            {
+                walletAmount.text = mediator.Coins.ToString();
+                mediator.OnCoinsChanged += Wallet_OnValueChanged;
+                walletAmount.text = mediator.Coins.ToString();
+            }
+        }
         private void OnDisable()
         {
-            wallet.OnValueChanged -= Wallet_OnValueChanged;
+            mediator.OnCoinsChanged -= Wallet_OnValueChanged;
         }
 
-        public void Init(Wallet wallet)
+        public void Init(GlobalMediator mediator)
         {
-            this.wallet = wallet;
+            this.mediator = mediator;
 
             foreach (var item in ShopItemData.items)
             {
                 var pref = Instantiate(previwItemPrefab,GridRootItem);
-                pref.Init(item,wallet);
+                pref.Init(mediator,item);
             }
-            rewardButton.onClick.AddListener(() => { YandexGame.Instance.RewardShow(1); });
-            walletAmount.text = wallet.Coins.ToString();
-            wallet.OnValueChanged += Wallet_OnValueChanged;
+            rewardButton.onClick.AddListener(() => { AudioManager.instance.PlayEffect(EffectClip.click); YandexGame.Instance.RewardShow(1); });
+            walletAmount.text = mediator.Coins.ToString();
+            mediator.OnCoinsChanged += Wallet_OnValueChanged;
             closeButton.onClick.AddListener(() => { AudioManager.instance.PlayEffect(EffectClip.click); gameObject.SetActive(false); });
         }
 

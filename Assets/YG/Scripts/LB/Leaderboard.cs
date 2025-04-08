@@ -33,8 +33,10 @@ namespace Assets.YG.Scripts.LB
         {
 #if !UNITY_EDITOR
             GetLeaderboardScores(nameLB, maxQuantityPlayers, quantityTop, quantityAround, photoSizeLB, auth);
-#endif
+#else
+            yandex.SetLB(new LBData() { thisPlayer = new LBThisPlayerData() { rank = 0, score = 0 } });  
             yandex.Message("Get Leaderboard");
+#endif
         }
 
         public void LeaderboardEntries(string data)

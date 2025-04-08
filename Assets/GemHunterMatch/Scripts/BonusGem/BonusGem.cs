@@ -49,8 +49,8 @@ namespace Match3
                 //normally the game will instantiate the bonus vfx when it first get spawn, but if using a bonus item
                 //before that happen, this ensure the vfx will get instantiated first 
                 GridBoard.Instance.PoolEffect.PlayInstance(effectPrefab.type, position);
-                //GameManager.Instance.PoolSystem.AddNewInstance(effectPrefab, 8);
-                //GameManager.Instance.PoolSystem.PlayInstanceAt(effectPrefab, position);
+                //GameManager.instance.PoolSystem.AddNewInstance(effectPrefab, 8);
+                //GameManager.instance.PoolSystem.PlayInstanceAt(effectPrefab, position);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.YG.Scripts;
@@ -20,10 +21,12 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private RectTransform rootPrefabs;
 
         private SelectLevelsUI selectLevels;
+        private GlobalMediator mediator;
         private Location location;
 
-        public void Init(Location location)
+        public void Init(GlobalMediator mediator, Location location)
         {
+            this.mediator = mediator;
             this.location = location;
             openselectLevels.interactable = location.isLock;
             CloseMask(!location.isLock);
@@ -52,7 +55,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 StartCoroutine(LoaderAsset.InstantiateAsset<SelectLevelsUI>("SelectLevels", rootPrefabs, op =>
                 {
                     selectLevels = op;
-                    selectLevels.Init(location);
+                    selectLevels.Init(mediator,location);
                 }));
 
                 rootPrefabs.gameObject.SetActive(true);

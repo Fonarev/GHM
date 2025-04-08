@@ -10,7 +10,7 @@ namespace Match3
     /// </summary>
     public class SmallBomb : BonusGem
     {
-        public AudioClip TriggerSound;
+        public string TriggerSound;
         
         public override void Awake()
         {

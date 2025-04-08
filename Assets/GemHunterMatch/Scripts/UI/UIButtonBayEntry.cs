@@ -1,4 +1,4 @@
-﻿using Assets.GameMains.Scripts.Bank;
+﻿using Assets.GameMains.Scripts;
 using Assets.YG.Scripts;
 
 using TMPro;
@@ -15,23 +15,23 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private int price;
         [SerializeField] private int moves;
         private GamePlay gamePlay;
-        private Wallet wallet;
+        private GlobalMediator mediator;
         private GameObject window;
 
         private Button button => GetComponent<Button>();
         private TextMeshProUGUI priceT => GetComponentInChildren<TextMeshProUGUI>();
-        public void Init(BayType type, GamePlay gamePlay, Wallet wallet,GameObject window)
+        public void Init(BayType type, GamePlay gamePlay, GlobalMediator mediator,GameObject window)
         {
             this.type = type;
             this.gamePlay = gamePlay;
-            this.wallet = wallet;
+            this.mediator = mediator;
             this.window = window;
 
             switch (type)
             {
                 case BayType.Moves:
                     priceT.text = "x " + price.ToString();
-                    button.interactable = wallet.Check(price);
+                    button.interactable = mediator.Check(price);
                     break;
 
                 case BayType.RewardAds:
@@ -48,9 +48,9 @@ namespace Assets.GemHunterMatch.Scripts.UI
             switch(type)
             {
                 case BayType.Moves:
-                    if (wallet.Check(price))
+                    if (mediator.Check(price))
                     {
-                        wallet.Spend(price);
+                        mediator.Spend(price);
                         gamePlay.AddMoves(moves);
                         
                         Addressables.ReleaseInstance(window);

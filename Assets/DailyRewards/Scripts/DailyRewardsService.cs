@@ -1,5 +1,5 @@
 ﻿using Assets.AssetLoaders;
-using Assets.GameMains.Scripts.Bank;
+using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.Scripts.UI;
 using Assets.YG.Scripts;
@@ -19,6 +19,7 @@ namespace Assets.DailyRewards.Scripts
 
         public RewardsConfig data;
         private bool claimReward;
+        private GlobalMediator mediator;
 
         public bool ClaimReward
         {
@@ -35,11 +36,10 @@ namespace Assets.DailyRewards.Scripts
             }
         }
 
-        private readonly Wallet wallet;
 
-        public DailyRewardsService(Wallet wallet)
+        public DailyRewardsService(GlobalMediator mediator)
         {
-            this.wallet = wallet;
+            this.mediator = mediator;
         }
 
         private float TimeReset => data.timeReset;
@@ -88,7 +88,7 @@ namespace Assets.DailyRewards.Scripts
                 ClaimReward = false;
 
                 if (isAddRewardds)
-                    wallet.Add(reward.amount);
+                    mediator.Add(reward.amount);
             }
 
             return reward;

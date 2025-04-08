@@ -102,6 +102,7 @@ MonoBehaviour:
   effectMatch:
   - {fileID: 7200335071828383946, guid: 2401511a26e0b614c80588680195d923, type: 3}
   UISprite: {fileID: 21300000, guid: 702553098af67a645a282ce8b329ec8e, type: 3}
+  scoreReward: 10
   SpeedMultiplier: 1
   Shapes:
   - CanMirror: 0
@@ -117,5 +118,4 @@ MonoBehaviour:
       y: -4
       width: 0
       height: 4
-  UseEffect: {fileID: 9012753297738360650, guid: d0d98cbd61945ac43890f9997b6b7bb8, type: 3}
-  TriggerSound: {fileID: 8300000, guid: dc4fa3b4e75bbf24e8e51bc9f17ac22a, type: 3}
+  TriggerSound: chime

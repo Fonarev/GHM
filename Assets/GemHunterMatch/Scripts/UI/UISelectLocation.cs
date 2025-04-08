@@ -1,4 +1,5 @@
-﻿using Assets.YG.Scripts;
+﻿using Assets.GameMains.Scripts;
+using Assets.YG.Scripts;
 
 using UnityEngine;
 
@@ -11,13 +12,13 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private const int offset = 1;
 
-        public void Init()
+        public void Init(GlobalMediator mediator)
         {
            for (int i = 0; i < locations.Length; i++) 
            {
                 if (YandexGame.Instance.progressData.locations.TryGetValue(i + offset, out var location))
                 {
-                    locations[i].Init(location);
+                    locations[i].Init(mediator,location);
                 }
                 else
                 {

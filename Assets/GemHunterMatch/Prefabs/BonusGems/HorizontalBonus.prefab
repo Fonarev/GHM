@@ -102,6 +102,7 @@ MonoBehaviour:
   effectMatch:
   - {fileID: 3496490428925415611, guid: aed3c0acdb0f1f94d8643ead080c5bee, type: 3}
   UISprite: {fileID: 21300000, guid: a3c042e7079c8fc4b8d2ead6d6113868, type: 3}
+  scoreReward: 10
   SpeedMultiplier: 1
   Shapes:
   - CanMirror: 0
@@ -118,4 +119,4 @@ MonoBehaviour:
       height: 3
   VisualPrefab: {fileID: 2004717415917217116, guid: 2f499eb51442d584c8fbe1967c62e2fa, type: 3}
   Vertical: 0
-  TriggerSound: {fileID: 8300000, guid: cbd6e7774d789364090f22bb0271cf88, type: 3}
+  TriggerSound: fireball_blast_projectile_spell_01

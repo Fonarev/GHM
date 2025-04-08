@@ -77,7 +77,7 @@ namespace Match3
 
             public virtual bool CanBeBought()
             {
-                //return GameManager.Instance.Coins >= Price; 
+                //return GameManager.instance.Coins >= Price; 
                 return true;
             }
         

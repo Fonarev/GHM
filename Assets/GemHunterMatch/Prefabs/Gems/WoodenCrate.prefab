@@ -111,5 +111,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 300d57988ceb6154b8ebdc00614b5922, type: 3}
   - {fileID: 21300000, guid: d78687da77e2a5a4e9cb564a8a9e3988, type: 3}
   Health: 3
-  DamagedClip: {fileID: 8300000, guid: 745b0601a2e6edf419958550bdb2be02, type: 3}
+  DamagedClip: wood_tree_branch_move_15
   DamageEffect: {fileID: 8496191591587367252, guid: 4b068e7559536e548a1c9e17faaaf785, type: 3}

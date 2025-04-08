@@ -1,6 +1,6 @@
 ﻿using Assets.AssetLoaders;
+using Assets.GameMains.Scripts;
 using Assets.GameMains.Scripts.AudiosSources;
-using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.GemHunterMatch.ShopStore.Scripts;
 using Assets.GemHunterMatch.UI;
@@ -8,6 +8,7 @@ using Assets.YG.Scripts;
 
 using Match3;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,9 +27,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         [SerializeField] private AssetReference popupWin;
         [SerializeField] private TextMeshProUGUI levelNumber;
         [SerializeField] private OpenWindowButton settingsButton;
-
+        private GlobalMediator mediator;
         private GamePlay gamePlay;
-        private Wallet wallet;
         private LevelConfig level;
         public RectTransform rootGoals;
         [SerializeField] private RectTransform containerPopups;
@@ -42,7 +42,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
 
         private void OnDisable()
         {
-            wallet.OnValueChanged -= ValueChange;
+            mediator.OnCoinsChanged -= ValueChange;
+            mediator.OnOpenedShop -= OpenShop;
             gamePlay.OnGoalChanged -= GoalChange;
             gamePlay.OnMoveHappened -= MoveHappen;
             gamePlay.OnMoveTriger -= GamePlay_OnMoveTriger;
@@ -58,7 +59,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             //score.text = "Score: " + newScore.ToString();
             StartCoroutine(ScrollScore(oldScore, newScore));
         }
-       private IEnumerator ScrollScore(int oldScore,int newScore)
+        private IEnumerator ScrollScore(int oldScore,int newScore)
        {
             var content = Languages.GetContent("Score: ");
             var scroll = newScore - oldScore;
@@ -71,18 +72,20 @@ namespace Assets.GemHunterMatch.Scripts.UI
                 yield return scroll--;
             }
        }
-        public void Initialize(GamePlay gamePlay, Wallet wallet, LevelConfig level)
+        public void Initialize(GlobalMediator mediator, GamePlay gamePlay, LevelConfig level)
         {
+            this.mediator = mediator;
             this.gamePlay = gamePlay;
-            this.wallet = wallet;
+       
             this.level = level;
 
             levelNumber.text = Languages.GetContent("Level ") + level.level.ToString();
             moveCounter.text = level.MaxMove.ToString();
-            coins.text = wallet.Coins.ToString();
-            InitSettingsButton(wallet);
+            coins.text = mediator.Coins.ToString();
+            InitSettingsButton();
 
-            wallet.OnValueChanged += ValueChange;
+            mediator.OnCoinsChanged += ValueChange;
+            mediator.OnOpenedShop += OpenShop;
 
             gamePlay.OnGoalChanged += GoalChange;
             gamePlay.OnMoveHappened += MoveHappen;
@@ -92,12 +95,30 @@ namespace Assets.GemHunterMatch.Scripts.UI
             gamePlay.OnMachtedGem += MatchEffect;
             gamePlay.OnMachted += OnMachted;
             gamePlay.OnAddScore += OnAddScore;
+            
             score.text = Languages.GetContent("Score: ") + 0.ToString();
-            bonusGroup.Init(gamePlay);
+            bonusGroup.Init(mediator, gamePlay);
 
             InitGoals(gamePlay);
 
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<UIPopupLevelGoals>(popupLevelGoals, containerPopups, op => op.Init(gamePlay)));
+        }
+
+        private void OpenShop(BonusGemBonusItem obj)
+        {
+            if (shop == null)
+            {
+                CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<ShopUI>("Shop", containerPopups, op =>
+                {
+                    shop = op;
+                    op.Init(mediator);
+                }));
+            }
+            else
+            {
+                shop.gameObject.SetActive(true);
+            }
+
         }
 
         private void InitGoals(GamePlay gamePlay)
@@ -112,7 +133,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
             }
         }
 
-        private void InitSettingsButton(Wallet wallet)
+        private void InitSettingsButton()
         {
             settingsButton.Init((type) =>
             {
@@ -127,7 +148,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                     CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<GameSetitngsUI>("GameSettings", containerPopups, op =>
                     {
                         settihgs = op;
-                        op.Init(true, (type) =>
+                        op.Init(mediator, true, (type) =>
                         {
                             AudioManager.instance.PlayEffect(EffectClip.click);
                             if (shop != null)
@@ -141,7 +162,7 @@ namespace Assets.GemHunterMatch.Scripts.UI
                                 {
                                     shop = op;
                                     settihgs.gameObject.SetActive(false);
-                                    op.Init(wallet);
+                                    op.Init(mediator);
                                 }));
                             }
                         });
@@ -155,7 +176,8 @@ namespace Assets.GemHunterMatch.Scripts.UI
         {
             CoroutineHandler.StartRoutine(LoaderAsset.InstantiateAsset<MessagesPopup>("MessagesPopup", containerPopups, op =>
             {
-                op.Init(message);
+                if (YandexGame.Instance.Language == "ru")
+                    op.Init();
             }));
         }
 
@@ -174,18 +196,17 @@ namespace Assets.GemHunterMatch.Scripts.UI
             coins.text = value.ToString();
         }
 
-
         private void Finished(bool isCondition)
         {
             if (isCondition)
             {
                 StartCoroutine(LoaderAsset.InstantiateAsset<VictoryPopup>(popupWin, containerPopups, op =>
                 {
-                    op.Init(level.level,gamePlay.Score);
+                    op.Init(mediator,level.level,gamePlay.Score);
                 }));
             }
             else
-                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopups, op => { op.Init(gamePlay,wallet); op.Show(gamePlay.Goals); })); 
+                StartCoroutine(LoaderAsset.InstantiateAsset<PopupDefeat>("PopupDefeat", containerPopups, op => { op.Init(mediator,gamePlay); op.Show(gamePlay.Goals); })); 
         }
 
         private void MoveHappen(int move)

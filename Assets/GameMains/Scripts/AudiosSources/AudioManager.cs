@@ -1,4 +1,4 @@
-﻿using Assets.YG.Scripts;
+﻿using System.Collections;
 
 using UnityEngine;
 
@@ -7,31 +7,18 @@ namespace Assets.GameMains.Scripts.AudiosSources
     public class AudioManager : MonoBehaviour
     {
         [SerializeField] private bool singleton;
+        [SerializeField] private BackgroundMusic backgroundMusic;
+        [SerializeField] private AudioEffects audioEffects;
 
-        public static AudioManager instance;
-        [SerializeField] private MusicSourceBackground sourceBackground;
-        [SerializeField] private MusicSourceEffect sourceEffect;
+        private GlobalMediator mediator;
+        private static AudioManager _instance;
 
-        public bool isBGMusic
-        {
-            get => YandexGame.Instance.progressData.music;
+        public bool IsBackground => mediator.IsEnableBackgroundMusic;
 
-            set
-            {
-                YandexGame.Instance.progressData.music = value;
-                Play();
-            }
-        }
+        public bool IsEffect => mediator.IsEnableAudioEffect;
 
-        public bool isEffectAudio
-        {
-            get => YandexGame.Instance.progressData.effectAudio;
+        public static AudioManager instance => _instance;
 
-            set
-            {
-                YandexGame.Instance.progressData.effectAudio = value;
-            }
-        }
         private void Awake()
         {
             #region singleton
@@ -43,40 +30,48 @@ namespace Assets.GameMains.Scripts.AudiosSources
                 }
                 else
                 {
-                    instance = this;
+                    _instance = this;
                     DontDestroyOnLoad(gameObject);
                 }
             }
             else
             {
-                instance = null;
+                _instance = null;
                 DontDestroyOnLoad(gameObject);
             }
             #endregion
         }
 
-        public void Initialize(PauseController pauseController)
+        public void Initialize(GlobalMediator mediator)
         {
-            sourceBackground.Initialize();
-            sourceEffect.Initialize();
+            this.mediator = mediator;
 
-            pauseController.OnPause += Pause;
-            YandexGame.Instance.OnNowAdsShow += Pause;
+            backgroundMusic.Initialize();
+            audioEffects.Initialize();
+
+            mediator.OnApplicationFocused += Pause;
+            mediator.OnNowAdsShow += Pause;
         }
 
-        public void Play()
+        public IEnumerator LoadDatas()
         {
-            if (isBGMusic)
-                sourceBackground.Play();
+            StartCoroutine(backgroundMusic.LoadData("bgMusic"));
+            yield return StartCoroutine(audioEffects.LoadData("audioEffect"));
+        }
+
+        public void PlayBackgroundMusic(string name, bool checkClip = true, float volume = 1, float pitch = 1)
+        {
+            if (IsBackground)
+                backgroundMusic.Play(name, checkClip, volume, pitch);
             else
-                sourceBackground.Pause();
+                backgroundMusic.Pause();
         }
 
-        public void PlayEffect(string name, float volume = 1, float pitch = 1) 
+        public void PlayEffect(string name, bool checkClip = true, float volume = 1, float pitch = 1)
         {
-            if (isEffectAudio)
+            if (IsEffect)
             {
-                sourceEffect.Play(name, volume, pitch);
+                audioEffects.Play(name, checkClip, volume, pitch);
             }
         }
 
@@ -84,7 +79,7 @@ namespace Assets.GameMains.Scripts.AudiosSources
         {
             if (!isSilence)
             {
-                AudioListener.pause = YandexGame.Instance.nowAdsShow ? false : true;
+                AudioListener.pause = mediator.StateNowAdsShow;
             }
             else
             {
@@ -92,10 +87,5 @@ namespace Assets.GameMains.Scripts.AudiosSources
             }
         }
 
-        public void PlayEffect(AudioClip triggerSound)
-        {
-            if (isEffectAudio)
-                sourceEffect.Play(triggerSound);
-        }
     }
 }

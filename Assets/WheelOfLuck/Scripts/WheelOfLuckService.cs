@@ -1,7 +1,6 @@
 ﻿using Assets.AssetLoaders;
 
 using Assets.GameMains.Scripts;
-using Assets.GameMains.Scripts.Bank;
 using Assets.GameMains.Scripts.Expansion;
 using Assets.YG.Scripts;
 
@@ -39,11 +38,11 @@ namespace Assets.WheelOfLuck.Scripts
         private PopupReward popupReward;
         private WheelConfig config;
         private Transform container;
-        private Wallet wallet;
+        private GlobalMediator mediator;
 
-        public WheelOfLuckService(Wallet wallet)
+        public WheelOfLuckService(GlobalMediator mediator)
         {
-            this.wallet = wallet;
+            this.mediator = mediator;
         }
 
         public void LoadData()
@@ -124,7 +123,7 @@ namespace Assets.WheelOfLuck.Scripts
         }
         private void AddReward(Reward reward)
         {
-            wallet.Add(reward.amount);
+            mediator.Add(reward.amount);
         }
         public void SetNewDateTime()
         {
